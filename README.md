@@ -5,8 +5,8 @@ a nETWORK LANGUAGE WITH 5 CLASSES
 an5 - is a network modelling language designed to allow description and
 processing and simulation of networks
 
-The lanuage syntax is derived from java but without any methods
-So it is data definition only, with 'define' schema defintion
+The language syntax is derived from java but without any methods
+So it is data definition only, with 'define' for schema defintion
 
 Parser is written with ANTLR
 
