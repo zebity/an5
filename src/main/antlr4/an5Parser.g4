@@ -39,7 +39,7 @@ parser grammar an5Parser;
 
 options { tokenVocab=an5Lexer; }
 
-ccompilationUnit
+compilationUnit
     : packageDeclaration? importDeclaration* typeDeclaration* EOF
     ;
 
@@ -617,6 +617,7 @@ primitiveType
     | LONG
     | FLOAT
     | DOUBLE
+    | STRING
     ;
 
 // typeArguments

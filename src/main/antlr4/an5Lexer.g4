@@ -79,6 +79,7 @@ PACKAGE:            'package';
 SHORT:              'short';
 // STATIC:             'static';
 // STRICTFP:           'strictfp';
+STRING:                 'string';
 // SUPER:              'super';
 // SWITCH:             'switch';
 // SYNCHRONIZED:       'synchronized';

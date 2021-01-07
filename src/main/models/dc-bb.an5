@@ -1,2 +1,73 @@
+/*
+  What: A small test example of set of classes
+     that can be used to assemble a data centre network.
+     It is example of set of a nETWORK LANGUAGE WITH 5 CLASSES
+     definitions, not instances.
+     
+  By: John Hartley - Graphica Software/Dokmai Pty Ltd
+    
+
+*/
+
+package au.com.graphica.dcTypes;
+
+@Model(
+  spec = "an9",
+  version = "1.0"
+)
+
+interface pcie-interface {
+  string common[] = { "type=pcie", "width=(1|4|8|16)", "gen=([1-4]\.*)"};
+  string needs[];
+  string provides[];
+}
+
+class computer extends element {
+  interface pcie-slot extends pci-interface {
+    string needs[] = {"form=card?"};
+    string provides[] = {"form=slot"};
+  }
+  interface slot[];
+  string name;
+}
+
+interface ethernet-port-base-t {
+  string common[] = { "service=ethernet", "plug=rj45"};
+  string needs[] = {"cable=cat([3-8].?)?", "plug=rj45",
+                    "gender=male", "media=copper"};
+  string provides[] = {"rj45", "gender=female"};
+  string name;
+}
+
+class pcie-nic extends element {
+  interface pcie-card extends pcie-interface {
+      string needs[] = {"form=slot?"};
+      string provides[] = {"form=card"};
+  }
+  interface card;
+  interface port[];
+}
+
+class switch extends element {
+  interface port[];
+}
+
+interface catx-cable {
+  string common[] = {"cable=cat([3-8].?)?", "plug=rj45",
+                     "gender=male", "media=copper"};
+}
+
+define class cat6-cable extends link {
+  interface cat6-cable extends catx-cable {
+    string provides[] = {"cable=cat6"} ;
+    string needs[] = {"plug=rj45", "gender=female"};
+  }
+  string type = "physical",
+         length,
+         colour,
+         label;
+   interface a, b;
+  }
+}
 
 
