@@ -4,9 +4,8 @@
   By: John Hartley
 */
 
-import org.antlr.runtime.*;
-import org.antlr.v4.runtime.CharStream;
-import org.antlr.v4.runtime.TokenStream;
+import org.antlr.v4.runtime.CharStreams;
+import org.antlr.v4.runtime.CommonTokenStream;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,8 +32,8 @@ public class an5Model {
   public static an5Model create(String nm, String src) throws IOException {
 	File an5File = new File(src);
 	InputStream stream = new FileInputStream(an5File);
-    an5Lexer lexer = new an5Lexer((CharStream) new ANTLRInputStream(stream));
-    an5Parser parser = new an5Parser((TokenStream) new CommonTokenStream((TokenSource) lexer));
+    an5Lexer lexer = new an5Lexer(CharStreams.fromStream(stream));
+    an5Parser parser = new an5Parser(new CommonTokenStream(lexer));
 //    parser.addErrorListener(new BaseErrorListener() {
 //      @Override
 //      public void syntaxError(Recognizer<?, ?> recognizer,
