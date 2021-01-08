@@ -17,7 +17,7 @@ package au.com.graphica.dcTypes;
 )
 
 interface pcie-interface {
-  string common[] = { "type=pcie", "width=(1|4|8|16)", "gen=([1-4]\.*)"};
+  string common[] = { "type=pcie", "width=(1|4|8|16)", "gen=([1-4]\\.*)"};
   string needs[];
   string provides[];
 }
@@ -67,7 +67,4 @@ define class cat6-cable extends link {
          colour,
          label;
    interface a, b;
-  }
 }
-
-

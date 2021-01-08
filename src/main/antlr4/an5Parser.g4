@@ -605,7 +605,8 @@ typeList
     ;
 
 typeType
-    : annotation* (classOrInterfaceType | primitiveType) (annotation* '[' ']')*
+    : annotation* (classOrInterfaceType | networkType | primitiveType) (annotation* '[' ']')*
+//    : annotation* (classOrInterfaceType | primitiveType) (annotation* '[' ']')*
     ;
 
 primitiveType
@@ -618,6 +619,14 @@ primitiveType
     | FLOAT
     | DOUBLE
     | STRING
+    ;
+
+networkType
+    : NETWORK
+    | ELEMENT
+    | INTERFACE
+    | LINK
+    | PATH
     ;
 
 // typeArguments

@@ -53,6 +53,7 @@ CONST:              'const';
 DEFAULT:            'default';
 // DO:                 'do';
 DOUBLE:             'double';
+ELEMENT:            'element';
 // ELSE:               'else';
 ENUM:               'enum';
 EXPOSES:            'exposes';
@@ -68,10 +69,13 @@ IMPORT:             'import';
 // INSTANCEOF:         'instanceof';
 INT:                'int';
 INTERFACE:          'interface';
+LINK:               'link';
 LONG:               'long';
-NATIVE:             'native';
+// NATIVE:             'native';
+NETWORK:            'network';
 // NEW:                'new';
 PACKAGE:            'package';
+PATH:               'path';
 // PRIVATE:            'private';
 // PROTECTED:          'protected';
 // PUBLIC:             'public';
@@ -171,7 +175,8 @@ LINE_COMMENT:       '//' ~[\r\n]*    -> channel(HIDDEN);
 
 // Identifiers
 
-IDENTIFIER:         Letter LetterOrDigit*;
+// IDENTIFIER:         Letter LetterOrDigit*;
+IDENTIFIER:         Letter LetterOrDigitOrDash*;
 
 // Fragment rules
 
@@ -193,10 +198,14 @@ fragment HexDigit
 fragment Digits
     : [0-9] ([0-9_]* [0-9])?
     ;
-fragment LetterOrDigit
+// fragment LetterOrDigit
+//    : Letter
+//    | [0-9]
+//    ;
+fragment LetterOrDigitOrDash
     : Letter
-    | [0-9]
-    ;
+    | [0-9\-]
+    ;    
 fragment Letter
     : [a-zA-Z$_] // these are the "java letters" below 0x7F
     | ~[\u0000-\u007F\uD800-\uDBFF] // covers all characters above 0x7F which are not a surrogate
