@@ -1,7 +1,7 @@
 // package an5.test;
 
 import java.util.Scanner;
-import java.io.InputStream;
+import java.io.IOException;
 
 
 public class modelANetwork5 {
@@ -11,11 +11,14 @@ public class modelANetwork5 {
     String str = s.next();
     s.close();
 
-    File an5File = new File(str);
-    InputStream stream = new FileInputStream(an5File);
-    an5Model model = new an5Model::create(stream);
-
-    model.info();        
+    an5Model model;
+	try {
+		model = an5Model.create(new String("test"), str);
+	    model.info(); 
+	} catch (IOException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}       
   }
   
 }
