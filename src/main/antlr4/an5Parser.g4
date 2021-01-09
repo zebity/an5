@@ -197,6 +197,7 @@ interfaceBodyDeclaration
 
 interfaceMemberDeclaration
     : constDeclaration
+    | interfaceSignatureDeclaration
     | interfaceMethodDeclaration
 //    | genericInterfaceMethodDeclaration
     | interfaceDeclaration
@@ -212,6 +213,11 @@ constDeclaration
 constantDeclarator
     : IDENTIFIER ('[' ']')* '=' variableInitializer
     ;
+
+interfaceSignatureDeclaration
+    : signatureType '=' arrayInitializer 
+    ;
+
 
 // see matching of [] comment in methodDeclaratorRest
 // methodBody from Java8
@@ -619,6 +625,7 @@ primitiveType
     | FLOAT
     | DOUBLE
     | STRING
+    | DECLARE
     ;
 
 networkType
@@ -629,6 +636,12 @@ networkType
     | PATH
     ;
 
+signatureType
+    : COMMON
+    | NEEDS
+    | PROVIDES
+    ;
+    
 // typeArguments
 //     : '<' typeArgument (',' typeArgument)* '>'
 //     ;
