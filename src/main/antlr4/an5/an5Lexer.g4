@@ -64,7 +64,7 @@ EXTENDS:            'extends';
 FLOAT:              'float';
 // FOR:                'for';
 // IF:                 'if';
-GOTO:               'goto';
+// GOTO:               'goto';
 // IMPLEMENTS:         'implements';
 IMPORT:             'import';
 // INSTANCEOF:         'instanceof';

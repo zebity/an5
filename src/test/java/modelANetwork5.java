@@ -2,7 +2,7 @@
 
 import java.util.Scanner;
 import java.io.IOException;
-
+import an5.an5Model;
 
 public class modelANetwork5 {
   public static void main(String[] args){

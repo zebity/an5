@@ -625,7 +625,6 @@ primitiveType
     | FLOAT
     | DOUBLE
     | STRING
-    | DECLARE
     ;
 
 networkType
