@@ -6,7 +6,7 @@ an5 - is a network modelling language designed to allow description and
 processing and simulation of networks
 
 The language syntax is derived from java but without any methods
-So it is data definition only, with 'define' for schema defintion
+So it is data definition only, with class & interface used for schema defintion
 
 # Build Tools
 
