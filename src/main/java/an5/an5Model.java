@@ -36,6 +36,7 @@ public class an5Model {
 	InputStream stream = new FileInputStream(an5File);
     an5Lexer lexer = new an5Lexer(CharStreams.fromStream(stream));
     an5Parser parser = new an5Parser(new CommonTokenStream(lexer));
+    an5ModelDefinitionsListener listener = new an5ModelDefinitionsListener();
 //    parser.addErrorListener(new BaseErrorListener() {
 //      @Override
 //      public void syntaxError(Recognizer<?, ?> recognizer,
@@ -45,6 +46,7 @@ public class an5Model {
 //                    " due to " + msg, e);
 //      }
 //    }
+    parser.addParseListener(listener);
     parser.compilationUnit();
     return new an5Model(nm, src, parser);
   }
