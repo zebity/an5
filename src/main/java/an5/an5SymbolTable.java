@@ -14,10 +14,14 @@ package an5;
 import java.util.HashMap;
 import java.util.Map;
 
-class SymbolTable {
+class an5SymbolTable {
   an5ModelContext root,
-	              current;
+                  current;
   Map<String, an5ModelContext> packageContexts = new HashMap<>();
+  an5SymbolTable() {
+    root = new an5ModelContext();
+    packageContexts.put(".", root);
+  }
   an5TypeValue select(String key) {
 	an5TypeValue res = null;
     an5ModelContext nxt = current;

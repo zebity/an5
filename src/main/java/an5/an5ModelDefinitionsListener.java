@@ -4,14 +4,22 @@
 
 package an5;
 
+import java.util.List;
+
+import org.antlr.v4.runtime.tree.TerminalNode;
+
 class an5ModelDefinitionsListener extends an5ParserBaseListener {
   int verbosity = 1;
+  an5SymbolTable symtab;
   void DBG(String msg) {
 	switch (verbosity) {
 	  case 3:
 	  case 2:
 	  case 1: System.out.println(msg);
 	}
+  }
+  an5ModelDefinitionsListener() {
+    symtab = new an5SymbolTable();
   }
   public void enterAltAnnotationQualifiedName(an5Parser.AltAnnotationQualifiedNameContext ctx) { DBG("enterAltAnnotationQualifiedName"); }
   public void enterAnnotation(an5Parser.AnnotationContext ctx) { DBG("enterAnnotation"); }
@@ -31,8 +39,13 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void enterClassDeclaration(an5Parser.ClassDeclarationContext ctx) { DBG("enterClassDeclaration"); }
   public void enterClassOrInterfaceModifier(an5Parser.ClassOrInterfaceModifierContext ctx) { DBG("enterClassOrInterfaceModifier"); }
   public void enterClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { DBG("enterClassOrInterfaceType"); }
-  public void enterCompilationUnit(an5Parser.CompilationUnitContext ctx) { DBG("enterCompilationUnit"); }
-  public void enterConstantDeclarator(an5Parser.ConstantDeclaratorContext ctx) { DBG("enterConstantDeclarator"); }
+  public void enterCompilationUnit(an5Parser.CompilationUnitContext ctx) {
+	DBG("enterCompilationUnit");
+  }
+  public void enterConstantDeclarator(an5Parser.ConstantDeclaratorContext ctx) {
+    DBG("enterConstantDeclarator");
+    
+  }
   public void enterConstDeclaration(an5Parser.ConstDeclarationContext ctx) { DBG("enterConstDeclaration"); }
   public void enterDefaultValue(an5Parser.DefaultValueContext ctx) { DBG("enterDefaultValue"); }
   public void enterElementValue(an5Parser.ElementValueContext ctx) { DBG("enterElementValue"); }
@@ -66,7 +79,9 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void enterMemberDeclaration(an5Parser.MemberDeclarationContext ctx) { DBG("enterMemberDeclaration"); }
   public void enterModifier(an5Parser.ModifierContext ctx) { DBG("enterModifier"); }
   public void enterNetworkType(an5Parser.NetworkTypeContext ctx) { DBG("enterNetworkType"); }
-  public void enterPackageDeclaration(an5Parser.PackageDeclarationContext ctx) { DBG("enterPackageDeclaration"); }
+  public void enterPackageDeclaration(an5Parser.PackageDeclarationContext ctx) {
+    DBG("enterPackageDeclaration");
+  }
   public void enterParExpression(an5Parser.ParExpressionContext ctx) { DBG("enterParExpression"); }
   public void enterPrimary(an5Parser.PrimaryContext ctx) { DBG("enterPrimary"); }
   public void enterPrimitiveType(an5Parser.PrimitiveTypeContext ctx) { DBG("enterPrimitiveType"); }
@@ -102,7 +117,9 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitClassDeclaration(an5Parser.ClassDeclarationContext ctx) { DBG("exitClassDeclaration"); }
   public void exitClassOrInterfaceModifier(an5Parser.ClassOrInterfaceModifierContext ctx) { DBG("exitClassOrInterfaceModifier"); }
   public void exitClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { DBG("exitClassOrInterfaceType"); }
-  public void exitCompilationUnit(an5Parser.CompilationUnitContext ctx) { DBG("exitCompilationUnit"); }
+  public void exitCompilationUnit(an5Parser.CompilationUnitContext ctx) {
+	DBG("exitCompilationUnit");
+  }
   public void exitConstantDeclarator(an5Parser.ConstantDeclaratorContext ctx) { DBG("exitConstantDeclarator"); }
   public void exitConstDeclaration(an5Parser.ConstDeclarationContext ctx) { DBG("exitConstDeclaration"); }
   public void exitDefaultValue(an5Parser.DefaultValueContext ctx) { DBG("exitDefaultValue"); }
@@ -137,7 +154,18 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitMemberDeclaration(an5Parser.MemberDeclarationContext ctx) { DBG("exitMemberDeclaration"); }
   public void exitModifier(an5Parser.ModifierContext ctx) { DBG("exitModifier"); }
   public void exitNetworkType(an5Parser.NetworkTypeContext ctx) { DBG("exitNetworkType"); }
-  public void exitPackageDeclaration(an5Parser.PackageDeclarationContext ctx) { DBG("exitPackageDeclaration"); }
+  public void exitPackageDeclaration(an5Parser.PackageDeclarationContext ctx) {
+    DBG("exitPackageDeclaration");
+    String qualName;
+    List<TerminalNode> nodes = ctx.qualifiedName().IDENTIFIER();
+    
+    qualName = nodes.get(0).getText();
+    for (int i = 1; i < nodes.size(); i++) 
+      qualName = qualName + "." + nodes.get(i);
+    DBG("Adding Package: " + qualName);
+    symtab.current = new an5ModelContext();
+    symtab.packageContexts.put(qualName, symtab.current);
+  }
   public void exitParExpression(an5Parser.ParExpressionContext ctx) { DBG("exitParExpression"); }
   public void exitPrimary(an5Parser.PrimaryContext ctx) { DBG("exitPrimary"); }
   public void exitPrimitiveType(an5Parser.PrimitiveTypeContext ctx) { DBG("exitPrimitiveType"); }

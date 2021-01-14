@@ -20,6 +20,12 @@ class an5ModelContext {
 	              parentCxt = null;
   ArrayList<an5ModelContext> children = new ArrayList<>();
   Map<String, an5TypeValue> identifier = new HashMap<>();
+  an5ModelContext() {
+  } 
+  /* an5ModelContext(an5ModelContext def) {
+	defaultCxt = def;
+    parentCxt = null;
+  } */
   an5ModelContext(an5ModelContext d, an5ModelContext par) {
     defaultCxt = d;
     parentCxt = par;

@@ -37,6 +37,7 @@ public class an5Model {
     an5Lexer lexer = new an5Lexer(CharStreams.fromStream(stream));
     an5Parser parser = new an5Parser(new CommonTokenStream(lexer));
     an5ModelDefinitionsListener listener = new an5ModelDefinitionsListener();
+//    an5SymbolTable symTab = new an5SymbolTable();
 //    parser.addErrorListener(new BaseErrorListener() {
 //      @Override
 //      public void syntaxError(Recognizer<?, ?> recognizer,
