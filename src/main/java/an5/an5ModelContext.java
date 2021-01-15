@@ -30,4 +30,11 @@ class an5ModelContext {
     defaultCxt = d;
     parentCxt = par;
   }
+  an5ModelContext addChild() {
+    an5ModelContext res = new an5ModelContext(defaultCxt, this);
+    return res;
+  }
+  an5ModelContext getParent() {
+    return parentCxt;
+  }
 }

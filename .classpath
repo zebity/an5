@@ -12,7 +12,7 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/home/jbh/Documents/dev/antlr/antlr-4.9-complete.jar"/>
+	<classpathentry kind="lib" path="/home/jbh/Documents/dev/antlr/antlr-4.9.1-complete.jar"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
 			<attribute name="test" value="true"/>

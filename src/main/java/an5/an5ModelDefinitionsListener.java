@@ -6,6 +6,8 @@ package an5;
 
 import java.util.List;
 
+import org.antlr.v4.runtime.ParserRuleContext;
+import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 class an5ModelDefinitionsListener extends an5ParserBaseListener {
@@ -36,7 +38,10 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void enterBlockStatement(an5Parser.BlockStatementContext ctx) { DBG("enterBlockStatement"); }
   public void enterClassBody(an5Parser.ClassBodyContext ctx) { DBG("enterClassBody"); }
   public void enterClassBodyDeclaration(an5Parser.ClassBodyDeclarationContext ctx) { DBG("enterClassBodyDeclaration"); }
-  public void enterClassDeclaration(an5Parser.ClassDeclarationContext ctx) { DBG("enterClassDeclaration"); }
+  public void enterClassDeclaration(an5Parser.ClassDeclarationContext ctx) {
+    DBG("enterClassDeclaration");
+    symtab.current = symtab.current.addChild();
+  }
   public void enterClassOrInterfaceModifier(an5Parser.ClassOrInterfaceModifierContext ctx) { DBG("enterClassOrInterfaceModifier"); }
   public void enterClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { DBG("enterClassOrInterfaceType"); }
   public void enterCompilationUnit(an5Parser.CompilationUnitContext ctx) {
@@ -44,7 +49,6 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   }
   public void enterConstantDeclarator(an5Parser.ConstantDeclaratorContext ctx) {
     DBG("enterConstantDeclarator");
-    
   }
   public void enterConstDeclaration(an5Parser.ConstDeclarationContext ctx) { DBG("enterConstDeclaration"); }
   public void enterDefaultValue(an5Parser.DefaultValueContext ctx) { DBG("enterDefaultValue"); }
@@ -67,7 +71,10 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void enterIntegerLiteral(an5Parser.IntegerLiteralContext ctx) { DBG("enterIntegerLiteral"); }
   public void enterInterfaceBody(an5Parser.InterfaceBodyContext ctx) { DBG("enterInterfaceBody"); }
   public void enterInterfaceBodyDeclaration(an5Parser.InterfaceBodyDeclarationContext ctx) { DBG("enterInterfaceBodyDeclaration"); }
-  public void enterInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) { DBG("enterInterfaceDeclaration"); }
+  public void enterInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) {
+    DBG("enterInterfaceDeclaration");
+    symtab.current = symtab.current.addChild();
+  }
   public void enterInterfaceMemberDeclaration(an5Parser.InterfaceMemberDeclarationContext ctx) { DBG("enterInterfaceMemberDeclaration"); }
   public void enterInterfaceMethodDeclaration(an5Parser.InterfaceMethodDeclarationContext ctx) { DBG("enterInterfaceMethodDeclaration"); }
   public void enterInterfaceMethodModifier(an5Parser.InterfaceMethodModifierContext ctx) { DBG("enterInterfaceMethodModifier"); }
@@ -114,7 +121,32 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitBlockStatement(an5Parser.BlockStatementContext ctx) { DBG("exitBlockStatement"); }
   public void exitClassBody(an5Parser.ClassBodyContext ctx) { DBG("exitClassBody"); }
   public void exitClassBodyDeclaration(an5Parser.ClassBodyDeclarationContext ctx) { DBG("exitClassBodyDeclaration"); }
-  public void exitClassDeclaration(an5Parser.ClassDeclarationContext ctx) { DBG("exitClassDeclaration"); }
+  public void exitClassDeclaration(an5Parser.ClassDeclarationContext ctx) {
+    DBG("exitClassDeclaration");
+    String newClass = ctx.IDENTIFIER().getText();
+    an5Parser.TypeTypeContext extender = ctx.typeType();
+    an5Parser.TypeListContext exposer = ctx.typeList();
+    an5Parser.NetworkTypeContext netExtenders;
+    an5Parser.ClassOrInterfaceTypeContext clOrIfExtenders;
+    an5Parser.PrimitiveTypeContext primExtenders;
+    String extendsKey = "object";
+    
+    for (ParseTree nd : extender.children) {
+      if (nd instanceof an5Parser.ClassOrInterfaceTypeContext) {
+        clOrIfExtenders = (an5Parser.ClassOrInterfaceTypeContext)nd;
+        extendsKey = clOrIfExtenders.getText();
+      } else if (nd instanceof an5Parser.NetworkTypeContext) {
+          netExtenders = (an5Parser.NetworkTypeContext)nd;
+          extendsKey = netExtenders.getText();    		
+      } else if (nd instanceof an5Parser.PrimitiveTypeContext) {
+          primExtenders = (an5Parser.PrimitiveTypeContext)nd;
+          extendsKey = primExtenders.getText();     		
+      }
+    }
+
+    
+    symtab.current = symtab.current.getParent();
+  }
   public void exitClassOrInterfaceModifier(an5Parser.ClassOrInterfaceModifierContext ctx) { DBG("exitClassOrInterfaceModifier"); }
   public void exitClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { DBG("exitClassOrInterfaceType"); }
   public void exitCompilationUnit(an5Parser.CompilationUnitContext ctx) {
@@ -142,7 +174,11 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitIntegerLiteral(an5Parser.IntegerLiteralContext ctx) { DBG("exitIntegerLiteral"); }
   public void exitInterfaceBody(an5Parser.InterfaceBodyContext ctx) { DBG("exitInterfaceBody"); }
   public void exitInterfaceBodyDeclaration(an5Parser.InterfaceBodyDeclarationContext ctx) { DBG("exitInterfaceBodyDeclaration"); }
-  public void exitInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) { DBG("exitInterfaceDeclaration"); }
+  public void exitInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) {
+    DBG("exitInterfaceDeclaration");
+    
+    symtab.current = symtab.current.getParent();
+  }
   public void exitInterfaceMemberDeclaration(an5Parser.InterfaceMemberDeclarationContext ctx) { DBG("exitInterfaceMemberDeclaration"); }
   public void exitInterfaceMethodDeclaration(an5Parser.InterfaceMethodDeclarationContext ctx) { DBG("exitInterfaceMethodDeclaration"); }
   public void exitInterfaceMethodModifier(an5Parser.InterfaceMethodModifierContext ctx) { DBG("exitInterfaceMethodModifier"); }
