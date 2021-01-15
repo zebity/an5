@@ -4,24 +4,72 @@
 
 package an5;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
+import an5.an5Parser.TypeTypeContext;
+
 class an5ModelDefinitionsListener extends an5ParserBaseListener {
-  int verbosity = 1;
+  int verbosity = 1,
+      diags = 5;
   an5SymbolTable symtab;
   void DBG(String msg) {
 	switch (verbosity) {
+	  case 7: System.out.println(msg);
+	  case 6:
+	  case 5:
+	  case 4:
 	  case 3:
 	  case 2:
-	  case 1: System.out.println(msg);
+	  case 1: 
+	}
+  }
+  void DBG(int level, String msg) {
+	switch (level) {
+	  case 7:
+	  case 6:
+	  case 5: System.out.println(msg);
 	}
   }
   an5ModelDefinitionsListener() {
     symtab = new an5SymbolTable();
+  }
+  void extractTypeTypeKey(an5Parser.TypeTypeContext extender, StringBuilder extendsKey) {
+	an5Parser.NetworkTypeContext netExtenders;
+	an5Parser.ClassOrInterfaceTypeContext clOrIfExtenders;
+	an5Parser.PrimitiveTypeContext primExtenders;
+	    
+	for (ParseTree nd : extender.children) {
+	  if (nd instanceof an5Parser.ClassOrInterfaceTypeContext) {
+	    clOrIfExtenders = (an5Parser.ClassOrInterfaceTypeContext)nd;
+	    extendsKey.setLength(0);
+	    extendsKey.append(clOrIfExtenders.getText());
+	  } else if (nd instanceof an5Parser.NetworkTypeContext) {
+	    netExtenders = (an5Parser.NetworkTypeContext)nd;
+	    extendsKey.setLength(0);
+	    extendsKey.append(netExtenders.getText());    		
+	  } else if (nd instanceof an5Parser.PrimitiveTypeContext) {
+	    primExtenders = (an5Parser.PrimitiveTypeContext)nd;
+	    extendsKey.setLength(0);
+	    extendsKey.append(primExtenders.getText());     		
+	  }
+	}
+  }
+  void extractTypeListKeys(an5Parser.TypeListContext exposed, List<String> exposesKeys) {
+	StringBuilder key = new StringBuilder();
+	
+	if (exposed != null) {
+	  List<TypeTypeContext> exposedType = exposed.typeType();
+	  for (TypeTypeContext nd : exposedType) {
+		key.setLength(0);
+	    extractTypeTypeKey(nd, key);
+        exposesKeys.add(key.toString());
+  	    DBG(diags, "exposes - '" + key + "'");
+	  }
+	}	  
   }
   public void enterAltAnnotationQualifiedName(an5Parser.AltAnnotationQualifiedNameContext ctx) { DBG("enterAltAnnotationQualifiedName"); }
   public void enterAnnotation(an5Parser.AnnotationContext ctx) { DBG("enterAnnotation"); }
@@ -124,27 +172,13 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitClassDeclaration(an5Parser.ClassDeclarationContext ctx) {
     DBG("exitClassDeclaration");
     String newClass = ctx.IDENTIFIER().getText();
-    an5Parser.TypeTypeContext extender = ctx.typeType();
-    an5Parser.TypeListContext exposer = ctx.typeList();
-    an5Parser.NetworkTypeContext netExtenders;
-    an5Parser.ClassOrInterfaceTypeContext clOrIfExtenders;
-    an5Parser.PrimitiveTypeContext primExtenders;
-    String extendsKey = "object";
+    StringBuilder extendsKey = new StringBuilder("object");
+    List<String> exposesKeys = new ArrayList<>();
     
-    for (ParseTree nd : extender.children) {
-      if (nd instanceof an5Parser.ClassOrInterfaceTypeContext) {
-        clOrIfExtenders = (an5Parser.ClassOrInterfaceTypeContext)nd;
-        extendsKey = clOrIfExtenders.getText();
-      } else if (nd instanceof an5Parser.NetworkTypeContext) {
-          netExtenders = (an5Parser.NetworkTypeContext)nd;
-          extendsKey = netExtenders.getText();    		
-      } else if (nd instanceof an5Parser.PrimitiveTypeContext) {
-          primExtenders = (an5Parser.PrimitiveTypeContext)nd;
-          extendsKey = primExtenders.getText();     		
-      }
-    }
-
+    extractTypeTypeKey(ctx.typeType(), extendsKey);
+    extractTypeListKeys(ctx.typeList(), exposesKeys);
     
+	DBG(diags, "Class - '" + newClass + "' extends - '" + extendsKey + "'");   
     symtab.current = symtab.current.getParent();
   }
   public void exitClassOrInterfaceModifier(an5Parser.ClassOrInterfaceModifierContext ctx) { DBG("exitClassOrInterfaceModifier"); }
@@ -176,7 +210,10 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitInterfaceBodyDeclaration(an5Parser.InterfaceBodyDeclarationContext ctx) { DBG("exitInterfaceBodyDeclaration"); }
   public void exitInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) {
     DBG("exitInterfaceDeclaration");
-    
+    String newInterface = ctx.IDENTIFIER().getText();
+    List<String> exposesKeys = new ArrayList<>();
+ 
+    extractTypeListKeys(ctx.typeList(), exposesKeys);
     symtab.current = symtab.current.getParent();
   }
   public void exitInterfaceMemberDeclaration(an5Parser.InterfaceMemberDeclarationContext ctx) { DBG("exitInterfaceMemberDeclaration"); }
@@ -198,7 +235,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     qualName = nodes.get(0).getText();
     for (int i = 1; i < nodes.size(); i++) 
       qualName = qualName + "." + nodes.get(i);
-    DBG("Adding Package: " + qualName);
+    DBG(diags, "Adding Package: " + qualName);
     symtab.current = new an5ModelContext();
     symtab.packageContexts.put(qualName, symtab.current);
   }
