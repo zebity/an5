@@ -6,16 +6,17 @@ package an5;
 
 import java.lang.String;
 import java.util.ArrayList;
+import java.util.List;
 
 class an5InterfaceValue extends an5TypeValue {
 	String baseSignature,
 	       extendedSignature;
 	int cardinalityMin,
 	    cardinalityMax;
-	ArrayList<String> base,
-	                  needs,
-	                  provides;
-	ArrayList<an5InterfaceValue> interfacesExtended;
+	List<String> base,
+	             needs,
+	             provides;
+	List<an5InterfaceValue> interfacesExtended = new ArrayList<>();
 	an5InterfaceValue(String is, String val) {
       super(is, val);
 	}

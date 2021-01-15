@@ -13,27 +13,9 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import an5.an5Parser.TypeTypeContext;
 
 class an5ModelDefinitionsListener extends an5ParserBaseListener {
-  int verbosity = 1,
-      diags = 5;
+  an5Logging log = new an5Logging();
+  int diags = 5;
   an5SymbolTable symtab;
-  void DBG(String msg) {
-	switch (verbosity) {
-	  case 7: System.out.println(msg);
-	  case 6:
-	  case 5:
-	  case 4:
-	  case 3:
-	  case 2:
-	  case 1: 
-	}
-  }
-  void DBG(int level, String msg) {
-	switch (level) {
-	  case 7:
-	  case 6:
-	  case 5: System.out.println(msg);
-	}
-  }
   an5ModelDefinitionsListener() {
     symtab = new an5SymbolTable();
   }
@@ -67,193 +49,255 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 		key.setLength(0);
 	    extractTypeTypeKey(nd, key);
         exposesKeys.add(key.toString());
-  	    DBG(diags, "exposes - '" + key + "'");
+  	    log.DBG(diags, "exposes - '" + key + "'");
 	  }
 	}	  
   }
-  public void enterAltAnnotationQualifiedName(an5Parser.AltAnnotationQualifiedNameContext ctx) { DBG("enterAltAnnotationQualifiedName"); }
-  public void enterAnnotation(an5Parser.AnnotationContext ctx) { DBG("enterAnnotation"); }
-  public void enterAnnotationConstantRest(an5Parser.AnnotationConstantRestContext ctx) { DBG("enterAnnotationConstantRest"); }
-  public void enterAnnotationMethodOrConstantRest(an5Parser.AnnotationMethodOrConstantRestContext ctx) { DBG("enterAnnotationMethodOrConstantRest"); }
-  public void enterAnnotationMethodRest(an5Parser.AnnotationMethodRestContext ctx) { DBG("enterAnnotationMethodRest"); }
-  public void enterAnnotationTypeBody(an5Parser.AnnotationTypeBodyContext ctx) { DBG("enterAnnotationTypeBody"); }
-  public void enterAnnotationTypeDeclaration(an5Parser.AnnotationTypeDeclarationContext ctx) { DBG("enterAnnotationTypeDeclaration"); }
-  public void enterAnnotationTypeElementDeclaration(an5Parser.AnnotationTypeElementDeclarationContext ctx) { DBG("enterAnnotationTypeElementDeclaration"); }
-  public void enterAnnotationTypeElementRest(an5Parser.AnnotationTypeElementRestContext ctx) { DBG("enterAnnotationTypeElementRest"); }
-  public void enterArguments(an5Parser.ArgumentsContext ctx) { DBG("enterArguments"); }
-  public void enterArrayInitializer(an5Parser.ArrayInitializerContext ctx) { DBG("enterArrayInitializer"); }
-  public void enterBlock(an5Parser.BlockContext ctx) { DBG("enterBlock"); }
-  public void enterBlockStatement(an5Parser.BlockStatementContext ctx) { DBG("enterBlockStatement"); }
-  public void enterClassBody(an5Parser.ClassBodyContext ctx) { DBG("enterClassBody"); }
-  public void enterClassBodyDeclaration(an5Parser.ClassBodyDeclarationContext ctx) { DBG("enterClassBodyDeclaration"); }
+  public void enterAltAnnotationQualifiedName(an5Parser.AltAnnotationQualifiedNameContext ctx) { log.DBG("enterAltAnnotationQualifiedName"); }
+  public void enterAnnotation(an5Parser.AnnotationContext ctx) { log.DBG("enterAnnotation"); }
+  public void enterAnnotationConstantRest(an5Parser.AnnotationConstantRestContext ctx) { log.DBG("enterAnnotationConstantRest"); }
+  public void enterAnnotationMethodOrConstantRest(an5Parser.AnnotationMethodOrConstantRestContext ctx) { log.DBG("enterAnnotationMethodOrConstantRest"); }
+  public void enterAnnotationMethodRest(an5Parser.AnnotationMethodRestContext ctx) { log.DBG("enterAnnotationMethodRest"); }
+  public void enterAnnotationTypeBody(an5Parser.AnnotationTypeBodyContext ctx) { log.DBG("enterAnnotationTypeBody"); }
+  public void enterAnnotationTypeDeclaration(an5Parser.AnnotationTypeDeclarationContext ctx) { log.DBG("enterAnnotationTypeDeclaration"); }
+  public void enterAnnotationTypeElementDeclaration(an5Parser.AnnotationTypeElementDeclarationContext ctx) { log.DBG("enterAnnotationTypeElementDeclaration"); }
+  public void enterAnnotationTypeElementRest(an5Parser.AnnotationTypeElementRestContext ctx) { log.DBG("enterAnnotationTypeElementRest"); }
+  public void enterArguments(an5Parser.ArgumentsContext ctx) { log.DBG("enterArguments"); }
+  public void enterArrayInitializer(an5Parser.ArrayInitializerContext ctx) { log.DBG("enterArrayInitializer"); }
+  public void enterBlock(an5Parser.BlockContext ctx) { log.DBG("enterBlock"); }
+  public void enterBlockStatement(an5Parser.BlockStatementContext ctx) { log.DBG("enterBlockStatement"); }
+  public void enterClassBody(an5Parser.ClassBodyContext ctx) { log.DBG("enterClassBody"); }
+  public void enterClassBodyDeclaration(an5Parser.ClassBodyDeclarationContext ctx) { log.DBG("enterClassBodyDeclaration"); }
   public void enterClassDeclaration(an5Parser.ClassDeclarationContext ctx) {
-    DBG("enterClassDeclaration");
+    log.DBG("enterClassDeclaration");
     symtab.current = symtab.current.addChild();
   }
-  public void enterClassOrInterfaceModifier(an5Parser.ClassOrInterfaceModifierContext ctx) { DBG("enterClassOrInterfaceModifier"); }
-  public void enterClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { DBG("enterClassOrInterfaceType"); }
+  public void enterClassOrInterfaceModifier(an5Parser.ClassOrInterfaceModifierContext ctx) { log.DBG("enterClassOrInterfaceModifier"); }
+  public void enterClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { log.DBG("enterClassOrInterfaceType"); }
   public void enterCompilationUnit(an5Parser.CompilationUnitContext ctx) {
-	DBG("enterCompilationUnit");
+	log.DBG("enterCompilationUnit");
   }
   public void enterConstantDeclarator(an5Parser.ConstantDeclaratorContext ctx) {
-    DBG("enterConstantDeclarator");
+    log.DBG("enterConstantDeclarator");
   }
-  public void enterConstDeclaration(an5Parser.ConstDeclarationContext ctx) { DBG("enterConstDeclaration"); }
-  public void enterDefaultValue(an5Parser.DefaultValueContext ctx) { DBG("enterDefaultValue"); }
-  public void enterElementValue(an5Parser.ElementValueContext ctx) { DBG("enterElementValue"); }
-  public void enterElementValueArrayInitializer(an5Parser.ElementValueArrayInitializerContext ctx) { DBG("enterElementValueArrayInitializer"); }
-  public void enterElementValuePair(an5Parser.ElementValuePairContext ctx) { DBG("enterElementValuePair"); }
-  public void enterElementValuePairs(an5Parser.ElementValuePairsContext ctx) { DBG("enterElementValuePairs"); }
-  public void enterEnumBodyDeclarations(an5Parser.EnumBodyDeclarationsContext ctx) { DBG("enterEnumBodyDeclarations"); }
-  public void enterEnumConstant(an5Parser.EnumConstantContext ctx) { DBG("enterEnumConstant"); }
-  public void enterEnumConstants(an5Parser.EnumConstantsContext ctx) { DBG("enterEnumConstants"); }
-  public void enterEnumDeclaration(an5Parser.EnumDeclarationContext ctx) { DBG("enterEnumDeclaration"); }
-  public void enterExpression(an5Parser.ExpressionContext ctx) { DBG("enterExpression"); }
-  public void enterExpressionList(an5Parser.ExpressionListContext ctx) { DBG("enterExpressionList"); }
-  public void enterFieldDeclaration(an5Parser.FieldDeclarationContext ctx) { DBG("enterFieldDeclaration"); }
-  public void enterFloatLiteral(an5Parser.FloatLiteralContext ctx) { DBG("enterFloatLiteral"); }
-  public void enterFormalParameter(an5Parser.FormalParameterContext ctx) { DBG("enterFormalParameter"); }
-  public void enterFormalParameterList(an5Parser.FormalParameterListContext ctx) { DBG("enterFormalParameterList"); }
-  public void enterFormalParameters(an5Parser.FormalParametersContext ctx) { DBG("enterFormalParameters"); }
-  public void enterImportDeclaration(an5Parser.ImportDeclarationContext ctx) { DBG("enterImportDeclaration"); }
-  public void enterIntegerLiteral(an5Parser.IntegerLiteralContext ctx) { DBG("enterIntegerLiteral"); }
-  public void enterInterfaceBody(an5Parser.InterfaceBodyContext ctx) { DBG("enterInterfaceBody"); }
-  public void enterInterfaceBodyDeclaration(an5Parser.InterfaceBodyDeclarationContext ctx) { DBG("enterInterfaceBodyDeclaration"); }
+  public void enterConstDeclaration(an5Parser.ConstDeclarationContext ctx) { log.DBG("enterConstDeclaration"); }
+  public void enterDefaultValue(an5Parser.DefaultValueContext ctx) { log.DBG("enterDefaultValue"); }
+  public void enterElementValue(an5Parser.ElementValueContext ctx) { log.DBG("enterElementValue"); }
+  public void enterElementValueArrayInitializer(an5Parser.ElementValueArrayInitializerContext ctx) { log.DBG("enterElementValueArrayInitializer"); }
+  public void enterElementValuePair(an5Parser.ElementValuePairContext ctx) { log.DBG("enterElementValuePair"); }
+  public void enterElementValuePairs(an5Parser.ElementValuePairsContext ctx) { log.DBG("enterElementValuePairs"); }
+  public void enterEnumBodyDeclarations(an5Parser.EnumBodyDeclarationsContext ctx) { log.DBG("enterEnumBodyDeclarations"); }
+  public void enterEnumConstant(an5Parser.EnumConstantContext ctx) { log.DBG("enterEnumConstant"); }
+  public void enterEnumConstants(an5Parser.EnumConstantsContext ctx) { log.DBG("enterEnumConstants"); }
+  public void enterEnumDeclaration(an5Parser.EnumDeclarationContext ctx) { log.DBG("enterEnumDeclaration"); }
+  public void enterExpression(an5Parser.ExpressionContext ctx) { log.DBG("enterExpression"); }
+  public void enterExpressionList(an5Parser.ExpressionListContext ctx) { log.DBG("enterExpressionList"); }
+  public void enterFieldDeclaration(an5Parser.FieldDeclarationContext ctx) { log.DBG("enterFieldDeclaration"); }
+  public void enterFloatLiteral(an5Parser.FloatLiteralContext ctx) { log.DBG("enterFloatLiteral"); }
+  public void enterFormalParameter(an5Parser.FormalParameterContext ctx) { log.DBG("enterFormalParameter"); }
+  public void enterFormalParameterList(an5Parser.FormalParameterListContext ctx) { log.DBG("enterFormalParameterList"); }
+  public void enterFormalParameters(an5Parser.FormalParametersContext ctx) { log.DBG("enterFormalParameters"); }
+  public void enterImportDeclaration(an5Parser.ImportDeclarationContext ctx) { log.DBG("enterImportDeclaration"); }
+  public void enterIntegerLiteral(an5Parser.IntegerLiteralContext ctx) { log.DBG("enterIntegerLiteral"); }
+  public void enterInterfaceBody(an5Parser.InterfaceBodyContext ctx) { log.DBG("enterInterfaceBody"); }
+  public void enterInterfaceBodyDeclaration(an5Parser.InterfaceBodyDeclarationContext ctx) { log.DBG("enterInterfaceBodyDeclaration"); }
   public void enterInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) {
-    DBG("enterInterfaceDeclaration");
+    log.DBG("enterInterfaceDeclaration");
     symtab.current = symtab.current.addChild();
   }
-  public void enterInterfaceMemberDeclaration(an5Parser.InterfaceMemberDeclarationContext ctx) { DBG("enterInterfaceMemberDeclaration"); }
-  public void enterInterfaceMethodDeclaration(an5Parser.InterfaceMethodDeclarationContext ctx) { DBG("enterInterfaceMethodDeclaration"); }
-  public void enterInterfaceMethodModifier(an5Parser.InterfaceMethodModifierContext ctx) { DBG("enterInterfaceMethodModifier"); }
-  public void enterInterfaceSignatureDeclaration(an5Parser.InterfaceSignatureDeclarationContext ctx) { DBG("enterInterfaceSignatureDeclaration"); }
-  public void enterLastFormalParameter(an5Parser.LastFormalParameterContext ctx) { DBG("enterLastFormalParameter"); }
-  public void enterLiteral(an5Parser.LiteralContext ctx) { DBG("enterLiteral"); }
-  public void enterLocalTypeDeclaration(an5Parser.LocalTypeDeclarationContext ctx) { DBG("enterLocalTypeDeclaration"); }
-  public void enterLocalVariableDeclaration(an5Parser.LocalVariableDeclarationContext ctx) { DBG("enterLocalVariableDeclaration"); }
-  public void enterMemberDeclaration(an5Parser.MemberDeclarationContext ctx) { DBG("enterMemberDeclaration"); }
-  public void enterModifier(an5Parser.ModifierContext ctx) { DBG("enterModifier"); }
-  public void enterNetworkType(an5Parser.NetworkTypeContext ctx) { DBG("enterNetworkType"); }
+  public void enterInterfaceMemberDeclaration(an5Parser.InterfaceMemberDeclarationContext ctx) { log.DBG("enterInterfaceMemberDeclaration"); }
+  public void enterInterfaceMethodDeclaration(an5Parser.InterfaceMethodDeclarationContext ctx) { log.DBG("enterInterfaceMethodDeclaration"); }
+  public void enterInterfaceMethodModifier(an5Parser.InterfaceMethodModifierContext ctx) { log.DBG("enterInterfaceMethodModifier"); }
+  public void enterInterfaceSignatureDeclaration(an5Parser.InterfaceSignatureDeclarationContext ctx) { log.DBG("enterInterfaceSignatureDeclaration"); }
+  public void enterLastFormalParameter(an5Parser.LastFormalParameterContext ctx) { log.DBG("enterLastFormalParameter"); }
+  public void enterLiteral(an5Parser.LiteralContext ctx) { log.DBG("enterLiteral"); }
+  public void enterLocalTypeDeclaration(an5Parser.LocalTypeDeclarationContext ctx) { log.DBG("enterLocalTypeDeclaration"); }
+  public void enterLocalVariableDeclaration(an5Parser.LocalVariableDeclarationContext ctx) { log.DBG("enterLocalVariableDeclaration"); }
+  public void enterMemberDeclaration(an5Parser.MemberDeclarationContext ctx) { log.DBG("enterMemberDeclaration"); }
+  public void enterModifier(an5Parser.ModifierContext ctx) { log.DBG("enterModifier"); }
+  public void enterNetworkType(an5Parser.NetworkTypeContext ctx) { log.DBG("enterNetworkType"); }
   public void enterPackageDeclaration(an5Parser.PackageDeclarationContext ctx) {
-    DBG("enterPackageDeclaration");
+    log.DBG("enterPackageDeclaration");
   }
-  public void enterParExpression(an5Parser.ParExpressionContext ctx) { DBG("enterParExpression"); }
-  public void enterPrimary(an5Parser.PrimaryContext ctx) { DBG("enterPrimary"); }
-  public void enterPrimitiveType(an5Parser.PrimitiveTypeContext ctx) { DBG("enterPrimitiveType"); }
-  public void enterQualifiedName(an5Parser.QualifiedNameContext ctx) { DBG("enterQualifiedName"); }
-  public void enterQualifiedNameList(an5Parser.QualifiedNameListContext ctx) { DBG("enterQualifiedNameList"); }
-  public void enterSignatureType(an5Parser.SignatureTypeContext ctx) { DBG("enterSignatureType"); }
-  public void enterStatement(an5Parser.StatementContext ctx) { DBG("enterStatement"); }
-  public void enterTypeArgument(an5Parser.TypeArgumentContext ctx) { DBG("enterTypeArgument"); }
-  public void enterTypeDeclaration(an5Parser.TypeDeclarationContext ctx) { DBG("enterTypeDeclaration"); }
-  public void enterTypeList(an5Parser.TypeListContext ctx) { DBG("enterTypeList"); }
-  public void enterTypeType(an5Parser.TypeTypeContext ctx) { DBG("enterTypeType"); }
-  public void enterTypeTypeOrVoid(an5Parser.TypeTypeOrVoidContext ctx) { DBG("enterTypeTypeOrVoid"); }
-  public void enterVariableDeclarator(an5Parser.VariableDeclaratorContext ctx) { DBG("enterVariableDeclarator"); }
-  public void enterVariableDeclaratorId(an5Parser.VariableDeclaratorIdContext ctx) { DBG("enterVariableDeclaratorId"); }
-  public void enterVariableDeclarators(an5Parser.VariableDeclaratorsContext ctx) { DBG("enterVariableDeclarators"); }
-  public void enterVariableInitializer(an5Parser.VariableInitializerContext ctx) { DBG("enterVariableInitializer"); }
-  public void enterVariableModifier(an5Parser.VariableModifierContext ctx) { DBG("enterVariableModifier"); }
-  public void exitAltAnnotationQualifiedName(an5Parser.AltAnnotationQualifiedNameContext ctx) { DBG("exitAltAnnotationQualifiedName"); }
-  public void exitAnnotation(an5Parser.AnnotationContext ctx) { DBG("exitAnnotation"); }
-  public void exitAnnotationConstantRest(an5Parser.AnnotationConstantRestContext ctx) { DBG("exitAnnotationConstantRest"); }
-  public void exitAnnotationMethodOrConstantRest(an5Parser.AnnotationMethodOrConstantRestContext ctx) { DBG("exitAnnotationMethodOrConstantRest"); }
-  public void exitAnnotationMethodRest(an5Parser.AnnotationMethodRestContext ctx) { DBG("exitAnnotationMethodRest"); }
-  public void exitAnnotationTypeBody(an5Parser.AnnotationTypeBodyContext ctx) { DBG("exitAnnotationTypeBody"); }
-  public void exitAnnotationTypeDeclaration(an5Parser.AnnotationTypeDeclarationContext ctx) { DBG("exitAnnotationTypeDeclaration"); }
-  public void exitAnnotationTypeElementDeclaration(an5Parser.AnnotationTypeElementDeclarationContext ctx) { DBG("exitAnnotationTypeElementDeclaration"); }
-  public void exitAnnotationTypeElementRest(an5Parser.AnnotationTypeElementRestContext ctx) { DBG("exitAnnotationTypeElementRest"); }
-  public void exitArguments(an5Parser.ArgumentsContext ctx) { DBG("exitArguments"); }
-  public void exitArrayInitializer(an5Parser.ArrayInitializerContext ctx) { DBG("exitArrayInitializer"); }
-  public void exitBlock(an5Parser.BlockContext ctx) { DBG("exitBlock"); }
-  public void exitBlockStatement(an5Parser.BlockStatementContext ctx) { DBG("exitBlockStatement"); }
-  public void exitClassBody(an5Parser.ClassBodyContext ctx) { DBG("exitClassBody"); }
-  public void exitClassBodyDeclaration(an5Parser.ClassBodyDeclarationContext ctx) { DBG("exitClassBodyDeclaration"); }
+  public void enterParExpression(an5Parser.ParExpressionContext ctx) { log.DBG("enterParExpression"); }
+  public void enterPrimary(an5Parser.PrimaryContext ctx) { log.DBG("enterPrimary"); }
+  public void enterPrimitiveType(an5Parser.PrimitiveTypeContext ctx) { log.DBG("enterPrimitiveType"); }
+  public void enterQualifiedName(an5Parser.QualifiedNameContext ctx) { log.DBG("enterQualifiedName"); }
+  public void enterQualifiedNameList(an5Parser.QualifiedNameListContext ctx) { log.DBG("enterQualifiedNameList"); }
+  public void enterSignatureType(an5Parser.SignatureTypeContext ctx) { log.DBG("enterSignatureType"); }
+  public void enterStatement(an5Parser.StatementContext ctx) { log.DBG("enterStatement"); }
+  public void enterTypeArgument(an5Parser.TypeArgumentContext ctx) { log.DBG("enterTypeArgument"); }
+  public void enterTypeDeclaration(an5Parser.TypeDeclarationContext ctx) { log.DBG("enterTypeDeclaration"); }
+  public void enterTypeList(an5Parser.TypeListContext ctx) { log.DBG("enterTypeList"); }
+  public void enterTypeType(an5Parser.TypeTypeContext ctx) { log.DBG("enterTypeType"); }
+  public void enterTypeTypeOrVoid(an5Parser.TypeTypeOrVoidContext ctx) { log.DBG("enterTypeTypeOrVoid"); }
+  public void enterVariableDeclarator(an5Parser.VariableDeclaratorContext ctx) { log.DBG("enterVariableDeclarator"); }
+  public void enterVariableDeclaratorId(an5Parser.VariableDeclaratorIdContext ctx) { log.DBG("enterVariableDeclaratorId"); }
+  public void enterVariableDeclarators(an5Parser.VariableDeclaratorsContext ctx) { log.DBG("enterVariableDeclarators"); }
+  public void enterVariableInitializer(an5Parser.VariableInitializerContext ctx) { log.DBG("enterVariableInitializer"); }
+  public void enterVariableModifier(an5Parser.VariableModifierContext ctx) { log.DBG("enterVariableModifier"); }
+  public void exitAltAnnotationQualifiedName(an5Parser.AltAnnotationQualifiedNameContext ctx) { log.DBG("exitAltAnnotationQualifiedName"); }
+  public void exitAnnotation(an5Parser.AnnotationContext ctx) { log.DBG("exitAnnotation"); }
+  public void exitAnnotationConstantRest(an5Parser.AnnotationConstantRestContext ctx) { log.DBG("exitAnnotationConstantRest"); }
+  public void exitAnnotationMethodOrConstantRest(an5Parser.AnnotationMethodOrConstantRestContext ctx) { log.DBG("exitAnnotationMethodOrConstantRest"); }
+  public void exitAnnotationMethodRest(an5Parser.AnnotationMethodRestContext ctx) { log.DBG("exitAnnotationMethodRest"); }
+  public void exitAnnotationTypeBody(an5Parser.AnnotationTypeBodyContext ctx) { log.DBG("exitAnnotationTypeBody"); }
+  public void exitAnnotationTypeDeclaration(an5Parser.AnnotationTypeDeclarationContext ctx) { log.DBG("exitAnnotationTypeDeclaration"); }
+  public void exitAnnotationTypeElementDeclaration(an5Parser.AnnotationTypeElementDeclarationContext ctx) { log.DBG("exitAnnotationTypeElementDeclaration"); }
+  public void exitAnnotationTypeElementRest(an5Parser.AnnotationTypeElementRestContext ctx) { log.DBG("exitAnnotationTypeElementRest"); }
+  public void exitArguments(an5Parser.ArgumentsContext ctx) { log.DBG("exitArguments"); }
+  public void exitArrayInitializer(an5Parser.ArrayInitializerContext ctx) { log.DBG("exitArrayInitializer"); }
+  public void exitBlock(an5Parser.BlockContext ctx) { log.DBG("exitBlock"); }
+  public void exitBlockStatement(an5Parser.BlockStatementContext ctx) { log.DBG("exitBlockStatement"); }
+  public void exitClassBody(an5Parser.ClassBodyContext ctx) { log.DBG("exitClassBody"); }
+  public void exitClassBodyDeclaration(an5Parser.ClassBodyDeclarationContext ctx) { log.DBG("exitClassBodyDeclaration"); }
   public void exitClassDeclaration(an5Parser.ClassDeclarationContext ctx) {
-    DBG("exitClassDeclaration");
+    log.DBG("exitClassDeclaration");
     String newClass = ctx.IDENTIFIER().getText();
     StringBuilder extendsKey = new StringBuilder("object");
     List<String> exposesKeys = new ArrayList<>();
     
     extractTypeTypeKey(ctx.typeType(), extendsKey);
     extractTypeListKeys(ctx.typeList(), exposesKeys);
-    
-	DBG(diags, "Class - '" + newClass + "' extends - '" + extendsKey + "'");   
+   
+	log.DBG(diags, "Class - '" + newClass + "' extends - '" + extendsKey + "'");
+	
+    an5ClassValue newClVal = new an5ClassValue("class", newClass);
+    an5TypeValue res = symtab.insert(newClass, newClVal);
+    if (res != null) {
+      log.ERR(3, "<log.ERR>:AN5:Duplicate Name: [" + res.isA + "]" + res.value + ".");
+    }
+    else {
+      res = symtab.select(extendsKey.toString());
+  	  if (res == null) {
+  	    newClVal.classExtended = new an5UnresolvedClassValue("class", extendsKey.toString());
+  	  }
+  	  else if (res instanceof an5UnresolvedClassValue) {
+  	    an5UnresolvedClassValue fix = (an5UnresolvedClassValue)res;
+  	    fix.resolvedTo = res;
+  	  }
+  	  else if (res instanceof an5ClassValue) {
+  	    newClVal.classExtended = (an5ClassValue)res;
+  	  }
+  	  else {
+  	    log.ERR(3, "<ERR>:AN5:Class Extension Type Invalid: [" + res.isA + "]" + res.value + ".");
+  	  }      
+/*      for (String s: exposesKeys) {
+        res = symtab.select(s);
+    	if (res == null) {
+    	  newIfVal.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s));
+    	}
+    	else if (res instanceof an5UnresolvedInterfaceValue) {
+    	  an5UnresolvedInterfaceValue fix = (an5UnresolvedInterfaceValue)res;
+    	  fix.resolvedTo = res;
+    	}
+    	else if (res instanceof an5InterfaceValue) {
+    	  newIfVal.interfacesExtended.add((an5InterfaceValue)res);
+    	}
+    	else {
+    	  log.ERR(3, "<ERR>:AN5:Interface Extension Type Invalid: [" + res.isA + "]" + res.value + ".");
+    	}
+      } */
+    }
     symtab.current = symtab.current.getParent();
   }
-  public void exitClassOrInterfaceModifier(an5Parser.ClassOrInterfaceModifierContext ctx) { DBG("exitClassOrInterfaceModifier"); }
-  public void exitClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { DBG("exitClassOrInterfaceType"); }
+  public void exitClassOrInterfaceModifier(an5Parser.ClassOrInterfaceModifierContext ctx) { log.DBG("exitClassOrInterfaceModifier"); }
+  public void exitClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { log.DBG("exitClassOrInterfaceType"); }
   public void exitCompilationUnit(an5Parser.CompilationUnitContext ctx) {
-	DBG("exitCompilationUnit");
+	log.DBG("exitCompilationUnit");
   }
-  public void exitConstantDeclarator(an5Parser.ConstantDeclaratorContext ctx) { DBG("exitConstantDeclarator"); }
-  public void exitConstDeclaration(an5Parser.ConstDeclarationContext ctx) { DBG("exitConstDeclaration"); }
-  public void exitDefaultValue(an5Parser.DefaultValueContext ctx) { DBG("exitDefaultValue"); }
-  public void exitElementValue(an5Parser.ElementValueContext ctx) { DBG("exitElementValue"); }
-  public void exitElementValueArrayInitializer(an5Parser.ElementValueArrayInitializerContext ctx) { DBG("exitElementValueArrayInitializer"); }
-  public void exitElementValuePair(an5Parser.ElementValuePairContext ctx) { DBG("exitElementValuePair"); }
-  public void exitElementValuePairs(an5Parser.ElementValuePairsContext ctx) { DBG("exitElementValuePairs"); }
-  public void exitEnumBodyDeclarations(an5Parser.EnumBodyDeclarationsContext ctx) { DBG("exitEnumBodyDeclarations"); }
-  public void exitEnumConstant(an5Parser.EnumConstantContext ctx) { DBG("exitEnumConstant"); }
-  public void exitEnumConstants(an5Parser.EnumConstantsContext ctx) { DBG("exitEnumConstants"); }
-  public void exitEnumDeclaration(an5Parser.EnumDeclarationContext ctx) { DBG("exitEnumDeclaration"); }
-  public void exitExpression(an5Parser.ExpressionContext ctx) { DBG("exitExpression"); }
-  public void exitExpressionList(an5Parser.ExpressionListContext ctx) { DBG("exitExpressionList"); }
-  public void exitFieldDeclaration(an5Parser.FieldDeclarationContext ctx) { DBG("exitFieldDeclaration"); }
-  public void exitFloatLiteral(an5Parser.FloatLiteralContext ctx) { DBG("exitFloatLiteral"); }
-  public void exitFormalParameter(an5Parser.FormalParameterContext ctx) { DBG("exitFormalParameter"); }
-  public void exitFormalParameterList(an5Parser.FormalParameterListContext ctx) { DBG("exitFormalParameterList"); }
-  public void exitFormalParameters(an5Parser.FormalParametersContext ctx) { DBG("exitFormalParameters"); }
-  public void exitImportDeclaration(an5Parser.ImportDeclarationContext ctx) { DBG("exitImportDeclaration"); }
-  public void exitIntegerLiteral(an5Parser.IntegerLiteralContext ctx) { DBG("exitIntegerLiteral"); }
-  public void exitInterfaceBody(an5Parser.InterfaceBodyContext ctx) { DBG("exitInterfaceBody"); }
-  public void exitInterfaceBodyDeclaration(an5Parser.InterfaceBodyDeclarationContext ctx) { DBG("exitInterfaceBodyDeclaration"); }
+  public void exitConstantDeclarator(an5Parser.ConstantDeclaratorContext ctx) { log.DBG("exitConstantDeclarator"); }
+  public void exitConstDeclaration(an5Parser.ConstDeclarationContext ctx) { log.DBG("exitConstDeclaration"); }
+  public void exitDefaultValue(an5Parser.DefaultValueContext ctx) { log.DBG("exitDefaultValue"); }
+  public void exitElementValue(an5Parser.ElementValueContext ctx) { log.DBG("exitElementValue"); }
+  public void exitElementValueArrayInitializer(an5Parser.ElementValueArrayInitializerContext ctx) { log.DBG("exitElementValueArrayInitializer"); }
+  public void exitElementValuePair(an5Parser.ElementValuePairContext ctx) { log.DBG("exitElementValuePair"); }
+  public void exitElementValuePairs(an5Parser.ElementValuePairsContext ctx) { log.DBG("exitElementValuePairs"); }
+  public void exitEnumBodyDeclarations(an5Parser.EnumBodyDeclarationsContext ctx) { log.DBG("exitEnumBodyDeclarations"); }
+  public void exitEnumConstant(an5Parser.EnumConstantContext ctx) { log.DBG("exitEnumConstant"); }
+  public void exitEnumConstants(an5Parser.EnumConstantsContext ctx) { log.DBG("exitEnumConstants"); }
+  public void exitEnumDeclaration(an5Parser.EnumDeclarationContext ctx) { log.DBG("exitEnumDeclaration"); }
+  public void exitExpression(an5Parser.ExpressionContext ctx) { log.DBG("exitExpression"); }
+  public void exitExpressionList(an5Parser.ExpressionListContext ctx) { log.DBG("exitExpressionList"); }
+  public void exitFieldDeclaration(an5Parser.FieldDeclarationContext ctx) { log.DBG("exitFieldDeclaration"); }
+  public void exitFloatLiteral(an5Parser.FloatLiteralContext ctx) { log.DBG("exitFloatLiteral"); }
+  public void exitFormalParameter(an5Parser.FormalParameterContext ctx) { log.DBG("exitFormalParameter"); }
+  public void exitFormalParameterList(an5Parser.FormalParameterListContext ctx) { log.DBG("exitFormalParameterList"); }
+  public void exitFormalParameters(an5Parser.FormalParametersContext ctx) { log.DBG("exitFormalParameters"); }
+  public void exitImportDeclaration(an5Parser.ImportDeclarationContext ctx) { log.DBG("exitImportDeclaration"); }
+  public void exitIntegerLiteral(an5Parser.IntegerLiteralContext ctx) { log.DBG("exitIntegerLiteral"); }
+  public void exitInterfaceBody(an5Parser.InterfaceBodyContext ctx) { log.DBG("exitInterfaceBody"); }
+  public void exitInterfaceBodyDeclaration(an5Parser.InterfaceBodyDeclarationContext ctx) { log.DBG("exitInterfaceBodyDeclaration"); }
   public void exitInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) {
-    DBG("exitInterfaceDeclaration");
-    String newInterface = ctx.IDENTIFIER().getText();
+    log.DBG("exitInterfaceDeclaration");
+    String newIfName = ctx.IDENTIFIER().getText();
     List<String> exposesKeys = new ArrayList<>();
  
     extractTypeListKeys(ctx.typeList(), exposesKeys);
+    
+    an5InterfaceValue newIfVal = new an5InterfaceValue("interface", newIfName);
+    an5TypeValue res = symtab.insert(newIfName, newIfVal);
+    if (res != null) {
+      log.ERR(3, "<log.ERR>:AN5:Duplicate Name: [" + res.isA + "]" + res.value + ".");
+    }
+    else {
+      for (String s: exposesKeys) {
+        res = symtab.select(s);
+    	if (res == null) {
+    	  newIfVal.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s));
+    	}
+    	else if (res instanceof an5UnresolvedInterfaceValue) {
+    	  an5UnresolvedInterfaceValue fix = (an5UnresolvedInterfaceValue)res;
+    	  fix.resolvedTo = res;
+    	}
+    	else if (res instanceof an5InterfaceValue) {
+    	  newIfVal.interfacesExtended.add((an5InterfaceValue)res);
+    	}
+    	else {
+    	  log.ERR(3, "<ERR>:AN5:Interface Extension Type Invalid: [" + res.isA + "]" + res.value + ".");
+    	}
+      }
+    }
     symtab.current = symtab.current.getParent();
   }
-  public void exitInterfaceMemberDeclaration(an5Parser.InterfaceMemberDeclarationContext ctx) { DBG("exitInterfaceMemberDeclaration"); }
-  public void exitInterfaceMethodDeclaration(an5Parser.InterfaceMethodDeclarationContext ctx) { DBG("exitInterfaceMethodDeclaration"); }
-  public void exitInterfaceMethodModifier(an5Parser.InterfaceMethodModifierContext ctx) { DBG("exitInterfaceMethodModifier"); }
-  public void exitInterfaceSignatureDeclaration(an5Parser.InterfaceSignatureDeclarationContext ctx) { DBG("exitInterfaceSignatureDeclaration"); }
-  public void exitLastFormalParameter(an5Parser.LastFormalParameterContext ctx) { DBG("exitLastFormalParameter"); }
-  public void exitLiteral(an5Parser.LiteralContext ctx) { DBG("exitLiteral"); }
-  public void exitLocalTypeDeclaration(an5Parser.LocalTypeDeclarationContext ctx) { DBG("exitLocalTypeDeclaration"); }
-  public void exitLocalVariableDeclaration(an5Parser.LocalVariableDeclarationContext ctx) { DBG("exitLocalVariableDeclaration"); }
-  public void exitMemberDeclaration(an5Parser.MemberDeclarationContext ctx) { DBG("exitMemberDeclaration"); }
-  public void exitModifier(an5Parser.ModifierContext ctx) { DBG("exitModifier"); }
-  public void exitNetworkType(an5Parser.NetworkTypeContext ctx) { DBG("exitNetworkType"); }
+  public void exitInterfaceMemberDeclaration(an5Parser.InterfaceMemberDeclarationContext ctx) { log.DBG("exitInterfaceMemberDeclaration"); }
+  public void exitInterfaceMethodDeclaration(an5Parser.InterfaceMethodDeclarationContext ctx) { log.DBG("exitInterfaceMethodDeclaration"); }
+  public void exitInterfaceMethodModifier(an5Parser.InterfaceMethodModifierContext ctx) { log.DBG("exitInterfaceMethodModifier"); }
+  public void exitInterfaceSignatureDeclaration(an5Parser.InterfaceSignatureDeclarationContext ctx) { log.DBG("exitInterfaceSignatureDeclaration"); }
+  public void exitLastFormalParameter(an5Parser.LastFormalParameterContext ctx) { log.DBG("exitLastFormalParameter"); }
+  public void exitLiteral(an5Parser.LiteralContext ctx) { log.DBG("exitLiteral"); }
+  public void exitLocalTypeDeclaration(an5Parser.LocalTypeDeclarationContext ctx) { log.DBG("exitLocalTypeDeclaration"); }
+  public void exitLocalVariableDeclaration(an5Parser.LocalVariableDeclarationContext ctx) { log.DBG("exitLocalVariableDeclaration"); }
+  public void exitMemberDeclaration(an5Parser.MemberDeclarationContext ctx) { log.DBG("exitMemberDeclaration"); }
+  public void exitModifier(an5Parser.ModifierContext ctx) { log.DBG("exitModifier"); }
+  public void exitNetworkType(an5Parser.NetworkTypeContext ctx) { log.DBG("exitNetworkType"); }
   public void exitPackageDeclaration(an5Parser.PackageDeclarationContext ctx) {
-    DBG("exitPackageDeclaration");
+    log.DBG("exitPackageDeclaration");
     String qualName;
     List<TerminalNode> nodes = ctx.qualifiedName().IDENTIFIER();
     
     qualName = nodes.get(0).getText();
     for (int i = 1; i < nodes.size(); i++) 
       qualName = qualName + "." + nodes.get(i);
-    DBG(diags, "Adding Package: " + qualName);
+    log.DBG(diags, "Adding Package: " + qualName);
     symtab.current = new an5ModelContext();
     symtab.packageContexts.put(qualName, symtab.current);
   }
-  public void exitParExpression(an5Parser.ParExpressionContext ctx) { DBG("exitParExpression"); }
-  public void exitPrimary(an5Parser.PrimaryContext ctx) { DBG("exitPrimary"); }
-  public void exitPrimitiveType(an5Parser.PrimitiveTypeContext ctx) { DBG("exitPrimitiveType"); }
-  public void exitQualifiedName(an5Parser.QualifiedNameContext ctx) { DBG("exitQualifiedName"); }
-  public void exitQualifiedNameList(an5Parser.QualifiedNameListContext ctx) { DBG("exitQualifiedNameList"); }
-  public void exitSignatureType(an5Parser.SignatureTypeContext ctx) { DBG("exitSignatureType"); }
-  public void exitStatement(an5Parser.StatementContext ctx) { DBG("exitStatement"); }
-  public void exitTypeArgument(an5Parser.TypeArgumentContext ctx) { DBG("exitTypeArgument"); }
-  public void exitTypeDeclaration(an5Parser.TypeDeclarationContext ctx) { DBG("exitTypeDeclaration"); }
-  public void exitTypeList(an5Parser.TypeListContext ctx) { DBG("exitTypeList"); }
-  public void exitTypeType(an5Parser.TypeTypeContext ctx) { DBG("exitTypeType"); }
-  public void exitTypeTypeOrVoid(an5Parser.TypeTypeOrVoidContext ctx) { DBG("exitTypeTypeOrVoid"); }
-  public void exitVariableDeclarator(an5Parser.VariableDeclaratorContext ctx) { DBG("exitVariableDeclarator"); }
-  public void exitVariableDeclaratorId(an5Parser.VariableDeclaratorIdContext ctx) { DBG("exitVariableDeclaratorId"); }
-  public void exitVariableDeclarators(an5Parser.VariableDeclaratorsContext ctx) { DBG("exitVariableDeclarators"); }
-  public void exitVariableInitializer(an5Parser.VariableInitializerContext ctx) { DBG("exitVariableInitializer"); }
-  public void exitVariableModifier(an5Parser.VariableModifierContext ctx) { DBG("exitVariableModifier"); }
+  public void exitParExpression(an5Parser.ParExpressionContext ctx) { log.DBG("exitParExpression"); }
+  public void exitPrimary(an5Parser.PrimaryContext ctx) { log.DBG("exitPrimary"); }
+  public void exitPrimitiveType(an5Parser.PrimitiveTypeContext ctx) { log.DBG("exitPrimitiveType"); }
+  public void exitQualifiedName(an5Parser.QualifiedNameContext ctx) { log.DBG("exitQualifiedName"); }
+  public void exitQualifiedNameList(an5Parser.QualifiedNameListContext ctx) { log.DBG("exitQualifiedNameList"); }
+  public void exitSignatureType(an5Parser.SignatureTypeContext ctx) { log.DBG("exitSignatureType"); }
+  public void exitStatement(an5Parser.StatementContext ctx) { log.DBG("exitStatement"); }
+  public void exitTypeArgument(an5Parser.TypeArgumentContext ctx) { log.DBG("exitTypeArgument"); }
+  public void exitTypeDeclaration(an5Parser.TypeDeclarationContext ctx) { log.DBG("exitTypeDeclaration"); }
+  public void exitTypeList(an5Parser.TypeListContext ctx) { log.DBG("exitTypeList"); }
+  public void exitTypeType(an5Parser.TypeTypeContext ctx) { log.DBG("exitTypeType"); }
+  public void exitTypeTypeOrVoid(an5Parser.TypeTypeOrVoidContext ctx) { log.DBG("exitTypeTypeOrVoid"); }
+  public void exitVariableDeclarator(an5Parser.VariableDeclaratorContext ctx) { log.DBG("exitVariableDeclarator"); }
+  public void exitVariableDeclaratorId(an5Parser.VariableDeclaratorIdContext ctx) { log.DBG("exitVariableDeclaratorId"); }
+  public void exitVariableDeclarators(an5Parser.VariableDeclaratorsContext ctx) { log.DBG("exitVariableDeclarators"); }
+  public void exitVariableInitializer(an5Parser.VariableInitializerContext ctx) { log.DBG("exitVariableInitializer"); }
+  public void exitVariableModifier(an5Parser.VariableModifierContext ctx) { log.DBG("exitVariableModifier"); }
 }
