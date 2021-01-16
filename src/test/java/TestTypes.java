@@ -19,9 +19,22 @@ class Sleeper {
   }
 }
 
-/* interface Slooper extends Sleeper {	
-} */
+class /* interface */ Slooper extends Sleeper {	
+}
 
+interface singer {
+  public String register();
+}
+
+interface SingingJumper extends Jumper, singer {
+	public String song();
+}
+
+class Wrapper implements Inside {
+  public interface Inside {
+	  public int hidden();
+  }
+}
 public class TestTypes {
 
 	public static void main(String[] args) {

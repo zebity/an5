@@ -20,12 +20,13 @@ interface pcie-interface {
   common = { "type=pcie", "width=(1|4|8|16)", "gen=([1-4]\\.*)"};
 }
 
+interface pcie-slot extends pci-interface {
+  needs = {"form=(card)?"};
+  provides = {"form=slot"};
+}
+
 class computer extends element exposes pcie-slot {
-  interface pcie-slot extends pci-interface {
-    needs = {"form=(card)?"};
-    provides = {"form=slot"};
-  }
-  interface slot[];
+  pcie-slot slot[];
   string name;
 }
 
@@ -37,32 +38,34 @@ interface ethernet-port-base-t {
   string name;
 }
 
+interface pcie-card extends pcie-interface {
+  needs = {"form=(slot)?"};
+  provides = {"form=card"};
+}
+
 class pcie-nic extends element exposes pcie-card, ethernet-port-base-t {
-  interface pcie-card extends pcie-interface {
-      needs = {"form=(slot)?"};
-      provides = {"form=card"};
-  }
-  interface card;
-  interface port[];
+  pcie-card card;
+  ethernet-port-base-1 port[];
 }
 
 class switch extends element exposes ethernet-port-base-t {
-  interface port[];
+  ethernet-port-base-t port[];
 }
 
 interface catx-cable {
   common = {"cable=(cat([3-8].?))?", "plug=rj45",
-                     "gender=male", "media=copper"};
+            "gender=male", "media=copper"};
 }
 
+interface cat6-cable extends catx-cable {
+  provides = {"cable=cat6"} ;
+  needs = {"plug=rj45", "gender=female"};
+}
+  
 class cat6-cable extends link exposes catx-cable {
-  interface cat6-cable extends catx-cable {
-    provides = {"cable=cat6"} ;
-    needs = {"plug=rj45", "gender=female"};
-  }
   string type = "physical",
          length,
          colour,
          label;
-   interface a, b;
+   catx-cable a, b;
 }

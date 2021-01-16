@@ -1,4 +1,4 @@
-# an5 V1.0
+# an5 V0.1
 
 - a nETWORK LANGUAGE WITH 5 CLASSES
 - an5 - is a network modelling language designed to allow description and

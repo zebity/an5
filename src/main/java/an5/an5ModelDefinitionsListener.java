@@ -64,7 +64,10 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void enterAnnotationTypeElementRest(an5Parser.AnnotationTypeElementRestContext ctx) { log.DBG("enterAnnotationTypeElementRest"); }
   public void enterArguments(an5Parser.ArgumentsContext ctx) { log.DBG("enterArguments"); }
   public void enterArrayInitializer(an5Parser.ArrayInitializerContext ctx) { log.DBG("enterArrayInitializer"); }
-  public void enterBlock(an5Parser.BlockContext ctx) { log.DBG("enterBlock"); }
+  public void enterBlock(an5Parser.BlockContext ctx) {
+	log.DBG("enterBlock");
+	symtab.current = symtab.current.addChild();
+  }
   public void enterBlockStatement(an5Parser.BlockStatementContext ctx) { log.DBG("enterBlockStatement"); }
   public void enterClassBody(an5Parser.ClassBodyContext ctx) { log.DBG("enterClassBody"); }
   public void enterClassBodyDeclaration(an5Parser.ClassBodyDeclarationContext ctx) { log.DBG("enterClassBodyDeclaration"); }
@@ -147,57 +150,61 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitAnnotationTypeElementRest(an5Parser.AnnotationTypeElementRestContext ctx) { log.DBG("exitAnnotationTypeElementRest"); }
   public void exitArguments(an5Parser.ArgumentsContext ctx) { log.DBG("exitArguments"); }
   public void exitArrayInitializer(an5Parser.ArrayInitializerContext ctx) { log.DBG("exitArrayInitializer"); }
-  public void exitBlock(an5Parser.BlockContext ctx) { log.DBG("exitBlock"); }
+  public void exitBlock(an5Parser.BlockContext ctx) {
+	log.DBG("exitBlock");
+    symtab.current = symtab.current.getParent();
+  }
   public void exitBlockStatement(an5Parser.BlockStatementContext ctx) { log.DBG("exitBlockStatement"); }
   public void exitClassBody(an5Parser.ClassBodyContext ctx) { log.DBG("exitClassBody"); }
   public void exitClassBodyDeclaration(an5Parser.ClassBodyDeclarationContext ctx) { log.DBG("exitClassBodyDeclaration"); }
   public void exitClassDeclaration(an5Parser.ClassDeclarationContext ctx) {
     log.DBG("exitClassDeclaration");
-    String newClass = ctx.IDENTIFIER().getText();
+    String newClassId = ctx.IDENTIFIER().getText();
     StringBuilder extendsKey = new StringBuilder("object");
     List<String> exposesKeys = new ArrayList<>();
     
     extractTypeTypeKey(ctx.typeType(), extendsKey);
     extractTypeListKeys(ctx.typeList(), exposesKeys);
    
-	log.DBG(diags, "Class - '" + newClass + "' extends - '" + extendsKey + "'");
+	log.DBG(diags, "Class - '" + newClassId + "' extends - '" + extendsKey + "'");
 	
-    an5ClassValue newClVal = new an5ClassValue("class", newClass);
-    an5TypeValue res = symtab.insert(newClass, newClVal);
+    an5ClassValue newClass = new an5ClassValue("class", newClassId);
+    an5TypeValue res = symtab.insert(newClassId, newClass);
     if (res != null) {
       log.ERR(3, "<log.ERR>:AN5:Duplicate Name: [" + res.isA + "]" + res.value + ".");
     }
     else {
       res = symtab.select(extendsKey.toString());
   	  if (res == null) {
-  	    newClVal.classExtended = new an5UnresolvedClassValue("class", extendsKey.toString());
+  	    newClass.classExtended = new an5UnresolvedClassValue("class", extendsKey.toString());
   	  }
   	  else if (res instanceof an5UnresolvedClassValue) {
   	    an5UnresolvedClassValue fix = (an5UnresolvedClassValue)res;
   	    fix.resolvedTo = res;
   	  }
   	  else if (res instanceof an5ClassValue) {
-  	    newClVal.classExtended = (an5ClassValue)res;
+  	    newClass.classExtended = (an5ClassValue)res;
   	  }
   	  else {
   	    log.ERR(3, "<ERR>:AN5:Class Extension Type Invalid: [" + res.isA + "]" + res.value + ".");
-  	  }      
-/*      for (String s: exposesKeys) {
-        res = symtab.select(s);
-    	if (res == null) {
-    	  newIfVal.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s));
-    	}
-    	else if (res instanceof an5UnresolvedInterfaceValue) {
-    	  an5UnresolvedInterfaceValue fix = (an5UnresolvedInterfaceValue)res;
-    	  fix.resolvedTo = res;
-    	}
-    	else if (res instanceof an5InterfaceValue) {
-    	  newIfVal.interfacesExtended.add((an5InterfaceValue)res);
-    	}
-    	else {
-    	  log.ERR(3, "<ERR>:AN5:Interface Extension Type Invalid: [" + res.isA + "]" + res.value + ".");
-    	}
-      } */
+  	  }
+    }
+  	for (String s: exposesKeys) {
+  	  an5InterfaceValue newIf = new an5InterfaceValue("class", s);
+      res = symtab.select(s);
+      if (res == null) {
+    	  newIf.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s));
+      }
+      else if (res instanceof an5UnresolvedInterfaceValue) {
+    	an5UnresolvedInterfaceValue fix = (an5UnresolvedInterfaceValue)res;
+    	fix.resolvedTo = res;
+      }
+      else if (res instanceof an5InterfaceValue) {
+    	newIf.interfacesExtended.add((an5InterfaceValue)res);
+      }
+      else {
+    	log.ERR(3, "<ERR>:AN5:Interface Extension Type Invalid: [" + res.isA + "]" + res.value + ".");
+      }
     }
     symtab.current = symtab.current.getParent();
   }
@@ -230,13 +237,13 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitInterfaceBodyDeclaration(an5Parser.InterfaceBodyDeclarationContext ctx) { log.DBG("exitInterfaceBodyDeclaration"); }
   public void exitInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) {
     log.DBG("exitInterfaceDeclaration");
-    String newIfName = ctx.IDENTIFIER().getText();
+    String newIfId = ctx.IDENTIFIER().getText();
     List<String> exposesKeys = new ArrayList<>();
  
     extractTypeListKeys(ctx.typeList(), exposesKeys);
     
-    an5InterfaceValue newIfVal = new an5InterfaceValue("interface", newIfName);
-    an5TypeValue res = symtab.insert(newIfName, newIfVal);
+    an5InterfaceValue newIf = new an5InterfaceValue("interface", newIfId);
+    an5TypeValue res = symtab.insert(newIfId, newIf);
     if (res != null) {
       log.ERR(3, "<log.ERR>:AN5:Duplicate Name: [" + res.isA + "]" + res.value + ".");
     }
@@ -244,14 +251,14 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
       for (String s: exposesKeys) {
         res = symtab.select(s);
     	if (res == null) {
-    	  newIfVal.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s));
+    	  newIf.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s));
     	}
     	else if (res instanceof an5UnresolvedInterfaceValue) {
     	  an5UnresolvedInterfaceValue fix = (an5UnresolvedInterfaceValue)res;
     	  fix.resolvedTo = res;
     	}
     	else if (res instanceof an5InterfaceValue) {
-    	  newIfVal.interfacesExtended.add((an5InterfaceValue)res);
+    	  newIf.interfacesExtended.add((an5InterfaceValue)res);
     	}
     	else {
     	  log.ERR(3, "<ERR>:AN5:Interface Extension Type Invalid: [" + res.isA + "]" + res.value + ".");
