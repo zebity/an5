@@ -5,10 +5,12 @@
 package an5;
 
 class an5TypeValue {
-	String isA,
-	       value;
-	an5TypeValue(String is, String val) {
-      isA = is;
-      value = val;
-	}
+  String isA,
+	     value,
+	     inPackage;
+  an5TypeValue(String is, String val, String pack) {
+    isA = is;
+    value = val;
+    inPackage = pack;
+  }
 }

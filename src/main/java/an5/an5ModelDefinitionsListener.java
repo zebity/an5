@@ -14,10 +14,12 @@ import an5.an5Parser.TypeTypeContext;
 
 class an5ModelDefinitionsListener extends an5ParserBaseListener {
   an5Logging log = new an5Logging();
+  an5Global globalDefs = new an5Global();
   int diags = 5;
   an5SymbolTable symtab;
   an5ModelDefinitionsListener() {
     symtab = new an5SymbolTable();
+    globalDefs.initSymbolTable(symtab);
   }
   void extractTypeTypeKey(an5Parser.TypeTypeContext extender, StringBuilder extendsKey) {
 	an5Parser.NetworkTypeContext netExtenders;
@@ -73,7 +75,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void enterClassBodyDeclaration(an5Parser.ClassBodyDeclarationContext ctx) { log.DBG("enterClassBodyDeclaration"); }
   public void enterClassDeclaration(an5Parser.ClassDeclarationContext ctx) {
     log.DBG("enterClassDeclaration");
-    symtab.current = symtab.current.addChild();
+//    symtab.current = symtab.current.addChild();
   }
   public void enterClassOrInterfaceModifier(an5Parser.ClassOrInterfaceModifierContext ctx) { log.DBG("enterClassOrInterfaceModifier"); }
   public void enterClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { log.DBG("enterClassOrInterfaceType"); }
@@ -106,7 +108,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void enterInterfaceBodyDeclaration(an5Parser.InterfaceBodyDeclarationContext ctx) { log.DBG("enterInterfaceBodyDeclaration"); }
   public void enterInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) {
     log.DBG("enterInterfaceDeclaration");
-    symtab.current = symtab.current.addChild();
+//    symtab.current = symtab.current.addChild();
   }
   public void enterInterfaceMemberDeclaration(an5Parser.InterfaceMemberDeclarationContext ctx) { log.DBG("enterInterfaceMemberDeclaration"); }
   public void enterInterfaceMethodDeclaration(an5Parser.InterfaceMethodDeclarationContext ctx) { log.DBG("enterInterfaceMethodDeclaration"); }
@@ -168,7 +170,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
    
 	log.DBG(diags, "Class - '" + newClassId + "' extends - '" + extendsKey + "'");
 	
-    an5ClassValue newClass = new an5ClassValue("class", newClassId);
+    an5ClassValue newClass = new an5ClassValue(newClassId, symtab.current.forPackage);
     an5TypeValue res = symtab.insert(newClassId, newClass);
     if (res != null) {
       log.ERR(3, "<log.ERR>:AN5:Duplicate Name: [" + res.isA + "]" + res.value + ".");
@@ -176,7 +178,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     else {
       res = symtab.select(extendsKey.toString());
   	  if (res == null) {
-  	    newClass.classExtended = new an5UnresolvedClassValue("class", extendsKey.toString());
+  	    newClass.classExtended = new an5UnresolvedClassValue("class", extendsKey.toString(), symtab.current.forPackage);
   	  }
   	  else if (res instanceof an5UnresolvedClassValue) {
   	    an5UnresolvedClassValue fix = (an5UnresolvedClassValue)res;
@@ -190,10 +192,10 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   	  }
     }
   	for (String s: exposesKeys) {
-  	  an5InterfaceValue newIf = new an5InterfaceValue("class", s);
+  	  an5InterfaceValue newIf = new an5InterfaceValue(s, symtab.current.forPackage);
       res = symtab.select(s);
       if (res == null) {
-    	  newIf.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s));
+    	  newIf.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s, symtab.current.forPackage));
       }
       else if (res instanceof an5UnresolvedInterfaceValue) {
     	an5UnresolvedInterfaceValue fix = (an5UnresolvedInterfaceValue)res;
@@ -206,7 +208,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     	log.ERR(3, "<ERR>:AN5:Interface Extension Type Invalid: [" + res.isA + "]" + res.value + ".");
       }
     }
-    symtab.current = symtab.current.getParent();
+//    symtab.current = symtab.current.getParent();
   }
   public void exitClassOrInterfaceModifier(an5Parser.ClassOrInterfaceModifierContext ctx) { log.DBG("exitClassOrInterfaceModifier"); }
   public void exitClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { log.DBG("exitClassOrInterfaceType"); }
@@ -242,7 +244,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
  
     extractTypeListKeys(ctx.typeList(), exposesKeys);
     
-    an5InterfaceValue newIf = new an5InterfaceValue("interface", newIfId);
+    an5InterfaceValue newIf = new an5InterfaceValue(newIfId, symtab.current.forPackage);
     an5TypeValue res = symtab.insert(newIfId, newIf);
     if (res != null) {
       log.ERR(3, "<log.ERR>:AN5:Duplicate Name: [" + res.isA + "]" + res.value + ".");
@@ -251,7 +253,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
       for (String s: exposesKeys) {
         res = symtab.select(s);
     	if (res == null) {
-    	  newIf.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s));
+    	  newIf.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s, an5Global.basePackage));
     	}
     	else if (res instanceof an5UnresolvedInterfaceValue) {
     	  an5UnresolvedInterfaceValue fix = (an5UnresolvedInterfaceValue)res;

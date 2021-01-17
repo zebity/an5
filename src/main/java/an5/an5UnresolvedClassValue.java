@@ -8,7 +8,9 @@ package an5;
 
 public class an5UnresolvedClassValue extends an5ClassValue {
   an5TypeValue resolvedTo = null;
-  an5UnresolvedClassValue(String target, String val) {
-	super("class", val);
+  String target;
+  an5UnresolvedClassValue(String targ, String val, String pack) {
+	super(val, pack);
+	target = targ;
   }
 }

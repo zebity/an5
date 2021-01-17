@@ -14,11 +14,13 @@ package an5;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
 
 class an5ModelContext {
   an5ModelContext defaultCxt = null,
 	              parentCxt = null;
-  ArrayList<an5ModelContext> children = new ArrayList<>();
+  String forPackage;
+  List<an5ModelContext> children = new ArrayList<>();
   Map<String, an5TypeValue> identifier = new HashMap<>();
   an5ModelContext() {
   } 
@@ -26,9 +28,13 @@ class an5ModelContext {
 	defaultCxt = def;
     parentCxt = null;
   } */
+  an5ModelContext(String forPkg) {
+	forPackage = forPkg;
+  }
   an5ModelContext(an5ModelContext d, an5ModelContext par) {
     defaultCxt = d;
     parentCxt = par;
+    forPackage = par.forPackage;
   }
   an5ModelContext addChild() {
     an5ModelContext res = new an5ModelContext(defaultCxt, this);

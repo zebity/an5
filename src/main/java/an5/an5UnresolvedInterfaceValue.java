@@ -8,7 +8,9 @@ package an5;
 
 public class an5UnresolvedInterfaceValue extends an5InterfaceValue {
   an5TypeValue resolvedTo = null;
-  an5UnresolvedInterfaceValue(String target, String val) {
-	super("interface", val);
+  String target;
+  an5UnresolvedInterfaceValue(String targ, String val, String pack) {
+	super(val, pack);
+	target = targ;
   }
 }

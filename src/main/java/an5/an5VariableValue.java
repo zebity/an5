@@ -5,7 +5,7 @@
 package an5;
 
 class an5VariableValue extends an5TypeValue {
-  an5VariableValue(String is, String val) {
-    super(is, val);
+  an5VariableValue(String is, String val, String pack) {
+    super(is, val, pack);
   }
 }
