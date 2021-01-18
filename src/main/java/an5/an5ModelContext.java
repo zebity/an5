@@ -17,8 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 
 class an5ModelContext {
-  an5ModelContext defaultCxt = null,
-	              parentCxt = null;
+  an5ModelContext parentCxt = null,
+	              rootCxt = null;
   String forPackage;
   List<an5ModelContext> children = new ArrayList<>();
   Map<String, an5TypeValue> identifier = new HashMap<>();
@@ -29,18 +29,27 @@ class an5ModelContext {
     parentCxt = null;
   } */
   an5ModelContext(String forPkg) {
-	forPackage = forPkg;
+	forPackage = new String(forPkg);
+	rootCxt = this;
   }
-  an5ModelContext(an5ModelContext d, an5ModelContext par) {
-    defaultCxt = d;
+  an5ModelContext(an5ModelContext par) {
     parentCxt = par;
     forPackage = par.forPackage;
+    rootCxt = par.rootCxt;
   }
   an5ModelContext addChild() {
-    an5ModelContext res = new an5ModelContext(defaultCxt, this);
+    an5ModelContext res = new an5ModelContext(this);
     return res;
   }
   an5ModelContext getParent() {
     return parentCxt;
   }
+/*  an5ModelContext getRoot() {
+	an5ModelContext res = this,
+			        nxt = parentCxt;
+    while (nxt != null) {
+      nxt = nxt.parentCxt;
+    }
+    return res;
+  } */
 }

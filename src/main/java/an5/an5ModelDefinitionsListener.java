@@ -19,7 +19,6 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   an5SymbolTable symtab;
   an5ModelDefinitionsListener() {
     symtab = new an5SymbolTable();
-    globalDefs.initSymbolTable(symtab);
   }
   void extractTypeTypeKey(an5Parser.TypeTypeContext extender, StringBuilder extendsKey) {
 	an5Parser.NetworkTypeContext netExtenders;
@@ -81,6 +80,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void enterClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { log.DBG("enterClassOrInterfaceType"); }
   public void enterCompilationUnit(an5Parser.CompilationUnitContext ctx) {
 	log.DBG("enterCompilationUnit");
+	symtab.reset();
   }
   public void enterConstantDeclarator(an5Parser.ConstantDeclaratorContext ctx) {
     log.DBG("enterConstantDeclarator");
@@ -267,7 +267,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     	}
       }
     }
-    symtab.current = symtab.current.getParent();
+//    symtab.current = symtab.current.getParent();
   }
   public void exitInterfaceMemberDeclaration(an5Parser.InterfaceMemberDeclarationContext ctx) { log.DBG("exitInterfaceMemberDeclaration"); }
   public void exitInterfaceMethodDeclaration(an5Parser.InterfaceMethodDeclarationContext ctx) { log.DBG("exitInterfaceMethodDeclaration"); }
@@ -289,8 +289,15 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     for (int i = 1; i < nodes.size(); i++) 
       qualName = qualName + "." + nodes.get(i);
     log.DBG(diags, "Adding Package: " + qualName);
-    symtab.current = new an5ModelContext();
-    symtab.packageContexts.put(qualName, symtab.current);
+    an5ModelContext res = symtab.packageContexts.get(qualName);
+    if (res == null) {
+      symtab.current = new an5ModelContext(qualName);
+      symtab.packageContexts.put(qualName, symtab.current);
+      symtab.searchList.add(symtab.current);
+    }
+    else {
+      symtab.current = res;
+    }
   }
   public void exitParExpression(an5Parser.ParExpressionContext ctx) { log.DBG("exitParExpression"); }
   public void exitPrimary(an5Parser.PrimaryContext ctx) { log.DBG("exitPrimary"); }

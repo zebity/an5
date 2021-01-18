@@ -11,33 +11,37 @@
 
 package an5;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
-import java.util.Map.Entry;
+// import java.util.Map.Entry;
 
 class an5SymbolTable {
   an5Logging log= new an5Logging();
   int diags = 5;
-  an5ModelContext root,
-                  current;
-  Map<String, an5ModelContext> packageContexts = new HashMap<>();
+  an5ModelContext current = null;
+  List<an5ModelContext> searchList = null;
+  Map<String, an5ModelContext> packageContexts = null;
   an5SymbolTable() {
-    root = new an5ModelContext();
-    packageContexts.put(".", root);
   }
-  an5TypeValue select(String key) {
+  void reset() {
+	an5Global.initSymbolTable(this);
+  }
+  an5TypeValue selectFrom(an5ModelContext srch, String key) {
 	an5TypeValue res = null;
-    an5ModelContext nxt = current;
-    log.DBG(diags, "<INFO> symtab.select[" + key + "]");
+    an5ModelContext nxt = srch;
+//    log.DBG(diags, "<INFO> symtab.select[" + key + "]");
     
     while (nxt != null) {
-      for (Entry<String, an5TypeValue> me: nxt.identifier.entrySet()) {
-     	 boolean tst = key == me.getKey();
+/*      for (Entry<String, an5TypeValue> me: nxt.identifier.entrySet()) {
+     	 boolean tst = key.equals(me.getKey());
      	 log.DBG(diags, "<INFO> symtab - Map[" + me.getKey() +
     			 "]='" + me.getValue().getClass().getName() + "' key==me.key = " +
      			 tst + ".");
 
-      }
+      } */
       res = nxt.identifier.get(key);
       if (res != null)
     	break;
@@ -46,12 +50,39 @@ class an5SymbolTable {
     }
     return res;
   }
+  an5TypeValue select(String key) {
+    return select(key, true);
+  }
+  an5TypeValue select(String key, boolean checkCurrent) {
+	an5TypeValue res = null;
+    an5ModelContext nxt;
+    log.DBG(diags, "<INFO> symtab.select[" + key + "]");
+    
+    if (checkCurrent)
+      res = selectFrom(current, key);
+    
+    if (res == null) {
+      for (ListIterator<an5ModelContext> it = searchList.listIterator(searchList.size()); it.hasPrevious();) {
+    	nxt = it.previous();
+    	if (nxt == current.rootCxt) {
+          continue; /* Skip current */
+    	}
+    	res = selectFrom(nxt, key);
+    	if (res != null)
+    	  break;
+      }
+    }
+    return res;
+  }
   an5TypeValue insert(String key, an5TypeValue val) {
 	an5TypeValue res = null;
 	
 	res = current.identifier.get(key);
-	if (res == null)
-      current.identifier.put(key, val);
+	if (res == null) {
+	  res = select(key, false);
+	  if (res == null)
+        current.identifier.put(key, val);
+	}
 	
 	return res;
   }	

@@ -20,7 +20,7 @@ interface pcie-interface {
   common = { "type=pcie", "width=(1|4|8|16)", "gen=([1-4]\\.*)"};
 }
 
-interface pcie-slot extends pci-interface {
+interface pcie-slot extends pcie-interface {
   needs = {"form=(card)?"};
   provides = {"form=slot"};
 }
@@ -52,17 +52,17 @@ class switch extends element exposes ethernet-port-base-t {
   ethernet-port-base-t port[];
 }
 
-interface catx-cable {
+interface catx-link {
   common = {"cable=(cat([3-8].?))?", "plug=rj45",
             "gender=male", "media=copper"};
 }
 
-interface cat6-cable extends catx-cable {
+interface cat6-link extends catx-link {
   provides = {"cable=cat6"} ;
   needs = {"plug=rj45", "gender=female"};
 }
   
-class cat6-cable extends link exposes catx-cable {
+class cat6-cable extends link exposes catx-link {
   string type = "physical",
          length,
          colour,

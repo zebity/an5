@@ -5,6 +5,11 @@
  */
 package an5;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+// import java.util.List;
+// import java.util.Map;
+
 // import java.util.function.BiFunction;
 
 public class an5Global {
@@ -59,7 +64,10 @@ public class an5Global {
 //	an5ClassValue newClass = new an5ClassValue("class", "network", basePackage);
 //	baseCxt.identifier.put(newClass.value, newClass);
 //  }
-  void initSymbolTable(an5SymbolTable symtab) {
+  static void initSymbolTable(an5SymbolTable symtab) {
+	symtab.searchList = new ArrayList<>();
+	symtab.packageContexts = new HashMap<>();
+	
 	an5ModelContext baseCxt = new an5ModelContext(basePackage);
 	symtab.packageContexts.put(basePackage, baseCxt);
 	
@@ -68,6 +76,10 @@ public class an5Global {
     baseCxt.identifier.put("element", elementFactory("element", objectRoot));    
     baseCxt.identifier.put("interface", interfaceFactory("interface", null));
     baseCxt.identifier.put("link", linkFactory("link", objectRoot));
-    baseCxt.identifier.put("path", pathFactory("path", objectRoot)); 
+    baseCxt.identifier.put("path", pathFactory("path", objectRoot));
+    symtab.searchList.add(baseCxt);
+    symtab.current = new an5ModelContext(".");
+    symtab.packageContexts.put(".", symtab.current);
+    symtab.searchList.add(symtab.current);
   }
 }
