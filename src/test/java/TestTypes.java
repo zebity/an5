@@ -22,19 +22,35 @@ class Sleeper {
 class /* interface */ Slooper extends Sleeper {	
 }
 
-interface singer {
+interface Singer {
   public String register();
 }
 
-interface SingingJumper extends Jumper, singer {
+interface SingingJumper extends Jumper, Singer {
 	public String song();
 }
 
+class KangarooSoprano implements SingingJumper {
+  public String register() {
+    return "high";
+  }
+  public String song() {
+    return "happy kangaroo";
+  }
+  public int jumpHeight() {
+    return 1;
+  }
+  public int jumpDistance() {
+	return 3;
+  }
+}
+/* Scope test - Inside not visible
 class Wrapper implements Inside {
   public interface Inside {
 	  public int hidden();
   }
-}
+} */
+
 public class TestTypes {
 
 	public static void main(String[] args) {
@@ -42,4 +58,13 @@ public class TestTypes {
 
 	}
 
+}
+
+class CollectionOfJumpers {
+  SingingJumper ref;
+  void putIfSinger(Jumper item) {
+    if (item instanceof SingingJumper) {
+      ref = (SingingJumper)item;
+    }
+  }
 }

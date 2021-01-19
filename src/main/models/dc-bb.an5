@@ -23,19 +23,40 @@ interface pcie-interface {
 interface pcie-slot extends pcie-interface {
   needs = {"form=(card)?"};
   provides = {"form=slot"};
+  string name;
 }
 
 class computer extends element exposes pcie-slot {
-  pcie-slot slot[];
+  reflects pcie-slot slot[];
   string name;
 }
 
 interface ethernet-port-base-t {
   common = { "service=ethernet", "plug=rj45"};
   needs = {"cable=(cat([3-8].?))?", "plug=rj45",
-                    "gender=male", "media=copper"};
+           "gender=male", "media=copper"};
   provides = {"rj45", "gender=female"};
   string name;
+}
+
+interface ethernet-lag {
+  common = { "service=(ethernet)+" }
+  string name;
+}
+
+interface ethernet-vlan {
+  common = { "service=(ethernet-vlan){0,4096}" }
+  needs = { "service=ethernet" };
+  string name;
+}
+
+class ethernet-lag-link extends link exposes ethernet-lag {
+  reflect ethernet-port-base-t ports[];
+}
+
+class ethernet-vlan-link extends link exposes ethernet-lag, ethernet-vlan {
+  reflects ethernet-lag lags[];
+  reflects ethernet-port-base-t ports[];
 }
 
 interface pcie-card extends pcie-interface {
@@ -44,12 +65,14 @@ interface pcie-card extends pcie-interface {
 }
 
 class pcie-nic extends element exposes pcie-card, ethernet-port-base-t {
-  pcie-card card;
-  ethernet-port-base-1 port[];
+  reflects pcie-card card;
+  reflects ethernet-port-base-t port[];
 }
 
-class switch extends element exposes ethernet-port-base-t {
-  ethernet-port-base-t port[];
+class switch extends element exposes ethernet-port-base-t, ethernet-vlan, exthernet-lag {
+  reflects ethernet-port-base-t port[];
+  reflects ethernet-vlan vlan[];
+  reflects ethernet-lag lag[];
 }
 
 interface catx-link {
@@ -67,5 +90,11 @@ class cat6-cable extends link exposes catx-link {
          length,
          colour,
          label;
-   catx-cable a, b;
+   reflects cat6-link a, b;
+}
+
+class ethernet-lan extends network {
+  switch fabric[];
+  computer hosts[];
+  catx-link cable[];  
 }

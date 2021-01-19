@@ -72,9 +72,10 @@ classOrInterfaceModifier
 //    | PROTECTED
 //    | PRIVATE
 //    | STATIC
-//    | ABSTRACT
+    | ABSTRACT
 //    | FINAL    // FINAL for class only -- does not apply to interfaces
 //    | STRICTFP
+    | REFLECTS
     ;
 
 variableModifier

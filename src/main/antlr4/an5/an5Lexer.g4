@@ -39,8 +39,9 @@ lexer grammar an5Lexer;
 
 // Keywords
 
-// ABSTRACT:           'abstract';
+ABSTRACT:           'abstract';
 // ASSERT:             'assert';
+BINDING:            'binding';
 BOOLEAN:            'boolean';
 // BREAK:              'break';
 BYTE:               'byte';
@@ -82,6 +83,7 @@ PATH:               'path';
 // PROTECTED:          'protected';
 PROVIDES:           'provides';
 // PUBLIC:             'public';
+REFLECTS:           'reflects';
 // RETURN:             'return';
 SHORT:              'short';
 // STATIC:             'static';
