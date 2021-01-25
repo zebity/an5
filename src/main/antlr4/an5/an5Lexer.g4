@@ -85,6 +85,7 @@ PROVIDES:           'provides';
 // PUBLIC:             'public';
 REFLECTS:           'reflects';
 // RETURN:             'return';
+SERVICE:            'service';
 SHORT:              'short';
 // STATIC:             'static';
 // STRICTFP:           'strictfp';
@@ -180,8 +181,8 @@ LINE_COMMENT:       '//' ~[\r\n]*    -> channel(HIDDEN);
 
 // Identifiers
 
-// IDENTIFIER:         Letter LetterOrDigit*;
-IDENTIFIER:         Letter LetterOrDigitOrDash*;
+IDENTIFIER:         Letter LetterOrDigit*;
+// IDENTIFIER:         Letter LetterOrDigitOrDash*;
 
 // Fragment rules
 
@@ -203,14 +204,16 @@ fragment HexDigit
 fragment Digits
     : [0-9] ([0-9_]* [0-9])?
     ;
-// fragment LetterOrDigit
-//    : Letter
-//    | [0-9]
-//    ;
-fragment LetterOrDigitOrDash
+fragment LetterOrDigit
     : Letter
-    | [0-9\-]
-    ;    
+    | [0-9]
+    ;
+    
+// fragment LetterOrDigitOrDash
+//    : Letter
+//    | [0-9\-]
+//    ;
+   
 fragment Letter
     : [a-zA-Z$_] // these are the "java letters" below 0x7F
     | ~[\u0000-\u007F\uD800-\uDBFF] // covers all characters above 0x7F which are not a surrogate

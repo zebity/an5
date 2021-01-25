@@ -73,15 +73,14 @@ classOrInterfaceModifier
 //    | PRIVATE
 //    | STATIC
     | ABSTRACT
+    | REFLECTS
 //    | FINAL    // FINAL for class only -- does not apply to interfaces
 //    | STRICTFP
-    | REFLECTS
     ;
 
 variableModifier
 //    : FINAL
     : annotation
-//    | annotation
     ;
 
 classDeclaration
@@ -144,7 +143,8 @@ classBodyDeclaration
 memberDeclaration
 //    : methodDeclaration
 //    | genericMethodDeclaration
-    : fieldDeclaration
+    : serviceSignatureDeclaration
+    | fieldDeclaration
 //    | fieldDeclaration
 //    | constructorDeclaration
 //    | genericConstructorDeclaration
@@ -187,6 +187,9 @@ typeTypeOrVoid
 //     : IDENTIFIER formalParameters (THROWS qualifiedNameList)? constructorBody=block
 //     ;
 
+serviceSignatureDeclaration
+    : SERVICE '=' arrayInitializer 
+    ;
 fieldDeclaration
     : typeType variableDeclarators ';'
     ;
@@ -329,7 +332,7 @@ altAnnotationQualifiedName
 annotation
     : ('@' qualifiedName | altAnnotationQualifiedName) ('(' ( elementValuePairs | elementValue )? ')')?
     ;
-
+   
 elementValuePairs
     : elementValuePair (',' elementValuePair)*
     ;
@@ -567,7 +570,7 @@ primary
 //     : (classOrInterfaceType '.')? annotation* IDENTIFIER typeArguments?
 //     ;
 
-// creator
+//creator
 //     : nonWildcardTypeArguments createdName classCreatorRest
 //     | createdName (arrayCreatorRest | classCreatorRest)
 //     ;

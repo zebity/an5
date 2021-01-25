@@ -68,3 +68,12 @@ class CollectionOfJumpers {
     }
   }
 }
+
+abstract class NotConcrete {
+
+}
+
+class Concrete {
+  static int SharedInt;
+  static int[] SharedArray = {1,2};
+}

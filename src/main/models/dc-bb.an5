@@ -16,85 +16,91 @@ package an5.generic.dcTypes;
   version = "1.0"
 )
 
-interface pcie-interface {
+interface pcie_interface {
   common = { "type=pcie", "width=(1|4|8|16)", "gen=([1-4]\\.*)"};
 }
 
-interface pcie-slot extends pcie-interface {
+interface pcie_slot extends pcie_interface {
   needs = {"form=(card)?"};
   provides = {"form=slot"};
   string name;
 }
 
-class computer extends element exposes pcie-slot {
-  reflects pcie-slot slot[];
+class computer extends element exposes pcie_slot {
+  reflects pcie_slot[] slot;
   string name;
 }
 
-interface ethernet-port-base-t {
-  common = { "service=ethernet", "plug=rj45"};
+interface ethernet_port {
+  common = { "service=ethernet"};
+  string name,
+         MAC;
+}
+ 
+interface ethernet_port_base_t extends ethernet_port {
+  common = { "plug=rj45"};
   needs = {"cable=(cat([3-8].?))?", "plug=rj45",
            "gender=male", "media=copper"};
-  provides = {"rj45", "gender=female"};
-  string name;
+  provides = {"plug=rj45", "gender=female"};
 }
 
-interface ethernet-lag {
+interface ethernet_lag {
   common = { "service=(ethernet)+" }
   string name;
 }
 
-interface ethernet-vlan {
+interface ethernet_vlan {
   common = { "service=(ethernet-vlan){0,4096}" }
   needs = { "service=ethernet" };
   string name;
 }
 
-class ethernet-lag-link extends link exposes ethernet-lag {
-  reflect ethernet-port-base-t ports[];
+class ethernet_lag_link extends link exposes ethernet_lag {
+  reflects ethernet_port_base_t[] ports;
 }
 
-class ethernet-vlan-link extends link exposes ethernet-lag, ethernet-vlan {
-  reflects ethernet-lag lags[];
-  reflects ethernet-port-base-t ports[];
+class ethernet_vlan_link extends link exposes ethernet_lag, ethernet_vlan {
+  reflects ethernet_lag lags[];
+  reflects ethernet_port_base_t ports[];
 }
 
-interface pcie-card extends pcie-interface {
+interface pcie_card extends pcie_interface {
   needs = {"form=(slot)?"};
   provides = {"form=card"};
 }
 
-class pcie-nic extends element exposes pcie-card, ethernet-port-base-t {
-  reflects pcie-card card;
-  reflects ethernet-port-base-t port[];
+class pcie_nic extends element exposes pcie_card, ethernet_port_base_t {
+  reflects pcie_card card;
+  reflects ethernet_port_base_t port[];
 }
 
-class switch extends element exposes ethernet-port-base-t, ethernet-vlan, exthernet-lag {
-  reflects ethernet-port-base-t port[];
-  reflects ethernet-vlan vlan[];
-  reflects ethernet-lag lag[];
+class switch extends element exposes ethernet_port_base_t, ethernet_vlan, exthernet_lag {
+  reflects ethernet_port_base_t port[];
+  reflects ethernet_vlan vlan[];
+  reflects ethernet_lag lag[];
 }
 
-interface catx-link {
+interface catx_link {
   common = {"cable=(cat([3-8].?))?", "plug=rj45",
             "gender=male", "media=copper"};
 }
 
-interface cat6-link extends catx-link {
+interface cat6_link extends catx_link {
   provides = {"cable=cat6"} ;
   needs = {"plug=rj45", "gender=female"};
 }
   
-class cat6-cable extends link exposes catx-link {
+class t6_cable extends link exposes catx_link {
   string type = "physical",
          length,
          colour,
          label;
-   reflects cat6-link a, b;
+   reflects cat6_link a, b;
 }
 
-class ethernet-lan extends network {
+abstract class ethernet_lan extends network {
   switch fabric[];
   computer hosts[];
-  catx-link cable[];  
+  catx_link cable[];
+  service = { "ethernet", "(ethernet_vlan)*" };
 }
