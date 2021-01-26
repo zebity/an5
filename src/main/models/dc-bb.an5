@@ -33,8 +33,8 @@ class computer extends element exposes pcie_slot {
 
 interface ethernet_port {
   common = { "service=ethernet"};
-  string name,
-         MAC;
+  string name = "",
+         MAC = "";
 }
  
 interface ethernet_port_base_t extends ethernet_port {
@@ -78,6 +78,7 @@ class switch extends element exposes ethernet_port_base_t, ethernet_vlan, exther
   reflects ethernet_port_base_t port[];
   reflects ethernet_vlan vlan[];
   reflects ethernet_lag lag[];
+  string name;
 }
 
 interface catx_link {
@@ -90,7 +91,7 @@ interface cat6_link extends catx_link {
   needs = {"plug=rj45", "gender=female"};
 }
   
-class t6_cable extends link exposes catx_link {
+class cat6_cable extends link exposes catx_link {
   string type = "physical",
          length,
          colour,
@@ -104,3 +105,4 @@ abstract class ethernet_lan extends network {
   catx_link cable[];
   service = { "ethernet", "(ethernet_vlan)*" };
 }
+

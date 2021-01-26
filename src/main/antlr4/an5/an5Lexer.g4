@@ -89,7 +89,7 @@ SERVICE:            'service';
 SHORT:              'short';
 // STATIC:             'static';
 // STRICTFP:           'strictfp';
-STRING:                 'string';
+STRING:             'string';
 // SUPER:              'super';
 // SWITCH:             'switch';
 // SYNCHRONIZED:       'synchronized';

@@ -7,6 +7,7 @@ package an5;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
@@ -125,6 +126,175 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   	    log.DBG(diags, "exposes - '" + key + "'");
 	  }
 	}	  
+  }
+  void extractVarVal(VariableInitializerContext nd, StringBuilder sigStr) {
+    log.DBG("extractVarVal");
+    
+    ExpressionContext exprCtx = nd.expression();
+    PrimaryContext priCtx = exprCtx.primary();
+    if (priCtx != null) {
+      LiteralContext litCtx = priCtx.literal();
+      if (litCtx != null) {
+        if (litCtx.STRING_LITERAL() != null) {
+          sigStr.setLength(0);
+          sigStr.append(litCtx.STRING_LITERAL().getText());
+        }
+      }
+	}
+  }
+  boolean getSignatureElementPairs(List<String> sigs, List<String[]> pairs, List<String> services, int[] cardinality) {
+    log.DBG("getSignatureElementPairs");
+    boolean setCard = false;
+    int idx,
+        cnt = 0;
+    String nm, val, card, num;
+    /* NOTE: string literals include the quotes, so remove these */
+    
+    for (String sig : sigs) {
+      idx = sig.indexOf('=');
+      if (idx == -1) {
+		log.ERR(3, "<log.ERR>:AN5:Signature Index has no name=value pair: [" + sig + "]."); 
+      }
+      else {
+        nm = sig.substring(1, idx);
+        val = sig.substring(idx + 1, sig.length()-1);
+        if (cnt == 0) {
+          if (val.charAt(0) == '(') {
+        	idx = val.lastIndexOf(')');
+        	if (idx != -1) {
+        	  card = val.substring(idx + 1, val.length());
+        	  if (card.length() == 1) {
+        		switch (card.charAt(0)) {
+        		  case '*': cardinality[0] = 0;
+        				    cardinality[1] = -1;
+        				    val = val.substring(1, idx);
+        				    setCard = true;
+        				    break;
+        		  case '?': cardinality[0] = 0;
+        		            cardinality[1] = 1;
+        				    val = val.substring(1, idx);
+        		            setCard = true;
+        		            break;
+        		  case '+': cardinality[0] = 1;
+        		            cardinality[1] = -1;
+        				    val = val.substring(1, idx);
+        		            setCard = true;
+        		            break;
+        		  default: log.ERR(3, "<log.ERR>:AN5:Signature Index has unknown cardinality indicator: [" + sig + "] - '" + card + "'."); 
+        		}  	 
+        	  }
+        	  else {
+        		if (card.charAt(0) == '{' && card.charAt(card.length()-1) == '}') {
+        		  val = val.substring(1, idx);
+        		  idx = card.indexOf(',');
+        		  num = card.substring(1, idx);
+        		  cardinality[0] = Integer.valueOf(num);
+        		  num = card.substring(idx + 1, card.length()-1);
+        		  cardinality[1] = Integer.valueOf(num);
+        		  setCard = true;
+        		}
+        		else {
+              	  log.ERR(3, "<log.ERR>:AN5:Signature Index has unkown/incomplete cardinality: [" + sig + "].");	
+        		}
+        	  }
+        	}
+          }
+        }
+        if (nm.equals(new String("service"))) {
+    	  services.add(val);
+        }
+        pairs.add(new String[]{nm, val});
+      }
+      cnt++;
+    }
+    return setCard;
+  }
+  void extractSignatureArrayInitializer(an5InterfaceValue ifNd, int sigFor, an5Parser.ArrayInitializerContext initCxt) {
+	log.DBG("extractSignatureArrayInitializer");
+	StringBuilder sigStr = new StringBuilder();
+    List<String> sigs = new ArrayList<>();
+    boolean cardinalityConflict = false,
+    		setCard;
+	
+	if (initCxt != null) {
+	  List<VariableInitializerContext> varInitCxt = initCxt.variableInitializer();
+	  for (VariableInitializerContext nd : varInitCxt) {
+	    sigStr.setLength(0);
+		extractVarVal(nd, sigStr);		
+	    sigs.add(sigStr.toString());
+	  	log.DBG(diags, "sig item - '" + sigStr + "'");
+	  }
+	  
+	  List<String[]> pairs = new ArrayList<>();
+	  List<String> services = new ArrayList<>();
+	  int[] cardinality = new int[]{0,-1};
+	  setCard = getSignatureElementPairs(sigs, pairs, services, cardinality);
+
+	  switch (sigFor) {
+	    case an5Lexer.COMMON: ifNd.base = sigs;
+	                          ifNd.basePair = pairs;
+	                          ifNd.services = services;
+	                          if (ifNd.cardinalityDefined && setCard) {
+		                        cardinalityConflict = true;
+	                          }
+		                      else if (setCard) {
+	                            ifNd.cardinalityMin = cardinality[0];
+	                            ifNd.cardinalityMax = cardinality[1];
+	                            ifNd.cardinalityDefined = true;
+	                          }
+	                          break;
+	    case an5Lexer.NEEDS: ifNd.needs = sigs;
+                             ifNd.needsPair = pairs;
+                             if (ifNd.cardinalityDefined && setCard) {
+                               cardinalityConflict = true;
+                             }
+                             else if (setCard) {
+                               ifNd.cardinalityMin = cardinality[0];
+                               ifNd.cardinalityMax = cardinality[1];
+	                           ifNd.cardinalityDefined = true;
+                             }
+                             break;
+	    case an5Lexer.PROVIDES: ifNd.provides = sigs;
+                                ifNd.providesPair = pairs;
+                                if (ifNd.cardinalityDefined && setCard) {
+                                  cardinalityConflict = true;
+                                }
+                                else if (setCard) {
+                                  ifNd.cardinalityMin = cardinality[0];
+                                  ifNd.cardinalityMax = cardinality[1];
+  	                              ifNd.cardinalityDefined = true;
+                                }
+	                            break;
+	  }
+	  if (cardinalityConflict) {
+        log.ERR(3, "<log.ERR>:AN5:Signature cardinarlity confict: [" + ifNd.isA + "]" + ifNd.value + "."); 		  
+	  }
+    }
+  }
+  an5InterfaceValue useInterfaceValue(an5Parser.InterfaceDeclarationContext ifCtx) {
+    log.DBG("useInterfaceValue");
+    String newIfId = ifCtx.IDENTIFIER().getText();
+	an5InterfaceValue ifNd = null;
+    boolean addIf = false;
+		      
+    an5TypeValue res = symtab.select(newIfId);
+    if (res != null) {
+	  if (res instanceof an5InterfaceValue) {
+		ifNd = (an5InterfaceValue)res;
+		if (! ifNd.fromSigDec) {
+		  ifNd = null;
+		  log.ERR(3, "<log.ERR>:AN5:Duplicate Name: [" + res.isA + "]" + res.value + ".");    		   
+		}
+      }
+	  else {
+		log.ERR(3, "<log.ERR>:AN5:Duplicate Name: [" + res.isA + "]" + res.value + ".");    		    
+      }
+    }
+    else {      
+      ifNd = new an5InterfaceValue(newIfId, symtab.current.forPackage);
+	  res = symtab.insert(newIfId, ifNd);
+	}
+    return ifNd;
   }
   public void enterAltAnnotationQualifiedName(an5Parser.AltAnnotationQualifiedNameContext ctx) { log.DBG("enterAltAnnotationQualifiedName"); }
   public void enterAnnotation(an5Parser.AnnotationContext ctx) { log.DBG("enterAnnotation"); }
@@ -313,26 +483,24 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     log.DBG("exitInterfaceDeclaration");
     String newIfId = ctx.IDENTIFIER().getText();
     List<String> exposesKeys = new ArrayList<>();
- 
+    an5TypeValue res = null;
+    
     extractTypeListKeys(ctx.typeList(), exposesKeys);
     
-    an5InterfaceValue newIf = new an5InterfaceValue(newIfId, symtab.current.forPackage);
-    an5TypeValue res = symtab.insert(newIfId, newIf);
-    if (res != null) {
-      log.ERR(3, "<log.ERR>:AN5:Duplicate Name: [" + res.isA + "]" + res.value + ".");
-    }
-    else {
+    an5InterfaceValue ifNd = useInterfaceValue(ctx);
+    if (ifNd != null) {
+      ifNd.fromSigDec = false;
       for (String s: exposesKeys) {
         res = symtab.select(s);
     	if (res == null) {
-    	  newIf.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s, an5Global.basePackage));
+    	  ifNd.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s, an5Global.basePackage));
     	}
     	else if (res instanceof an5UnresolvedInterfaceValue) {
     	  an5UnresolvedInterfaceValue fix = (an5UnresolvedInterfaceValue)res;
     	  fix.resolvedTo = res;
     	}
     	else if (res instanceof an5InterfaceValue) {
-    	  newIf.interfacesExtended.add((an5InterfaceValue)res);
+    	  ifNd.interfacesExtended.add((an5InterfaceValue)res);
     	}
     	else {
     	  log.ERR(3, "<ERR>:AN5:Interface Extension Type Invalid: [" + res.isA + "]" + res.value + ".");
@@ -344,7 +512,39 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitInterfaceMemberDeclaration(an5Parser.InterfaceMemberDeclarationContext ctx) { log.DBG("exitInterfaceMemberDeclaration"); }
   public void exitInterfaceMethodDeclaration(an5Parser.InterfaceMethodDeclarationContext ctx) { log.DBG("exitInterfaceMethodDeclaration"); }
   public void exitInterfaceMethodModifier(an5Parser.InterfaceMethodModifierContext ctx) { log.DBG("exitInterfaceMethodModifier"); }
-  public void exitInterfaceSignatureDeclaration(an5Parser.InterfaceSignatureDeclarationContext ctx) { log.DBG("exitInterfaceSignatureDeclaration"); }
+  public void exitInterfaceSignatureDeclaration(an5Parser.InterfaceSignatureDeclarationContext ctx) {
+	log.DBG("exitInterfaceSignatureDeclaration");
+	/* get parent interface */
+	RuleContext up = ctx.parent;
+	while (up != null) {
+      if (up instanceof an5Parser.InterfaceDeclarationContext) {
+        break;
+      }
+      up = up.parent;
+	}
+	
+	/* Extract signatures */
+	if (up == null) {
+      log.ERR(3, "<ERR>:AN5:Interface Signature Parent Not Found.");		
+	}
+	else {
+	  an5InterfaceValue ifNd = useInterfaceValue((an5Parser.InterfaceDeclarationContext)up);
+
+      if (ifNd != null) {
+		
+	    SignatureTypeContext sigCtx = ctx.signatureType();
+        if (sigCtx.COMMON() != null) {
+    	  extractSignatureArrayInitializer(ifNd, an5Lexer.COMMON, ctx.arrayInitializer());    	  
+        }
+        else if (sigCtx.NEEDS() != null) {
+    	  extractSignatureArrayInitializer(ifNd, an5Lexer.NEEDS, ctx.arrayInitializer());    	  
+        }
+        else if (sigCtx.PROVIDES() != null) {
+    	  extractSignatureArrayInitializer(ifNd, an5Lexer.PROVIDES, ctx.arrayInitializer());    	  
+        }
+	  }
+	}
+  }
   public void exitLastFormalParameter(an5Parser.LastFormalParameterContext ctx) { log.DBG("exitLastFormalParameter"); }
   public void exitLiteral(an5Parser.LiteralContext ctx) { log.DBG("exitLiteral"); }
   public void exitLocalTypeDeclaration(an5Parser.LocalTypeDeclarationContext ctx) { log.DBG("exitLocalTypeDeclaration"); }

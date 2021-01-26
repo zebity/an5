@@ -24,6 +24,9 @@ class /* interface */ Slooper extends Sleeper {
 
 interface Singer {
   public String register();
+  public class Notes {
+    String[] sings = { "a", "b", "c" };
+  }
 }
 
 interface SingingJumper extends Jumper, Singer {
@@ -77,3 +80,4 @@ class Concrete {
   static int SharedInt;
   static int[] SharedArray = {1,2};
 }
+
