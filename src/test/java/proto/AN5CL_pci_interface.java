@@ -1,3 +1,4 @@
+package proto;
 /*
  Prototype generate code
  */

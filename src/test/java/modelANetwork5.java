@@ -16,6 +16,7 @@ public class modelANetwork5 {
     an5Model model;
 	try {
 		model = an5Model.create(new String("test"), args[0]);
+		model.compile();
 	    model.info();
 	} catch (IOException e) {
 		// TODO Auto-generated catch block

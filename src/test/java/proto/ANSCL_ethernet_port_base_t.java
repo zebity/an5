@@ -1,3 +1,4 @@
+package proto;
 /**
  an5 prototype class implementation.
  This class should be generated from compiler

@@ -1,3 +1,4 @@
+package proto;
 /*
  An outline of what generated an5 java object would look like
 @author John Hartley - Graphica Software/Dokmai Pty Ltd

@@ -4,6 +4,7 @@
 
 package an5;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,8 +57,7 @@ import an5.an5Parser.InterfaceBodyContext;
 import an5.an5Parser.InterfaceBodyDeclarationContext;
 import an5.an5Parser.InterfaceDeclarationContext;
 import an5.an5Parser.InterfaceMemberDeclarationContext;
-import an5.an5Parser.InterfaceMethodDeclarationContext;
-import an5.an5Parser.InterfaceMethodModifierContext;
+import an5.an5Parser.InterfaceAttributeDeclarationContext;
 import an5.an5Parser.InterfaceSignatureDeclarationContext;
 import an5.an5Parser.LastFormalParameterContext;
 import an5.an5Parser.LiteralContext;
@@ -90,27 +90,29 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   an5Global globalDefs = new an5Global();
   int diags = 5;
   an5SymbolTable symtab;
-  an5ModelDefinitionsListener() {
+  String dirPath = null;
+  an5ModelDefinitionsListener(String dir) {
+	dirPath = new String(dir);
     symtab = new an5SymbolTable();
   }
-  void extractTypeTypeKey(an5Parser.TypeTypeContext extender, StringBuilder extendsKey) {
-	an5Parser.NetworkTypeContext netExtenders;
-	an5Parser.ClassOrInterfaceTypeContext clOrIfExtenders;
-	an5Parser.PrimitiveTypeContext primExtenders;
+  void extractTypeTypeKey(an5Parser.TypeTypeContext typeCtx, StringBuilder typeKey) {
+	an5Parser.NetworkTypeContext netType;
+	an5Parser.ClassOrInterfaceTypeContext clOrIfType;
+	an5Parser.PrimitiveTypeContext primType;
 	    
-	for (ParseTree nd : extender.children) {
+	for (ParseTree nd : typeCtx.children) {
 	  if (nd instanceof an5Parser.ClassOrInterfaceTypeContext) {
-	    clOrIfExtenders = (an5Parser.ClassOrInterfaceTypeContext)nd;
-	    extendsKey.setLength(0);
-	    extendsKey.append(clOrIfExtenders.getText());
+	    clOrIfType = (an5Parser.ClassOrInterfaceTypeContext)nd;
+	    typeKey.setLength(0);
+	    typeKey.append(clOrIfType.getText());
 	  } else if (nd instanceof an5Parser.NetworkTypeContext) {
-	    netExtenders = (an5Parser.NetworkTypeContext)nd;
-	    extendsKey.setLength(0);
-	    extendsKey.append(netExtenders.getText());    		
+	    netType = (an5Parser.NetworkTypeContext)nd;
+	    typeKey.setLength(0);
+	    typeKey.append(netType.getText());    		
 	  } else if (nd instanceof an5Parser.PrimitiveTypeContext) {
-	    primExtenders = (an5Parser.PrimitiveTypeContext)nd;
-	    extendsKey.setLength(0);
-	    extendsKey.append(primExtenders.getText());     		
+	    primType = (an5Parser.PrimitiveTypeContext)nd;
+	    typeKey.setLength(0);
+	    typeKey.append(primType.getText());     		
 	  }
 	}
   }
@@ -353,8 +355,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 //    symtab.current = symtab.current.addChild();
   }
   public void enterInterfaceMemberDeclaration(an5Parser.InterfaceMemberDeclarationContext ctx) { log.DBG("enterInterfaceMemberDeclaration"); }
-  public void enterInterfaceMethodDeclaration(an5Parser.InterfaceMethodDeclarationContext ctx) { log.DBG("enterInterfaceMethodDeclaration"); }
-  public void enterInterfaceMethodModifier(an5Parser.InterfaceMethodModifierContext ctx) { log.DBG("enterInterfaceMethodModifier"); }
+  public void enterInterfaceAttributeDeclaration(an5Parser.InterfaceAttributeDeclarationContext ctx) { log.DBG("enterInterfaceAttributeDeclaration"); }
   public void enterInterfaceSignatureDeclaration(an5Parser.InterfaceSignatureDeclarationContext ctx) { log.DBG("enterInterfaceSignatureDeclaration"); }
   public void enterLastFormalParameter(an5Parser.LastFormalParameterContext ctx) { log.DBG("enterLastFormalParameter"); }
   public void enterLiteral(an5Parser.LiteralContext ctx) { log.DBG("enterLiteral"); }
@@ -456,6 +457,17 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { log.DBG("exitClassOrInterfaceType"); }
   public void exitCompilationUnit(an5Parser.CompilationUnitContext ctx) {
 	log.DBG("exitCompilationUnit");
+	int res;
+	
+	an5Generate generator = new an5Generate(symtab, dirPath, an5Global.interfacePrefix, an5Global.classPrefix);
+	
+	res = generator.makePackage();
+	try {
+		res = generator.generateInterfaceDefinitions();
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}	
   }
   public void exitConstantDeclarator(an5Parser.ConstantDeclaratorContext ctx) { log.DBG("exitConstantDeclarator"); }
   public void exitConstDeclaration(an5Parser.ConstDeclarationContext ctx) { log.DBG("exitConstDeclaration"); }
@@ -510,8 +522,43 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 //    symtab.current = symtab.current.getParent();
   }
   public void exitInterfaceMemberDeclaration(an5Parser.InterfaceMemberDeclarationContext ctx) { log.DBG("exitInterfaceMemberDeclaration"); }
-  public void exitInterfaceMethodDeclaration(an5Parser.InterfaceMethodDeclarationContext ctx) { log.DBG("exitInterfaceMethodDeclaration"); }
-  public void exitInterfaceMethodModifier(an5Parser.InterfaceMethodModifierContext ctx) { log.DBG("exitInterfaceMethodModifier"); }
+  public void exitInterfaceAttributeDeclaration(an5Parser.InterfaceAttributeDeclarationContext ctx) {
+    log.DBG("exitInterfaceAttributeDeclaration");
+	/* get parent interface */
+	RuleContext up = ctx.parent;
+	while (up != null) {
+      if (up instanceof an5Parser.InterfaceDeclarationContext) {
+        break;
+      }
+      up = up.parent;
+	}
+	
+	/* Extract attributes */
+	if (up == null) {
+	  log.ERR(3, "<ERR>:AN5:Interface Attributes Parent Not Found.");		
+	}
+	else {
+	  an5InterfaceValue ifNd = useInterfaceValue((an5Parser.InterfaceDeclarationContext)up);
+
+	  if (ifNd != null) {
+			
+		TypeTypeContext sigCtx = ctx.typeType();
+		StringBuilder typeVal = new StringBuilder();
+		List<String[]> attrs = new ArrayList<String[]>();
+		
+		if (sigCtx != null) {
+          typeVal.setLength(0);
+		  extractTypeTypeKey(sigCtx, typeVal);
+		  List<TerminalNode> ids = ctx.IDENTIFIER();
+		  for (TerminalNode id : ids) {
+		     attrs.add(new String[]{typeVal.toString(), id.getText()});
+		  	 log.DBG(diags, "attribute type - '" + typeVal + "' value - '" + id.getText() + "'.");
+		  }
+	  	  ifNd.attributes = attrs;
+		}
+      }
+    }
+  }
   public void exitInterfaceSignatureDeclaration(an5Parser.InterfaceSignatureDeclarationContext ctx) {
 	log.DBG("exitInterfaceSignatureDeclaration");
 	/* get parent interface */

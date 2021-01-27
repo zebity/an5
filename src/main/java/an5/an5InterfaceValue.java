@@ -21,6 +21,8 @@ class an5InterfaceValue extends an5TypeValue {
   List<String[]> basePair = null,
 		         needsPair = null,
 		         providesPair = null;
+  List<String[]> attributes = null;
+  List<String[]> constants = null;
   List<String> services = null;
   List<an5InterfaceValue> interfacesExtended = new ArrayList<>();
   an5InterfaceValue(String val, String pack) {

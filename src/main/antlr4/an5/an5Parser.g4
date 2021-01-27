@@ -202,7 +202,8 @@ interfaceBodyDeclaration
 interfaceMemberDeclaration
     : constDeclaration
     | interfaceSignatureDeclaration
-    | interfaceMethodDeclaration
+    | interfaceAttributeDeclaration
+//    | interfaceMethodDeclaration
 //    | genericInterfaceMethodDeclaration
     | interfaceDeclaration
     | annotationTypeDeclaration
@@ -222,25 +223,28 @@ interfaceSignatureDeclaration
     : signatureType '=' arrayInitializer 
     ;
 
+interfaceAttributeDeclaration
+    : typeType IDENTIFIER (',' IDENTIFIER)* ';'
+    ;
 
 // see matching of [] comment in methodDeclaratorRest
 // methodBody from Java8
-interfaceMethodDeclaration
-    : interfaceMethodModifier* typeTypeOrVoid
+// interfaceMethodDeclaration
+//    : interfaceMethodModifier* typeTypeOrVoid
 //    : interfaceMethodModifier* (typeTypeOrVoid | typeParameters annotation* typeTypeOrVoid)
-    | IDENTIFIER formalParameters ('[' ']')* 
+//    | IDENTIFIER formalParameters ('[' ']')* 
 //      IDENTIFIER formalParameters ('[' ']')* (THROWS qualifiedNameList)? methodBody
-    ;
+//    ;
 
 // Java8
-interfaceMethodModifier
-    : annotation
+// interfaceMethodModifier
+//    : annotation
 //    | PUBLIC
 //    | ABSTRACT
 //    | DEFAULT
 //    | STATIC
 //    | STRICTFP
-    ;
+//    ;
 
 // genericInterfaceMethodDeclaration
 //     : typeParameters interfaceMethodDeclaration

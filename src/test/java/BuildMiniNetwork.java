@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import an5.model.*;
 import an5.solve.*;
+import proto.AN5CL_switch;
 
 public class BuildMiniNetwork {
   public static void main(String[] args){

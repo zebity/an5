@@ -14,7 +14,12 @@ import java.util.HashMap;
 
 public class an5Global {
   static String mainPackage = "an5",
-		        basePackage = "an5.lang";
+		        basePackage = "an5.lang",
+		        interfacePrefix = "AN5IF_",
+		        classPrefix = "AN5CL_",
+                fileSuffix = ".java";
+  static char pathSeperator = '/',
+		      packageSeparator = '.';
   static an5ClassValue objectRoot = new an5ClassValue("object", basePackage);
   
 // private static BiFunction<String, an5ClassValue, an5TypeValue> networkFactory;
