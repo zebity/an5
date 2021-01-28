@@ -9,7 +9,7 @@
 
 */
 
-package an5.generic.dcTypes;
+package an5.generic.dctypes;
 
 @Model(
   spec = "an5",
@@ -74,7 +74,7 @@ class pcie_nic extends element exposes pcie_card, ethernet_port_base_t {
   reflects ethernet_port_base_t port[];
 }
 
-class switch extends element exposes ethernet_port_base_t, ethernet_vlan, exthernet_lag {
+class switch extends element exposes ethernet_port_base_t, ethernet_vlan, ethernet_lag {
   reflects ethernet_port_base_t port[];
   reflects ethernet_vlan vlan[];
   reflects ethernet_lag lag[];

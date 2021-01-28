@@ -90,16 +90,18 @@ public class an5Global {
   int parseArgs(String[] args, Map<String, String> flags, List<String> sf) {
 	an5Logging log = new an5Logging();
 	int res = 0;
-	int cnt = 0;
-	for (String a: args) {
+
+	for (int i = 0; i < args.length; i++) {
+      String a = args[i];
 	  if (a.charAt(0) == '-' && a.length() > 1) {
 	    switch(a.charAt(1)) {
-	      case 'd': if (cnt+1 > args.length) {
+	      case 'd': if (i+1 > args.length) {
 	  		          log.ERR(3, "<log.ERR>:AN5:Invalid argument: [" + a + "].");
 	  		          res--;
 	                }
 	                else {
-	    	          flags.put("gendir", args[cnt+1]);
+	    	          flags.put("gendir", args[i+1]);
+	    	          i++; /* skip past dirpath */
 	                }
 	                break;
 	      case 'n': flags.put("nogen", "");
@@ -116,7 +118,6 @@ public class an5Global {
 		log.ERR(3, "<log.ERR>:AN5:Invalid argument: [" + a + "].");
 		res--;
 	  }
-	  cnt++;
 	}
 	return res;
   }

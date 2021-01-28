@@ -437,17 +437,16 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   	  }
     }
   	for (String s: exposesKeys) {
-  	  an5InterfaceValue newIf = new an5InterfaceValue(s, symtab.current.forPackage);
       res = symtab.select(s);
       if (res == null) {
-    	  newIf.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s, symtab.current.forPackage));
+    	  newClass.interfacesExposed.add(new an5UnresolvedInterfaceValue("interface", s, symtab.current.forPackage));
       }
       else if (res instanceof an5UnresolvedInterfaceValue) {
     	an5UnresolvedInterfaceValue fix = (an5UnresolvedInterfaceValue)res;
     	fix.resolvedTo = res;
       }
       else if (res instanceof an5InterfaceValue) {
-    	newIf.interfacesExtended.add((an5InterfaceValue)res);
+    	newClass.interfacesExposed.add((an5InterfaceValue)res);
       }
       else {
     	log.ERR(3, "<ERR>:AN5:Interface Extension Type Invalid: [" + res.isA + "]" + res.value + ".");
@@ -467,6 +466,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	try {
       res = generator.generateInterfaceDefinitions();
 	  res = generator.generateInterfaceImplementations();
+	  res = generator.generateClassImplementations();
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
