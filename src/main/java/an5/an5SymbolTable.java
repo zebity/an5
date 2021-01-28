@@ -20,14 +20,17 @@ import java.util.Map;
 
 class an5SymbolTable {
   an5Logging log= new an5Logging();
-  int diags = 5;
   an5ModelContext current = null;
   List<an5ModelContext> searchList = null;
   Map<String, an5ModelContext> packageContexts = null;
-  an5SymbolTable() {
+  an5Global global;
+  int diags = 5;
+  
+  an5SymbolTable(an5Global glob) {
+    global = glob;
   }
   void reset() {
-	an5Global.initSymbolTable(this);
+	global.initSymbolTable(this);
   }
   an5TypeValue selectFrom(an5ModelContext srch, String key) {
 	an5TypeValue res = null;

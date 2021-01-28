@@ -87,13 +87,15 @@ import an5.an5Parser.VariableModifierContext;
 
 class an5ModelDefinitionsListener extends an5ParserBaseListener {
   an5Logging log = new an5Logging();
-  an5Global globalDefs = new an5Global();
-  int diags = 5;
+  an5Global global;
   an5SymbolTable symtab;
   String dirPath = null;
-  an5ModelDefinitionsListener(String dir) {
+  int diags = 5;
+  
+  an5ModelDefinitionsListener(an5Global glob, String dir) {
 	dirPath = new String(dir);
-    symtab = new an5SymbolTable();
+    symtab = new an5SymbolTable(glob);
+    global = glob;
   }
   void extractTypeTypeKey(an5Parser.TypeTypeContext typeCtx, StringBuilder typeKey) {
 	an5Parser.NetworkTypeContext netType;
@@ -459,11 +461,12 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	log.DBG("exitCompilationUnit");
 	int res;
 	
-	an5Generate generator = new an5Generate(symtab, dirPath, an5Global.interfacePrefix, an5Global.classPrefix);
+	an5Generate generator = new an5Generate(global, symtab, dirPath);
 	
 	res = generator.makePackage();
 	try {
-		res = generator.generateInterfaceDefinitions();
+      res = generator.generateInterfaceDefinitions();
+	  res = generator.generateInterfaceImplementations();
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -505,7 +508,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
       for (String s: exposesKeys) {
         res = symtab.select(s);
     	if (res == null) {
-    	  ifNd.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s, an5Global.basePackage));
+    	  ifNd.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s, global.basePackage));
     	}
     	else if (res instanceof an5UnresolvedInterfaceValue) {
     	  an5UnresolvedInterfaceValue fix = (an5UnresolvedInterfaceValue)res;

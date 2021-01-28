@@ -7,20 +7,20 @@ package an5;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-// import java.util.List;
-// import java.util.Map;
+import java.util.List;
+import java.util.Map;
 
 // import java.util.function.BiFunction;
 
 public class an5Global {
-  static String mainPackage = "an5",
-		        basePackage = "an5.lang",
-		        interfacePrefix = "AN5IF_",
-		        classPrefix = "AN5CL_",
-                fileSuffix = ".java";
-  static char pathSeperator = '/',
-		      packageSeparator = '.';
-  static an5ClassValue objectRoot = new an5ClassValue("object", basePackage);
+  String mainPackage = "an5",
+		 basePackage = "an5.lang",
+		 interfacePrefix = "AN5IF_",
+		 classPrefix = "AN5CL_",
+         fileSuffix = ".java";
+  char pathSeperator = '/',
+       packageSeparator = '.';
+  an5ClassValue objectRoot = new an5ClassValue("object", basePackage);
   
 // private static BiFunction<String, an5ClassValue, an5TypeValue> networkFactory;
 //   class an5LangTypes {
@@ -36,26 +36,26 @@ public class an5Global {
 //		                    {"link", linkFactory, objectRoot},
 //		                    {"path", pathFactory, objectRoot}};
   
-  static an5TypeValue networkFactory(String val, an5ClassValue ext) {
+  an5TypeValue networkFactory(String val, an5ClassValue ext) {
     an5ClassValue res = new an5ClassValue(val, basePackage);
     res.classExtended = ext;
     return res;
   }
-  static an5TypeValue elementFactory(String val, an5ClassValue ext) {
+  an5TypeValue elementFactory(String val, an5ClassValue ext) {
 	an5ClassValue res = new an5ClassValue(val, basePackage);
 	res.classExtended = ext;
 	return res;
   }
-  static an5TypeValue interfaceFactory(String val, an5ClassValue ext) {
+  an5TypeValue interfaceFactory(String val, an5ClassValue ext) {
 	an5InterfaceValue res = new an5InterfaceValue(val, basePackage);
 	return res;
   }
-  static an5TypeValue linkFactory(String val, an5ClassValue ext) {
+  an5TypeValue linkFactory(String val, an5ClassValue ext) {
 	an5ClassValue res = new an5ClassValue(val, basePackage);
 	res.classExtended = ext;
 	return res;
   }
-  static an5TypeValue pathFactory(String val, an5ClassValue ext) {
+  an5TypeValue pathFactory(String val, an5ClassValue ext) {
 	an5ClassValue res = new an5ClassValue(val, basePackage);
 	res.classExtended = ext;
 	return res;
@@ -69,7 +69,7 @@ public class an5Global {
 //	an5ClassValue newClass = new an5ClassValue("class", "network", basePackage);
 //	baseCxt.identifier.put(newClass.value, newClass);
 //  }
-  static void initSymbolTable(an5SymbolTable symtab) {
+  void initSymbolTable(an5SymbolTable symtab) {
 	symtab.searchList = new ArrayList<>();
 	symtab.packageContexts = new HashMap<>();
 	
@@ -86,5 +86,38 @@ public class an5Global {
     symtab.current = new an5ModelContext(".");
     symtab.packageContexts.put(".", symtab.current);
     symtab.searchList.add(symtab.current);
+  }
+  int parseArgs(String[] args, Map<String, String> flags, List<String> sf) {
+	an5Logging log = new an5Logging();
+	int res = 0;
+	int cnt = 0;
+	for (String a: args) {
+	  if (a.charAt(0) == '-' && a.length() > 1) {
+	    switch(a.charAt(1)) {
+	      case 'd': if (cnt+1 > args.length) {
+	  		          log.ERR(3, "<log.ERR>:AN5:Invalid argument: [" + a + "].");
+	  		          res--;
+	                }
+	                else {
+	    	          flags.put("gendir", args[cnt+1]);
+	                }
+	                break;
+	      case 'n': flags.put("nogen", "");
+	                break;
+	      default: log.ERR(3, "<log.ERR>:AN5:Invalid argument: [" + a + "].");
+	               res--;
+	               break;
+	    }
+	  }
+	  else if (a.length() > 1) {
+        sf.add(a);
+	  }
+	  else {
+		log.ERR(3, "<log.ERR>:AN5:Invalid argument: [" + a + "].");
+		res--;
+	  }
+	  cnt++;
+	}
+	return res;
   }
 }
