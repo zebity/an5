@@ -73,7 +73,6 @@ classOrInterfaceModifier
 //    | PRIVATE
 //    | STATIC
     | ABSTRACT
-    | REFLECTS
 //    | FINAL    // FINAL for class only -- does not apply to interfaces
 //    | STRICTFP
     ;
@@ -144,6 +143,7 @@ memberDeclaration
 //    : methodDeclaration
 //    | genericMethodDeclaration
     : serviceSignatureDeclaration
+    | interfaceVariableDeclaration
     | fieldDeclaration
 //    | fieldDeclaration
 //    | constructorDeclaration
@@ -190,6 +190,11 @@ typeTypeOrVoid
 serviceSignatureDeclaration
     : SERVICE '=' arrayInitializer 
     ;
+
+interfaceVariableDeclaration
+    : REFLECTS typeType variableDeclarators
+    ;
+ 
 fieldDeclaration
     : typeType variableDeclarators ';'
     ;
@@ -222,7 +227,7 @@ constantDeclarator
 interfaceSignatureDeclaration
     : signatureType '=' arrayInitializer 
     ;
-
+   
 interfaceAttributeDeclaration
     : typeType IDENTIFIER (',' IDENTIFIER)* ';'
     ;
@@ -408,7 +413,7 @@ blockStatement
 localVariableDeclaration
     : variableModifier* typeType variableDeclarators
     ;
-
+    
 localTypeDeclaration
     : classOrInterfaceModifier*
       (classDeclaration | interfaceDeclaration)

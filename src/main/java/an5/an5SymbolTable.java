@@ -88,5 +88,25 @@ class an5SymbolTable {
 	}
 	
 	return res;
+  }
+  an5TypeValue insert(String key, an5TypeValue val, int up) {
+	an5TypeValue res = null;
+	an5ModelContext tabCtx = current;
+	
+	for (;(up > 0) && (tabCtx != null);up--) {
+	  tabCtx = tabCtx.getParent();
+	}
+	
+	if (tabCtx != null) {
+	  res = tabCtx.identifier.get(key);
+	  if (res == null) {
+	    res = select(key, false);
+	    if (res == null)
+          res = tabCtx.identifier.put(key, val);
+	    else
+	      res = null;
+	  }
+	}
+	return res;
   }	
 }

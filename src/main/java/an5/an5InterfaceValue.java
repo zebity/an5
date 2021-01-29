@@ -11,7 +11,7 @@ import java.util.List;
 class an5InterfaceValue extends an5TypeValue {
   String baseSignature,
 	     extendedSignature;
-  boolean fromSigDec = true,
+  boolean fromMemberDec = true,
 		  cardinalityDefined = false;
   int cardinalityMin,
 	  cardinalityMax;
