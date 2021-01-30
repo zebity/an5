@@ -108,7 +108,7 @@ public class an5Generate {
 	}
 	return cnt;
   }
-  int generateInterfaceSignatureConstructor(PrintStream jvStrm, String nm) {
+  int generateInterfaceSignatureConstructor(PrintStream jvStrm, String nm, int min, int max) {
 	int cnt = 0;
 
 	jvStrm.println("  public " + nm + "() {");
@@ -121,7 +121,7 @@ public class an5Generate {
     jvStrm.println("    for (String[] namVal : needs) newN.add(new String[]{namVal[0], namVal[1]});");
     jvStrm.println("    for (String[] namVal : provides) newP.add(new String[]{namVal[0], namVal[1]});");
     jvStrm.println("    for (String nam : services) newS.add(new String(nam));");
-    jvStrm.println("    addSignatureSet(new an5InterfaceSignature(an5name, newC, newN, newP, newS));");
+    jvStrm.println("    addSignatureSet(new an5InterfaceSignature(an5name, newC, newN, newP, newS, " + min + ", " + max + "));");
 	jvStrm.println("  };");      
 
 	return cnt;
@@ -165,7 +165,7 @@ public class an5Generate {
         generateInterfaceServiceImplementation(jvStrm, "services", ifNd.services);
         jvStrm.println("  /*  review and workout */");
         jvStrm.println("  String an5name = \"" + ifNd.value + "\";");
-        generateInterfaceSignatureConstructor(jvStrm, ifNm);
+        generateInterfaceSignatureConstructor(jvStrm, ifNm, ifNd.cardinalityMin, ifNd.cardinalityMax);
         jvStrm.println("}");
         cnt++;
       }
