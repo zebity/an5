@@ -71,7 +71,7 @@ public class an5Generate {
 	int cnt = 0;
 
 
-	jvStrm.print("  String[][] " + sigs + " = new String["); 
+	jvStrm.print("  static String[][] " + sigs + " = new String["); 
 	if (pairs != null && pairs.size() > 0) {
 
 	  jvStrm.println("][]{");
@@ -84,21 +84,44 @@ public class an5Generate {
 	  jvStrm.println("};");      
 	}
 	else {
-	  jvStrm.println("2][];");	
+	  jvStrm.println("0][];");	
 	}
 	return cnt;
   }
-  int generateInterfaceSignatureLoadingImplementation(PrintStream jvStrm) {
+  int generateInterfaceServiceImplementation(PrintStream jvStrm, String sigs, List<String> srv) {
 	int cnt = 0;
 
-	jvStrm.println("  public void loadSignatures() {");
+	jvStrm.print("  static String[] " + sigs + " = new String["); 
+	if (srv != null && srv.size() > 0) {
+
+	  jvStrm.println("]{");
+	  jvStrm.print("       new String(\"" + srv.get(cnt) + "\")");
+
+	  for (cnt = 1; cnt < srv.size(); cnt++) {
+	    jvStrm.println(",");
+        jvStrm.print("       new String(\"" + srv.get(cnt) + "\")");
+	  }
+	  jvStrm.println("};");      
+	}
+	else {
+	  jvStrm.println("0];");	
+	}
+	return cnt;
+  }
+  int generateInterfaceSignatureConstructor(PrintStream jvStrm, String nm) {
+	int cnt = 0;
+
+	jvStrm.println("  public " + nm + "() {");
+	jvStrm.println("    super();");
 	jvStrm.println("    List<String[]> newC = new ArrayList<>();");
 	jvStrm.println("    List<String[]> newN = new ArrayList<>();");
 	jvStrm.println("    List<String[]> newP = new ArrayList<>();");
+	jvStrm.println("    List<String> newS = new ArrayList<>();");
 	jvStrm.println("    for (String[] namVal : common) newC.add(new String[]{namVal[0], namVal[1]});");
-    jvStrm.println("    for (String[] namVal : needs) newC.add(new String[]{namVal[0], namVal[1]});");
-    jvStrm.println("    for (String[] namVal : provides) newC.add(new String[]{namVal[0], namVal[1]});");
-    jvStrm.println("    signatureSet.add(new an5InterfaceSignature(newC, newN, newP));");
+    jvStrm.println("    for (String[] namVal : needs) newN.add(new String[]{namVal[0], namVal[1]});");
+    jvStrm.println("    for (String[] namVal : provides) newP.add(new String[]{namVal[0], namVal[1]});");
+    jvStrm.println("    for (String nam : services) newS.add(new String(nam));");
+    jvStrm.println("    addSignatureSet(new an5InterfaceSignature(an5name, newC, newN, newP, newS));");
 	jvStrm.println("  };");      
 
 	return cnt;
@@ -139,13 +162,10 @@ public class an5Generate {
         generateInterfaceSignatureImplementation(jvStrm, "common", ifNd.commonPair);
         generateInterfaceSignatureImplementation(jvStrm, "needs", ifNd.needsPair);
         generateInterfaceSignatureImplementation(jvStrm, "provides", ifNd.providesPair);
+        generateInterfaceServiceImplementation(jvStrm, "services", ifNd.services);
         jvStrm.println("  /*  review and workout */");
         jvStrm.println("  String an5name = \"" + ifNd.value + "\";");
-        jvStrm.println("  public " + ifNm + "() {");
-        jvStrm.println("    loadSignatures();");
-        jvStrm.println("    super.loadSignatures();");
-        jvStrm.println("  }");
-        generateInterfaceSignatureLoadingImplementation(jvStrm);
+        generateInterfaceSignatureConstructor(jvStrm, ifNm);
         jvStrm.println("}");
         cnt++;
       }

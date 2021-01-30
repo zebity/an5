@@ -9,10 +9,12 @@ public class an5InterfaceSignature {
   List<String[]> needs;
   List<String[]> provides;
   List<String> services;
-//  an5Service service;
-  public an5InterfaceSignature(List<String[]> c, List<String[]> n, List<String[]> p) {
+  String an5name;
+  public an5InterfaceSignature(String ifType, List<String[]> c, List<String[]> n, List<String[]> p, List<String> s) {
     common = c;
     needs = n;
     provides = p;
+    services = s;
+    an5name = ifType;
   }
 }
