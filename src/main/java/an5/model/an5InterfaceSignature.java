@@ -8,5 +8,11 @@ public class an5InterfaceSignature {
   List<String[]> common;
   List<String[]> needs;
   List<String[]> provides;
-  an5Service service;
+  List<String> services;
+//  an5Service service;
+  public an5InterfaceSignature(List<String[]> c, List<String[]> n, List<String[]> p) {
+    common = c;
+    needs = n;
+    provides = p;
+  }
 }

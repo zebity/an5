@@ -8,6 +8,7 @@ package an5;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
+import java.util.List;
 
 public class an5Generate {
   an5Global global;
@@ -30,6 +31,8 @@ public class an5Generate {
       res = new String("an5Element");
     } else if (in.equals("network")) {
       res = new String("an5Network");
+    } else if (in.equals("object")) {
+        res = new String("an5Object");
     } else {
       res = new String(prefix + in);
     }
@@ -46,7 +49,7 @@ public class an5Generate {
     	ifNm = new String(global.interfacePrefix + ifNd.value);
         jvStrm = new PrintStream(dirPath + packagePath + global.pathSeperator + ifNm + global.fileSuffix);
         
-        jvStrm.println("/* -- AN5 Generated File -- */");
+        jvStrm.println("/* -- AN5 Generated Interface Definition File -- */");
         jvStrm.println("package " + symtab.current.forPackage + ";");
         jvStrm.println("import an5.model.*;");
         jvStrm.print("public interface " + ifNm);
@@ -64,6 +67,42 @@ public class an5Generate {
     }
     return cnt;
   }
+  int generateInterfaceSignatureImplementation(PrintStream jvStrm, String sigs, List<String[]> pairs) {
+	int cnt = 0;
+
+
+	jvStrm.print("  String[][] " + sigs + " = new String["); 
+	if (pairs != null && pairs.size() > 0) {
+
+	  jvStrm.println("][]{");
+	  jvStrm.print("       {new String(\"" + pairs.get(cnt)[0] + "\"), new String(\"" + pairs.get(cnt)[1] + "\")}");
+
+	  for (cnt = 1; cnt < pairs.size(); cnt++) {
+	    jvStrm.println(",");
+        jvStrm.print("       {new String(\"" + pairs.get(cnt)[0] + "\"), new String(\"" + pairs.get(cnt)[1] + "\")}");
+	  }
+	  jvStrm.println("};");      
+	}
+	else {
+	  jvStrm.println("2][];");	
+	}
+	return cnt;
+  }
+  int generateInterfaceSignatureLoadingImplementation(PrintStream jvStrm) {
+	int cnt = 0;
+
+	jvStrm.println("  public void loadSignatures() {");
+	jvStrm.println("    List<String[]> newC = new ArrayList<>();");
+	jvStrm.println("    List<String[]> newN = new ArrayList<>();");
+	jvStrm.println("    List<String[]> newP = new ArrayList<>();");
+	jvStrm.println("    for (String[] namVal : common) newC.add(new String[]{namVal[0], namVal[1]});");
+    jvStrm.println("    for (String[] namVal : needs) newC.add(new String[]{namVal[0], namVal[1]});");
+    jvStrm.println("    for (String[] namVal : provides) newC.add(new String[]{namVal[0], namVal[1]});");
+    jvStrm.println("    signatureSet.add(new an5InterfaceSignature(newC, newN, newP));");
+	jvStrm.println("  };");      
+
+	return cnt;
+  }
   int generateInterfaceImplementations() throws FileNotFoundException {
     int cnt = 0;
 	PrintStream jvStrm;
@@ -75,8 +114,10 @@ public class an5Generate {
     	ifNm = new String(global.classPrefix + ifNd.value);
         jvStrm = new PrintStream(dirPath + packagePath + global.pathSeperator + ifNm + global.fileSuffix);
         
-        jvStrm.println("/* -- AN5 Generated File -- */");
+        jvStrm.println("/* -- AN5 Generated Interface Class File -- */");
         jvStrm.println("package " + symtab.current.forPackage + ";");
+        jvStrm.println("import java.util.List;");
+        jvStrm.println("import java.util.ArrayList;");
         jvStrm.println("import an5.model.*;");
         jvStrm.print("public class " + ifNm);
         if (ifNd.interfacesExtended.size() > 0) {
@@ -95,12 +136,40 @@ public class an5Generate {
             }
         }
         jvStrm.println(" {");
+        generateInterfaceSignatureImplementation(jvStrm, "common", ifNd.commonPair);
+        generateInterfaceSignatureImplementation(jvStrm, "needs", ifNd.needsPair);
+        generateInterfaceSignatureImplementation(jvStrm, "provides", ifNd.providesPair);
+        jvStrm.println("  /*  review and workout */");
         jvStrm.println("  String an5name = \"" + ifNd.value + "\";");
-        jvStrm.println("  " + ifNm + "() {");
+        jvStrm.println("  public " + ifNm + "() {");
+        jvStrm.println("    loadSignatures();");
+        jvStrm.println("    super.loadSignatures();");
         jvStrm.println("  }");
+        generateInterfaceSignatureLoadingImplementation(jvStrm);
         jvStrm.println("}");
         cnt++;
       }
+    }
+    return cnt;
+  }
+  int generateClassInterfaceVariablesImplementation(PrintStream jvStrm, an5ClassValue nd) {
+    int cnt = 0;
+    
+    jvStrm.print("  an5InterfaceInstance[] ifInst = new an5InterfaceInstance[");
+    
+    if (nd.interfacesReflected.size() > 0) {
+
+      jvStrm.println("]{");
+      jvStrm.print("       new an5InterfaceInstance()");
+
+      for (cnt = 1; cnt < nd.interfacesReflected.size(); cnt++) {
+        jvStrm.println(",");
+        jvStrm.print("       new an5InterfaceInstance()");       
+      }
+      jvStrm.println("};");      
+    }
+    else {
+      jvStrm.println("0];");	
     }
     return cnt;
   }
@@ -130,7 +199,8 @@ public class an5Generate {
         }
         jvStrm.println(" {");
         jvStrm.println("  String an5name = \"" + clNd.value + "\";");
-        jvStrm.println("  " + clNm + "() {");
+        generateClassInterfaceVariablesImplementation(jvStrm, clNd);
+        jvStrm.println("  public " + clNm + "() {");
         jvStrm.println("  }");
         jvStrm.println("}");
       }

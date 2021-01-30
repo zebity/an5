@@ -6,4 +6,6 @@ public class an5InterfaceInstance {
   int minInstance,
       maxInstanc;
   int alloc = allocationPolicy.STATIC;
+  public an5InterfaceInstance() {
+  }
 }

@@ -155,7 +155,6 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   }
   void extractVariableNames(an5Parser.VariableDeclaratorsContext ctx, List<String> varIds) {
 	log.DBG("extractFullyQualifiedVariableName");
-	String qualName;
 	List<VariableDeclaratorContext> id = ctx.variableDeclarator();
 	
 	for (VariableDeclaratorContext varDecCtx: id) {
@@ -251,8 +250,8 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	  setCard = getSignatureElementPairs(sigs, pairs, services, cardinality);
 
 	  switch (sigFor) {
-	    case an5Lexer.COMMON: ifNd.base = sigs;
-	                          ifNd.basePair = pairs;
+	    case an5Lexer.COMMON: ifNd.common = sigs;
+	                          ifNd.commonPair = pairs;
 	                          ifNd.services = services;
 	                          if (ifNd.cardinalityDefined && setCard) {
 		                        cardinalityConflict = true;

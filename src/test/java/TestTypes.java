@@ -81,3 +81,6 @@ class Concrete {
   static int[] SharedArray = {1,2};
 }
 
+class ArrayOfArray {
+  String[][] array = new String[2][];
+}

@@ -15,10 +15,10 @@ class an5InterfaceValue extends an5TypeValue {
 		  cardinalityDefined = false;
   int cardinalityMin,
 	  cardinalityMax;
-  List<String> base,
+  List<String> common,
 	           needs,
 	           provides;
-  List<String[]> basePair = null,
+  List<String[]> commonPair = null,
 		         needsPair = null,
 		         providesPair = null;
   List<String[]> attributes = null;
