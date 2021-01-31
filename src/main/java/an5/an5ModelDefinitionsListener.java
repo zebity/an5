@@ -667,7 +667,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 		    if (res != null) {
 			  if (res instanceof an5InterfaceValue) {
 			    an5InterfaceValue ifNd = (an5InterfaceValue)res;
-			    nd.interfacesReflected.add(new an5IntefaceVariableValue(varNm, symtab.current.forPackage, ifNd, typeVal[0].toString()));	  
+			    nd.interfacesReflected.add(new an5InterfaceVariableValue(varNm, symtab.current.forPackage, ifNd, typeVal[0].toString()));	  
 			  } else {
 		        log.ERR(3, "<ERR>:AN5:Class Interface Variable wrong type: - " + res.value + " is-a:" + res.isA + " .");	
 			  }

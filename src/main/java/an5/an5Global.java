@@ -17,6 +17,7 @@ public class an5Global {
 		 basePackage = "an5.lang",
 		 interfacePrefix = "AN5IF_",
 		 classPrefix = "AN5CL_",
+		 attrPrefix = "AN5AT_",
          fileSuffix = ".java";
   char pathSeperator = '/',
        packageSeparator = '.';

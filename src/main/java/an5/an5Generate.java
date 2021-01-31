@@ -174,22 +174,29 @@ public class an5Generate {
   }
   int generateClassInterfaceVariablesImplementation(PrintStream jvStrm, an5ClassValue nd) {
     int cnt = 0;
-    
-    jvStrm.print("  an5InterfaceInstance[] ifInst = new an5InterfaceInstance[");
+    an5InterfaceVariableValue ifVar = null;
     
     if (nd.interfacesReflected.size() > 0) {
-
-      jvStrm.println("]{");
-      jvStrm.print("       new an5InterfaceInstance()");
-
-      for (cnt = 1; cnt < nd.interfacesReflected.size(); cnt++) {
-        jvStrm.println(",");
-        jvStrm.print("       new an5InterfaceInstance()");       
+      for (cnt = 0; cnt < nd.interfacesReflected.size(); cnt++) {
+    	ifVar = nd.interfacesReflected.get(cnt);
+        jvStrm.print("  an5InterfaceInstance " + global.attrPrefix + ifVar.value);
+        jvStrm.print(" = new an5InterfaceInstance(\"" + ifVar.value + "\", new ");
+        jvStrm.println(global.classPrefix + ifVar.interfaceReflected.value + "(), 0, " + ifVar.size + ");");
       }
-      jvStrm.println("};");      
+      
+      cnt = 0;
+      jvStrm.println("  an5InterfaceInstance[] ifInst = new an5InterfaceInstance[]{");
+      ifVar = nd.interfacesReflected.get(cnt);
+      jvStrm.print("    " + global.attrPrefix + ifVar.value);
+      for (cnt = 1; cnt < nd.interfacesReflected.size(); cnt++) {
+        ifVar = nd.interfacesReflected.get(cnt);
+    	jvStrm.println(",");
+        jvStrm.print("    " + global.attrPrefix + ifVar.value);
+      }
+      jvStrm.println("};");
     }
     else {
-      jvStrm.println("0];");	
+      jvStrm.println("  an5InterfaceInstance[] ifInst = new an5InterfaceInstance[];");
     }
     return cnt;
   }

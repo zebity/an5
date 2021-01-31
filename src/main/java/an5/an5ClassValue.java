@@ -11,7 +11,7 @@ class an5ClassValue extends an5TypeValue {
   boolean fromMemberDec = true;
   List<an5InterfaceValue> interfacesExposed = new ArrayList<>();
   an5ClassValue classExtended;
-  List<an5IntefaceVariableValue> interfacesReflected = new ArrayList<>();
+  List<an5InterfaceVariableValue> interfacesReflected = new ArrayList<>();
   List<String[]> attributes = null;
   List<String[]> constants = null;
   an5ClassValue(String val, String pack) {
