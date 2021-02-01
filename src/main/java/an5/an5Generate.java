@@ -196,7 +196,7 @@ public class an5Generate {
       jvStrm.println("};");
     }
     else {
-      jvStrm.println("  an5InterfaceInstance[] ifInst = new an5InterfaceInstance[];");
+      jvStrm.println("  an5InterfaceInstance[] ifInst = new an5InterfaceInstance[0];");
     }
     return cnt;
   }
@@ -211,7 +211,7 @@ public class an5Generate {
     	clNm = new String(global.classPrefix + clNd.value);
         jvStrm = new PrintStream(dirPath + packagePath + global.pathSeperator + clNm + global.fileSuffix);
         
-        jvStrm.println("/* -- AN5 Generated File -- */");
+        jvStrm.println("/* -- AN5 Generated Class File -- */");
         jvStrm.println("package " + symtab.current.forPackage + ";");
         jvStrm.println("import an5.model.*;");
         jvStrm.print("public class " + clNm);
@@ -228,7 +228,13 @@ public class an5Generate {
         jvStrm.println("  String an5name = \"" + clNd.value + "\";");
         generateClassInterfaceVariablesImplementation(jvStrm, clNd);
         jvStrm.println("  public " + clNm + "() {");
+    	jvStrm.println("    for (an5VariableInstance v: ifInst) clVars.put(v.var, v);");
         jvStrm.println("  }");
+        jvStrm.println("  public " + clNm + "(an5ConstructArguments args) {");
+        jvStrm.println("    super(args.getSuperArgs());");
+    	jvStrm.println("    for (an5VariableInstance v: ifInst) clVars.put(v.var, v);");
+    	jvStrm.println("    varUtil.setConstrutArgs(args, this);");
+    	jvStrm.println("  }");
         jvStrm.println("}");
       }
     }

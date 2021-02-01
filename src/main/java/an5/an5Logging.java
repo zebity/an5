@@ -24,8 +24,9 @@ public class an5Logging {
   void DBG(int level, String msg) {
     switch (level) {
 	  case 7:
-      case 6:
-      case 5: System.out.println(msg);
+      case 6: System.out.println(msg);
+              break;
+      case 5: 
 	}
   }
 }

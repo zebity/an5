@@ -8,6 +8,10 @@
 
 package an5.model;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class an5Object {
-  
+  public Map<String, an5VariableInstance> clVars = new HashMap<>();
+  public an5VarUtil varUtil = new an5VarUtil();
 }

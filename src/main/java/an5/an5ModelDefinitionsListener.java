@@ -99,29 +99,30 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     global = glob;
   }
   void extractTypeTypeKey(an5Parser.TypeTypeContext ctx, StringBuilder[] typeKey) {
-	an5Parser.NetworkTypeContext netType;
+	/* an5Parser.NetworkTypeContext netType;
 	an5Parser.ClassOrInterfaceTypeContext clOrIfType;
-	an5Parser.PrimitiveTypeContext primType;
-	    
-	for (ParseTree nd : ctx.children) {
-	  if (nd instanceof an5Parser.ClassOrInterfaceTypeContext) {
-	    clOrIfType = (an5Parser.ClassOrInterfaceTypeContext)nd;
-	    typeKey[1].setLength(0);
-	    typeKey[1].append(clOrIfType.getText());
-	  } else if (nd instanceof an5Parser.NetworkTypeContext) {
-	    netType = (an5Parser.NetworkTypeContext)nd;
-	    typeKey[1].setLength(0);
-	    typeKey[1].append(netType.getText());    		
-	  } else if (nd instanceof an5Parser.PrimitiveTypeContext) {
-	    primType = (an5Parser.PrimitiveTypeContext)nd;
-	    typeKey[1].setLength(0);
-	    typeKey[1].append(primType.getText());     		
-	  }
-	  List<TerminalNode> leftBrackets = ctx.LBRACK();
-	  if (leftBrackets.size() > 0) {
-	    typeKey[0].setLength(0);
-	    typeKey[0].append(new String("["));
-	  }
+	an5Parser.PrimitiveTypeContext primType; */
+	
+	an5Parser.ClassOrInterfaceTypeContext nd = ctx.classOrInterfaceType();
+	if (ctx.classOrInterfaceType() != null) {
+	  typeKey[1].setLength(0);
+	  typeKey[1].append(ctx.classOrInterfaceType().getText());
+	}
+	else if (ctx.networkType() != null) {
+      typeKey[1].setLength(0);
+      typeKey[1].append(ctx.networkType().getText());
+    }
+	else if (ctx.primitiveType() != null) {
+	  typeKey[1].setLength(0);
+	  typeKey[1].append(ctx.primitiveType().getText());
+	}
+	List<TerminalNode> leftBrackets = ctx.LBRACK();
+	if (leftBrackets.size() > 0) {
+	  typeKey[0].setLength(0);
+	  typeKey[0].append(new String(global.arrayFlag));
+	}
+	else {
+	  typeKey[0].setLength(0);
 	}
   }
   void extractTypeListKeys(an5Parser.TypeListContext exposed, List<String[]> exposesKeys) {
@@ -153,12 +154,17 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
       }
 	}
   }
-  void extractVariableNames(an5Parser.VariableDeclaratorsContext ctx, List<String> varIds) {
+  void extractVariableNames(an5Parser.VariableDeclaratorsContext ctx, List<String[]> varIds) {
 	log.DBG("extractFullyQualifiedVariableName");
 	List<VariableDeclaratorContext> id = ctx.variableDeclarator();
 	
 	for (VariableDeclaratorContext varDecCtx: id) {
-      varIds.add(varDecCtx.variableDeclaratorId().IDENTIFIER().getText());
+      String array = new String();
+      an5Parser.VariableDeclaratorIdContext varDecIdCtx = varDecCtx.variableDeclaratorId();
+      if (varDecIdCtx.LBRACK().size() > 0) {
+        array = new String(global.arrayFlag); 
+      }
+      varIds.add(new String[]{array, varDecIdCtx.IDENTIFIER().getText()});
     }
   }
   boolean getSignatureElementPairs(List<String> sigs, List<String[]> pairs, List<String> services, int[] cardinality) {
@@ -658,16 +664,23 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 		StringBuilder[] typeVal = new StringBuilder[]{new StringBuilder(), new StringBuilder()};
 				
 		if (sigCtx != null) {
-		  List<String> varIds = new ArrayList<>();
+		  List<String[]> varIds = new ArrayList<>();
 		  extractTypeTypeKey(sigCtx, typeVal);
 		  extractVariableNames(ctx.variableDeclarators(), varIds);
           
-		  for (String varNm : varIds) {
+		  for (String[] varNm : varIds) {
 		    an5TypeValue res = symtab.select(typeVal[1].toString());
 		    if (res != null) {
 			  if (res instanceof an5InterfaceValue) {
-			    an5InterfaceValue ifNd = (an5InterfaceValue)res;
-			    nd.interfacesReflected.add(new an5InterfaceVariableValue(varNm, symtab.current.forPackage, ifNd, typeVal[0].toString()));	  
+				an5InterfaceValue ifNd = (an5InterfaceValue)res;
+			    String flag = new String(typeVal[0].toString());
+			    if (flag.equals(global.arrayFlag)  && varNm[0].equals(global.arrayFlag)) {
+			      log.ERR(3, "<ERR>:AN5:Class Interface Variable is type [][]: - " + res.value + " is-a:" + res.isA + " .");
+			    }
+			    else if (varNm[0].equals(global.arrayFlag)) {
+			      flag = varNm[0];
+			    }
+			    nd.interfacesReflected.add(new an5InterfaceVariableValue(varNm[1], symtab.current.forPackage, ifNd, flag));	  
 			  } else {
 		        log.ERR(3, "<ERR>:AN5:Class Interface Variable wrong type: - " + res.value + " is-a:" + res.isA + " .");	
 			  }

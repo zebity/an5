@@ -18,7 +18,8 @@ public class an5Global {
 		 interfacePrefix = "AN5IF_",
 		 classPrefix = "AN5CL_",
 		 attrPrefix = "AN5AT_",
-         fileSuffix = ".java";
+         fileSuffix = ".java",
+         arrayFlag = "[";
   char pathSeperator = '/',
        packageSeparator = '.';
   an5ClassValue objectRoot = new an5ClassValue("object", basePackage);

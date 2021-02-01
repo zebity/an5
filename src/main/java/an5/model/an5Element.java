@@ -10,5 +10,8 @@ public class an5Element extends an5Object {
   public int[] canProvide(List<an5Service> serv) {
     return null;
   }
-
+  public an5Element() {
+  }
+  public an5Element(an5ConstructArguments args) {  
+  }
 }
