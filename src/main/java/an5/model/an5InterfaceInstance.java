@@ -9,7 +9,7 @@ public class an5InterfaceInstance extends an5VariableInstance {
   List<an5Binding> bindings = new ArrayList<>();
   int min,
       max;
-  int alloc = allocationPolicy.STATIC;
+  int alloc = allocationPolicy.DYNAMIC;
   public an5InterfaceInstance(String varNm, an5Interface ifDef, int mn, int mx) {
 	super(varNm);
     interfaceDefinition = ifDef;
@@ -22,6 +22,7 @@ public class an5InterfaceInstance extends an5VariableInstance {
     
     if (max > 0) {
       adj = Integer.min(max, sz);
+      alloc = allocationPolicy.STATIC;
     }
     for (;i < adj; i++) {
       bindings.add(interfaceDefinition.getBinding(Nm, i));

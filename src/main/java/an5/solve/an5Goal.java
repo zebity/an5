@@ -20,13 +20,17 @@ public class an5Goal {
   int strategy = SearchType.DEPTH;
   int result = SearchResult.START;
   int cost;
-  an5Goal(an5Template target, an5Network net, List<an5Object> from) {
+  public an5Goal(an5Template target, an5Network net, List<an5Object> from) {
     network = net;
     goal = target;
     elementsAndLinks = from;
   }
+  public int solve() {
+    int res = 0;
+    return res;
+  }
   void seedGoal() {
-    if (goal instanceof createNetwork) {
+    if (goal instanceof an5CreateNetwork) {
     	
     }
   }
