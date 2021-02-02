@@ -73,6 +73,7 @@ import an5.an5Parser.PrimaryContext;
 import an5.an5Parser.PrimitiveTypeContext;
 import an5.an5Parser.QualifiedNameContext;
 import an5.an5Parser.QualifiedNameListContext;
+import an5.an5Parser.ServiceSignatureDeclarationContext;
 import an5.an5Parser.SignatureTypeContext;
 import an5.an5Parser.StatementContext;
 import an5.an5Parser.TypeArgumentContext;
@@ -97,6 +98,15 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	dirPath = new String(dir);
     symtab = new an5SymbolTable(glob);
     global = glob;
+  }
+  String checkArrayFlag(String f1, String f2) {
+    String res = "";
+    if (f1.equals(global.arrayFlag) || f2.equals(global.arrayFlag)) {
+      res = "[";
+    } else if (f1.equals(global.arrayFlag) && f2.equals(global.arrayFlag)) {
+      res = "!";
+    }
+    return new String(res);
   }
   void extractTypeTypeKey(an5Parser.TypeTypeContext ctx, StringBuilder[] typeKey) {
 	/* an5Parser.NetworkTypeContext netType;
@@ -166,6 +176,65 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
       }
       varIds.add(new String[]{array, varDecIdCtx.IDENTIFIER().getText()});
     }
+  }
+  boolean getServicesSet(List<String> srvs, List<String> services, List<int[]> srvCardinality) {
+	log.DBG("getSignatureElementPairs");
+	boolean setCard = false;
+	int idx,
+	    cnt = 0;
+	int[] cardinality = new int[]{0,0};
+	String card, num;
+	 /* NOTE: string literals include the quotes, so remove these */
+
+	for (String val : srvs) {
+      val = val.substring(1, val.length()-1);
+	  cardinality[0] = 1;
+	  cardinality[1] = 1;
+	  if (val.charAt(0) == '(') {
+	    idx = val.lastIndexOf(')');
+	    if (idx != -1) {
+	      card = val.substring(idx + 1, val.length());
+	      if (card.length() == 1) {
+	        switch (card.charAt(0)) {
+	          case '*': cardinality[0] = 0;
+	        			cardinality[1] = -1;
+	        		    val = val.substring(1, idx);
+	        			setCard = true;
+	        		    break;
+	          case '?': cardinality[0] = 0;
+	        		    cardinality[1] = 1;
+	        		    val = val.substring(1, idx);
+	        		    setCard = true;
+	        		    break;
+	          case '+': cardinality[0] = 1;
+	        		    cardinality[1] = -1;
+	        		    val = val.substring(1, idx);
+	        		    setCard = true;
+	        		    break;
+	          default: log.ERR(3, "<log.ERR>:AN5:Service has unknown cardinality indicator: [" + val + "] - '" + card + "'."); 
+	        }  	 
+	      }
+	      else {
+	        if (card.charAt(0) == '{' && card.charAt(card.length()-1) == '}') {
+	          val = val.substring(1, idx);
+	          idx = card.indexOf(',');
+	          num = card.substring(1, idx);
+	          cardinality[0] = Integer.valueOf(num);
+	          num = card.substring(idx + 1, card.length()-1);
+	          cardinality[1] = Integer.valueOf(num);
+	          setCard = true;
+	        }
+	        else {
+	          log.ERR(3, "<log.ERR>:AN5:Service has unkown/incomplete cardinality: [" + srvs + "].");	
+	        }
+	      }
+	    }
+	  }
+	  services.add(val);
+	  srvCardinality.add(new int[]{cardinality[0], cardinality[1]});
+	  cnt++;
+	}
+	return setCard;
   }
   boolean getSignatureElementPairs(List<String> sigs, List<String[]> pairs, List<String> services, int[] cardinality) {
     log.DBG("getSignatureElementPairs");
@@ -255,41 +324,16 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	  int[] cardinality = new int[]{0,-1};
 	  setCard = getSignatureElementPairs(sigs, pairs, services, cardinality);
 
-	  switch (sigFor) {
-	    case an5Lexer.COMMON: ifNd.common = sigs;
-	                          ifNd.commonPair = pairs;
-	                          ifNd.services = services;
-	                          if (ifNd.cardinalityDefined && setCard) {
-		                        cardinalityConflict = true;
-	                          }
-		                      else if (setCard) {
-	                            ifNd.cardinalityMin = cardinality[0];
-	                            ifNd.cardinalityMax = cardinality[1];
-	                            ifNd.cardinalityDefined = true;
-	                          }
-	                          break;
-	    case an5Lexer.NEEDS: ifNd.needs = sigs;
-                             ifNd.needsPair = pairs;
-                             if (ifNd.cardinalityDefined && setCard) {
-                               cardinalityConflict = true;
-                             }
-                             else if (setCard) {
-                               ifNd.cardinalityMin = cardinality[0];
-                               ifNd.cardinalityMax = cardinality[1];
-	                           ifNd.cardinalityDefined = true;
-                             }
-                             break;
-	    case an5Lexer.PROVIDES: ifNd.provides = sigs;
-                                ifNd.providesPair = pairs;
-                                if (ifNd.cardinalityDefined && setCard) {
-                                  cardinalityConflict = true;
-                                }
-                                else if (setCard) {
-                                  ifNd.cardinalityMin = cardinality[0];
-                                  ifNd.cardinalityMax = cardinality[1];
-  	                              ifNd.cardinalityDefined = true;
-                                }
-	                            break;
+	  ifNd.common = sigs;
+	  ifNd.commonPair = pairs;
+	  ifNd.services = services;
+	  if (ifNd.cardinalityDefined && setCard) {
+		cardinalityConflict = true;
+	  }
+	  else if (setCard) {
+	    ifNd.cardinalityMin = cardinality[0];
+	    ifNd.cardinalityMax = cardinality[1];
+	    ifNd.cardinalityDefined = true;
 	  }
 	  if (cardinalityConflict) {
         log.ERR(3, "<log.ERR>:AN5:Signature cardinarlity confict: [" + ifNd.isA + "]" + ifNd.value + "."); 		  
@@ -419,6 +463,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void enterPrimitiveType(an5Parser.PrimitiveTypeContext ctx) { log.DBG("enterPrimitiveType"); }
   public void enterQualifiedName(an5Parser.QualifiedNameContext ctx) { log.DBG("enterQualifiedName"); }
   public void enterQualifiedNameList(an5Parser.QualifiedNameListContext ctx) { log.DBG("enterQualifiedNameList"); }
+  public void enterSericeSignatureDeclaration(ServiceSignatureDeclarationContext ctx) { log.DBG("enterServiceSignatureDeclaration"); }
   public void enterSignatureType(an5Parser.SignatureTypeContext ctx) { log.DBG("enterSignatureType"); }
   public void enterStatement(an5Parser.StatementContext ctx) { log.DBG("enterStatement"); }
   public void enterTypeArgument(an5Parser.TypeArgumentContext ctx) { log.DBG("enterTypeArgument"); }
@@ -529,7 +574,58 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitEnumDeclaration(an5Parser.EnumDeclarationContext ctx) { log.DBG("exitEnumDeclaration"); }
   public void exitExpression(an5Parser.ExpressionContext ctx) { log.DBG("exitExpression"); }
   public void exitExpressionList(an5Parser.ExpressionListContext ctx) { log.DBG("exitExpressionList"); }
-  public void exitFieldDeclaration(an5Parser.FieldDeclarationContext ctx) { log.DBG("exitFieldDeclaration"); }
+  public void exitFieldDeclaration(an5Parser.FieldDeclarationContext ctx) {
+    log.DBG("exitFieldDeclaration");
+	/* get parent interface */
+	RuleContext up = ctx.parent;
+	while (up != null) {
+      if (up instanceof an5Parser.ClassDeclarationContext) {
+        break;
+      }
+      up = up.parent;
+	}
+	
+	/* Extract attributes */
+	if (up == null) {
+	  log.ERR(3, "<ERR>:AN5:Class Field Parent Not Found.");		
+	}
+	else {
+	  an5ClassValue nd = useClassValue((an5Parser.ClassDeclarationContext)up, 0);
+
+	  if (nd != null) {
+
+	    TypeTypeContext sigCtx = ctx.typeType();
+	    StringBuilder[] typeVal = new StringBuilder[]{new StringBuilder(), new StringBuilder()};
+		List<String[]> varIds = new ArrayList<>();
+		String arFlag;
+		
+		extractTypeTypeKey(sigCtx, typeVal);
+		extractVariableNames(ctx.variableDeclarators(), varIds);
+		
+		an5TypeValue res = symtab.select(typeVal[1].toString());
+		if (res != null) {
+		  if (res instanceof an5ClassValue) {
+			for (String[] val: varIds) {
+			  arFlag = checkArrayFlag(typeVal[0].toString(), val[0]);
+			  if (arFlag.equals(global.arrayErr)) {
+				log.ERR(3, "<ERR>:AN5:Class Field [][] used.");				  
+			  } else {
+			    nd.contained.add(new an5ClassVariableValue(val[1], nd.inPackage,
+			    		               (an5ClassValue)res, arFlag));
+			  }
+		    }
+		  } else {
+            log.ERR(3, "<ERR>:AN5:Class Field Not Class or Primative.");	
+		  }
+		}
+		else {
+		  for (String[] val: varIds) {
+		    nd.attributes.add(new String[]{typeVal[1].toString(), val[1]});
+		  }
+		}
+      }
+    }
+  }
   public void exitFloatLiteral(an5Parser.FloatLiteralContext ctx) { log.DBG("exitFloatLiteral"); }
   public void exitFormalParameter(an5Parser.FormalParameterContext ctx) { log.DBG("exitFormalParameter"); }
   public void exitFormalParameterList(an5Parser.FormalParameterListContext ctx) { log.DBG("exitFormalParameterList"); }
@@ -724,6 +820,41 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitPrimitiveType(an5Parser.PrimitiveTypeContext ctx) { log.DBG("exitPrimitiveType"); }
   public void exitQualifiedName(an5Parser.QualifiedNameContext ctx) { log.DBG("exitQualifiedName"); }
   public void exitQualifiedNameList(an5Parser.QualifiedNameListContext ctx) { log.DBG("exitQualifiedNameList"); }
+  public void exitServiceSignatureDeclaration(an5Parser.ServiceSignatureDeclarationContext ctx) {
+	log.DBG("exitServiceSignatureDeclaration");
+	/* get parent interface */
+	RuleContext up = ctx.parent;
+	while (up != null) {
+      if (up instanceof an5Parser.ClassDeclarationContext) {
+        break;
+      }
+      up = up.parent;
+	}
+	
+	/* Extract services */
+	if (up == null) {
+	  log.ERR(3, "<ERR>:AN5:Class Services Parent Not Found.");		
+	}
+	else {
+	  an5ClassValue nd = useClassValue((an5Parser.ClassDeclarationContext)up, 0);
+      StringBuilder srvStr = new StringBuilder(); 
+	  List<String> vals = new ArrayList<>();
+	  List<String> services = new ArrayList<>();
+	  List<int[]> card = new ArrayList<>();
+	  
+	  if (nd != null) {
+        List<VariableInitializerContext> varInitCxt = ctx.arrayInitializer().variableInitializer();
+		for (VariableInitializerContext vCtx : varInitCxt) {
+		  srvStr.setLength(0);
+		  extractVarVal(vCtx, srvStr);		
+		  vals.add(srvStr.toString());
+		  log.DBG(diags, "service item - '" + srvStr + "'");
+		} 
+		getServicesSet(vals, services, card);
+      }
+	  nd.networkServices.add(new an5ServiceSetValue("service", nd.inPackage, services, card));
+    }
+  }
   public void exitSignatureType(an5Parser.SignatureTypeContext ctx) { log.DBG("exitSignatureType"); }
   public void exitStatement(an5Parser.StatementContext ctx) { log.DBG("exitStatement"); }
   public void exitTypeArgument(an5Parser.TypeArgumentContext ctx) { log.DBG("exitTypeArgument"); }

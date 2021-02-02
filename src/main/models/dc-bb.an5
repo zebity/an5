@@ -100,9 +100,9 @@ class cat6_cable extends link exposes catx_link {
 }
 
 abstract class ethernet_lan extends network {
-  switch fabric[];
-  computer hosts[];
-  catx_link cable[];
+  switch[] fabric;
+  computer[] hosts;
+  object[] uses;
   service = { "ethernet", "(ethernet_vlan)*" };
 }
 

@@ -200,6 +200,31 @@ public class an5Generate {
     }
     return cnt;
   }
+  int generateClassServiceSetVariablesImplementation(PrintStream jvStrm, an5ClassValue nd) {
+	int i = 0;
+	an5InterfaceVariableValue ifVar = null;
+	    
+	if (nd.networkServices.size() > 0) {
+		
+      jvStrm.print("  String[] AN5AT_service = {");  
+	  for (an5ServiceSetValue set: nd.networkServices) {
+		jvStrm.print("\"" + set.service.get(i) + "\"");
+		for (i = 1; i < set.service.size(); i++)
+		  jvStrm.print(", \"" + set.service.get(i) + "\"");
+	  }
+	  jvStrm.println("};");
+	  
+      jvStrm.print("  int[][] AN5AT_service_card = {");  
+	  for (an5ServiceSetValue set: nd.networkServices) {
+		i = 0;
+		jvStrm.print("{" + set.cardinality.get(i)[0] + ", " + set.cardinality.get(i)[1] + "}");
+		for (i = 1; i < set.cardinality.size(); i++)
+		  jvStrm.print(", {" + set.cardinality.get(i)[0] + ", " + set.cardinality.get(i)[1] + "}");
+	  }
+	  jvStrm.println("};");
+	}
+	return i;		
+  }
   int generateClassImplementations() throws FileNotFoundException {
     int cnt = 0;
 	PrintStream jvStrm;
@@ -227,12 +252,17 @@ public class an5Generate {
         jvStrm.println(" {");
         jvStrm.println("  String an5name = \"" + clNd.value + "\";");
         generateClassInterfaceVariablesImplementation(jvStrm, clNd);
+        generateClassServiceSetVariablesImplementation(jvStrm, clNd);
         jvStrm.println("  public " + clNm + "() {");
     	jvStrm.println("    for (an5VariableInstance v: ifInst) clVars.put(v.var, v);");
+    	if (clNd.networkServices.size() > 0)
+    	  jvStrm.println("    clVars.put(\"service\", new an5Service(AN5AT_service, AN5AT_service_card));");
         jvStrm.println("  }");
         jvStrm.println("  public " + clNm + "(an5ConstructArguments args) {");
         jvStrm.println("    super(args.getSuperArgs());");
     	jvStrm.println("    for (an5VariableInstance v: ifInst) clVars.put(v.var, v);");
+    	if (clNd.networkServices.size() > 0)
+    	  jvStrm.println("    clVars.put(\"service\", new an5Service(AN5AT_service, AN5AT_service_card));");
     	jvStrm.println("    varUtil.setConstrutArgs(args, this);");
     	jvStrm.println("  }");
         jvStrm.println("}");
