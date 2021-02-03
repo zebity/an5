@@ -144,7 +144,8 @@ memberDeclaration
 //    | genericMethodDeclaration
     : serviceSignatureDeclaration
     | interfaceVariableDeclaration
-    | fieldDeclaration
+    | annotationFieldDeclaration
+//    | fieldDeclaration
 //    | fieldDeclaration
 //    | constructorDeclaration
 //    | genericConstructorDeclaration
@@ -154,6 +155,12 @@ memberDeclaration
     | enumDeclaration
     ;
 
+
+annotationFieldDeclaration
+     : '@' MANDATORY fieldDeclaration
+     | fieldDeclaration
+     ;    
+    
 /* We use rule this even for void methods which cannot have [] after parameters.
    This simplifies grammar and we can consider void to be a type, which
    renders the [] matching as a context-sensitive issue or a semantic check
@@ -278,6 +285,7 @@ arrayInitializer
 
 classOrInterfaceType
     : IDENTIFIER ('.' IDENTIFIER)*
+//    : IDENTIFIER ('.' IDENTIFIER)*
 //    : IDENTIFIER typeArguments? ('.' IDENTIFIER typeArguments?)*
     ;
 
@@ -653,7 +661,8 @@ signatureType
     | NEEDS
     | PROVIDES
     ;
-    
+
+
 // typeArguments
 //     : '<' typeArgument (',' typeArgument)* '>'
 //     ;

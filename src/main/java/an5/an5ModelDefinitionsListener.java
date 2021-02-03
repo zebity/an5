@@ -9,83 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.v4.runtime.RuleContext;
-import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import an5.an5Parser;
-import an5.an5ParserBaseListener;
-import an5.an5Parser.AltAnnotationQualifiedNameContext;
-import an5.an5Parser.AnnotationConstantRestContext;
 import an5.an5Parser.AnnotationContext;
-import an5.an5Parser.AnnotationMethodOrConstantRestContext;
-import an5.an5Parser.AnnotationMethodRestContext;
-import an5.an5Parser.AnnotationTypeBodyContext;
-import an5.an5Parser.AnnotationTypeDeclarationContext;
-import an5.an5Parser.AnnotationTypeElementDeclarationContext;
-import an5.an5Parser.AnnotationTypeElementRestContext;
-import an5.an5Parser.ArgumentsContext;
-import an5.an5Parser.ArrayInitializerContext;
-import an5.an5Parser.BlockContext;
-import an5.an5Parser.BlockStatementContext;
-import an5.an5Parser.ClassBodyContext;
-import an5.an5Parser.ClassBodyDeclarationContext;
-import an5.an5Parser.ClassDeclarationContext;
+import an5.an5Parser.AnnotationFieldDeclarationContext;
 import an5.an5Parser.ClassOrInterfaceModifierContext;
-import an5.an5Parser.ClassOrInterfaceTypeContext;
-import an5.an5Parser.CompilationUnitContext;
-import an5.an5Parser.ConstDeclarationContext;
-import an5.an5Parser.ConstantDeclaratorContext;
-import an5.an5Parser.DefaultValueContext;
-import an5.an5Parser.ElementValueArrayInitializerContext;
-import an5.an5Parser.ElementValueContext;
-import an5.an5Parser.ElementValuePairContext;
-import an5.an5Parser.ElementValuePairsContext;
-import an5.an5Parser.EnumBodyDeclarationsContext;
-import an5.an5Parser.EnumConstantContext;
-import an5.an5Parser.EnumConstantsContext;
-import an5.an5Parser.EnumDeclarationContext;
 import an5.an5Parser.ExpressionContext;
-import an5.an5Parser.ExpressionListContext;
-import an5.an5Parser.FieldDeclarationContext;
-import an5.an5Parser.FloatLiteralContext;
-import an5.an5Parser.FormalParameterContext;
-import an5.an5Parser.FormalParameterListContext;
-import an5.an5Parser.FormalParametersContext;
-import an5.an5Parser.ImportDeclarationContext;
-import an5.an5Parser.IntegerLiteralContext;
-import an5.an5Parser.InterfaceBodyContext;
-import an5.an5Parser.InterfaceBodyDeclarationContext;
-import an5.an5Parser.InterfaceDeclarationContext;
-import an5.an5Parser.InterfaceMemberDeclarationContext;
-import an5.an5Parser.InterfaceAttributeDeclarationContext;
-import an5.an5Parser.InterfaceSignatureDeclarationContext;
-import an5.an5Parser.InterfaceVariableDeclarationContext;
-import an5.an5Parser.LastFormalParameterContext;
 import an5.an5Parser.LiteralContext;
-import an5.an5Parser.LocalTypeDeclarationContext;
-import an5.an5Parser.LocalVariableDeclarationContext;
-import an5.an5Parser.MemberDeclarationContext;
-import an5.an5Parser.ModifierContext;
-import an5.an5Parser.NetworkTypeContext;
-import an5.an5Parser.PackageDeclarationContext;
-import an5.an5Parser.ParExpressionContext;
 import an5.an5Parser.PrimaryContext;
-import an5.an5Parser.PrimitiveTypeContext;
-import an5.an5Parser.QualifiedNameContext;
-import an5.an5Parser.QualifiedNameListContext;
 import an5.an5Parser.ServiceSignatureDeclarationContext;
 import an5.an5Parser.SignatureTypeContext;
-import an5.an5Parser.StatementContext;
-import an5.an5Parser.TypeArgumentContext;
-import an5.an5Parser.TypeDeclarationContext;
-import an5.an5Parser.TypeListContext;
 import an5.an5Parser.TypeTypeContext;
-import an5.an5Parser.TypeTypeOrVoidContext;
 import an5.an5Parser.VariableDeclaratorContext;
-import an5.an5Parser.VariableDeclaratorIdContext;
-import an5.an5Parser.VariableDeclaratorsContext;
 import an5.an5Parser.VariableInitializerContext;
-import an5.an5Parser.VariableModifierContext;
 
 class an5ModelDefinitionsListener extends an5ParserBaseListener {
   an5Logging log = new an5Logging();
@@ -109,11 +45,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     return new String(res);
   }
   void extractTypeTypeKey(an5Parser.TypeTypeContext ctx, StringBuilder[] typeKey) {
-	/* an5Parser.NetworkTypeContext netType;
-	an5Parser.ClassOrInterfaceTypeContext clOrIfType;
-	an5Parser.PrimitiveTypeContext primType; */
 	
-	an5Parser.ClassOrInterfaceTypeContext nd = ctx.classOrInterfaceType();
 	if (ctx.classOrInterfaceType() != null) {
 	  typeKey[1].setLength(0);
 	  typeKey[1].append(ctx.classOrInterfaceType().getText());
@@ -134,17 +66,34 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	else {
 	  typeKey[0].setLength(0);
 	}
+	
+    RuleContext up = ctx.parent;
+	while (up != null) {
+	  if (up instanceof AnnotationFieldDeclarationContext) {
+	    break;
+	  }
+	  up = up.parent;
+    }
+	
+	typeKey[2].setLength(0);
+	if (up != null) {
+      AnnotationFieldDeclarationContext anFldDec = (AnnotationFieldDeclarationContext)up;
+      if (anFldDec.MANDATORY() != null) {
+	    typeKey[2].append(anFldDec.MANDATORY().getText());
+      }      
+	}
   }
   void extractTypeListKeys(an5Parser.TypeListContext exposed, List<String[]> exposesKeys) {
-	StringBuilder[] key = new StringBuilder[]{new StringBuilder(), new StringBuilder()};
+	StringBuilder[] key = new StringBuilder[]{new StringBuilder(), new StringBuilder(), new StringBuilder()};
 	
 	if (exposed != null) {
 	  List<TypeTypeContext> exposedType = exposed.typeType();
 	  for (TypeTypeContext nd : exposedType) {
 		key[0].setLength(0);
 		key[1].setLength(0);
+		key[2].setLength(0);
 	    extractTypeTypeKey(nd, key);
-        exposesKeys.add(new String[]{key[0].toString(), key[1].toString()});
+        exposesKeys.add(new String[]{key[0].toString(), key[1].toString(), key[2].toString()});
   	    log.DBG(diags, "exposes - '" + key[1] + "'");
 	  }
 	}	  
@@ -180,8 +129,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   boolean getServicesSet(List<String> srvs, List<String> services, List<int[]> srvCardinality) {
 	log.DBG("getSignatureElementPairs");
 	boolean setCard = false;
-	int idx,
-	    cnt = 0;
+	int idx;
 	int[] cardinality = new int[]{0,0};
 	String card, num;
 	 /* NOTE: string literals include the quotes, so remove these */
@@ -232,7 +180,6 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	  }
 	  services.add(val);
 	  srvCardinality.add(new int[]{cardinality[0], cardinality[1]});
-	  cnt++;
 	}
 	return setCard;
   }
@@ -388,6 +335,28 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	}
 	return nd;
   }
+  public boolean isAbstractClass(an5Parser.ClassDeclarationContext ctx) {
+    boolean res = false;
+    
+    RuleContext up = ctx.parent;
+	while (up != null) {
+	  if (up instanceof an5Parser.TypeDeclarationContext) {
+	    break;
+	  }
+	  up = up.parent;
+    }
+	
+	if (up != null) {
+	  an5Parser.TypeDeclarationContext typCtx = (an5Parser.TypeDeclarationContext)up;
+	  for (ClassOrInterfaceModifierContext modCtx: typCtx.classOrInterfaceModifier()) {
+		if (modCtx.ABSTRACT() != null) {
+		  res = true;
+		}
+	  }
+	}
+
+	return res;
+  }
   public void enterAltAnnotationQualifiedName(an5Parser.AltAnnotationQualifiedNameContext ctx) { log.DBG("enterAltAnnotationQualifiedName"); }
   public void enterAnnotation(an5Parser.AnnotationContext ctx) { log.DBG("enterAnnotation"); }
   public void enterAnnotationConstantRest(an5Parser.AnnotationConstantRestContext ctx) { log.DBG("enterAnnotationConstantRest"); }
@@ -477,7 +446,9 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void enterVariableInitializer(an5Parser.VariableInitializerContext ctx) { log.DBG("enterVariableInitializer"); }
   public void enterVariableModifier(an5Parser.VariableModifierContext ctx) { log.DBG("enterVariableModifier"); }
   public void exitAltAnnotationQualifiedName(an5Parser.AltAnnotationQualifiedNameContext ctx) { log.DBG("exitAltAnnotationQualifiedName"); }
-  public void exitAnnotation(an5Parser.AnnotationContext ctx) { log.DBG("exitAnnotation"); }
+  public void exitAnnotation(an5Parser.AnnotationContext ctx) {
+	log.DBG("exitAnnotation");
+  }
   public void exitAnnotationConstantRest(an5Parser.AnnotationConstantRestContext ctx) { log.DBG("exitAnnotationConstantRest"); }
   public void exitAnnotationMethodOrConstantRest(an5Parser.AnnotationMethodOrConstantRestContext ctx) { log.DBG("exitAnnotationMethodOrConstantRest"); }
   public void exitAnnotationMethodRest(an5Parser.AnnotationMethodRestContext ctx) { log.DBG("exitAnnotationMethodRest"); }
@@ -497,7 +468,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitClassDeclaration(an5Parser.ClassDeclarationContext ctx) {
     log.DBG("exitClassDeclaration");
     String id = ctx.IDENTIFIER().getText();
-    StringBuilder[] extendsKey = new StringBuilder[]{new StringBuilder(),new StringBuilder("object")};
+    StringBuilder[] extendsKey = new StringBuilder[]{new StringBuilder(),new StringBuilder("object"), new StringBuilder()};
     List<String[]> exposesKeys = new ArrayList<>();
     an5TypeValue res;
     
@@ -509,6 +480,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     an5ClassValue nd = useClassValue(ctx, 0);
     if (nd != null) {
       nd.fromMemberDec = false;
+      nd.abstractSpec = isAbstractClass(ctx);
       res = symtab.select(extendsKey[1].toString());
       if (res == null) {
     	nd.classExtended = new an5UnresolvedClassValue("class", extendsKey[1].toString(), symtab.current.forPackage);
@@ -595,7 +567,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	  if (nd != null) {
 
 	    TypeTypeContext sigCtx = ctx.typeType();
-	    StringBuilder[] typeVal = new StringBuilder[]{new StringBuilder(), new StringBuilder()};
+	    StringBuilder[] typeVal = new StringBuilder[]{new StringBuilder(), new StringBuilder(), new StringBuilder()};
 		List<String[]> varIds = new ArrayList<>();
 		String arFlag;
 		
@@ -611,7 +583,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 				log.ERR(3, "<ERR>:AN5:Class Field [][] used.");				  
 			  } else {
 			    nd.contained.add(new an5ClassVariableValue(val[1], nd.inPackage,
-			    		               (an5ClassValue)res, arFlag));
+			    		               (an5ClassValue)res, arFlag, typeVal[2].toString()));
 			  }
 		    }
 		  } else {
@@ -636,7 +608,6 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitInterfaceBodyDeclaration(an5Parser.InterfaceBodyDeclarationContext ctx) { log.DBG("exitInterfaceBodyDeclaration"); }
   public void exitInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) {
     log.DBG("exitInterfaceDeclaration");
-    String newIfId = ctx.IDENTIFIER().getText();
     List<String[]> exposesKeys = new ArrayList<>();
     an5TypeValue res = null;
     
@@ -686,7 +657,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	  if (ifNd != null) {
 			
 		TypeTypeContext sigCtx = ctx.typeType();
-		StringBuilder[] typeVal = new StringBuilder[]{new StringBuilder(), new StringBuilder()};
+		StringBuilder[] typeVal = new StringBuilder[]{new StringBuilder(), new StringBuilder(), new StringBuilder()};
 		List<String[]> attrs = new ArrayList<String[]>();
 		
 		if (sigCtx != null) {
@@ -757,7 +728,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	  if (nd != null) {
 		  
 		TypeTypeContext sigCtx = ctx.typeType();
-		StringBuilder[] typeVal = new StringBuilder[]{new StringBuilder(), new StringBuilder()};
+		StringBuilder[] typeVal = new StringBuilder[]{new StringBuilder(), new StringBuilder(), new StringBuilder()};
 				
 		if (sigCtx != null) {
 		  List<String[]> varIds = new ArrayList<>();

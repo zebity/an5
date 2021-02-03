@@ -73,6 +73,7 @@ INT:                'int';
 INTERFACE:          'interface';
 LINK:               'link';
 LONG:               'long';
+MANDATORY:          'mandatory';
 // NATIVE:             'native';
 NEEDS:              'needs';
 NETWORK:            'network';

@@ -13,7 +13,7 @@ package an5.generic.dctypes;
 
 @Model(
   spec = "an5",
-  version = "1.0"
+  version = "0.1"
 )
 
 interface pcie_interface {
@@ -100,8 +100,8 @@ class cat6_cable extends link exposes catx_link {
 }
 
 abstract class ethernet_lan extends network {
-  switch[] fabric;
-  computer[] hosts;
+  @mandatory switch[] fabric;
+  @mandatory computer[] hosts;
   object[] uses;
   service = { "ethernet", "(ethernet_vlan)*" };
 }
