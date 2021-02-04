@@ -20,7 +20,8 @@ public class an5Global {
 		 attrPrefix = "AN5AT_",
          fileSuffix = ".java",
          arrayFlag = "[",
-         arrayErr = "!";
+         arrayErr = "!",
+         mandatoryFlag = "mandatory";
   char pathSeperator = '/',
        packageSeparator = '.';
   an5ClassValue objectRoot = new an5ClassValue("object", basePackage);

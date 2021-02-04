@@ -27,11 +27,13 @@ public class an5Goal {
   }
   public int solve() {
     int res = 0;
+    seedGoal();
     return res;
   }
   void seedGoal() {
     if (goal instanceof an5CreateNetwork) {
-    	
+      an5CreateNetwork net = (an5CreateNetwork)goal;
+      net.seedGoal(elementsAndLinks);    	
     }
   }
 }
