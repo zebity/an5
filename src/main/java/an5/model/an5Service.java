@@ -15,6 +15,10 @@ public class an5Service extends an5VariableInstance {
       cardinality.add(new int[]{card[i][0], card[i][1]});
     }
   }
+  public boolean add(String srv, int n, int x) {
+    boolean res = service.add(srv);
+    res = res && cardinality.add(new int[]{m,x});
+  }
   public an5Service(List<String> srvs, List<int[]> card) {
     super("service");
     service = srvs;
