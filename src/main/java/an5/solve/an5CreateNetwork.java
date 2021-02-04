@@ -18,22 +18,24 @@ public class an5CreateNetwork extends an5Template {
   an5Service mustProvide,
              canProvide;
   List<an5Object> mustUse = new ArrayList<>();
-  Collection<Class> mustUseClass = new HashSet<>();
+  Collection<String> mustUseClass = new HashSet<>();
   
   public an5CreateNetwork(an5Network n) {
     netType = n;
   }
   void seedGoal(List<an5Object> use) {
-    mustProvide = netType.providesServices.getWhere(1, -1);
-    canProvide = netType.providesServices.getWhere(0, -1);
+    mustProvide = netType.providesServices().getWhere(1, -1);
+    canProvide = netType.providesServices().getWhere(0, -1);
     for (an5VariableInstance c : netType.clVars.values()) {
       if (c instanceof an5ClassInstance) {
     	an5ClassInstance cl = (an5ClassInstance)c;
-    	mustUseClass.add(cl.getClass());
+    	if (cl.mandatory) {
+    	  mustUseClass.add(cl.objectDefinition.getClass().getName());
+    	}
       }
     }
     for (an5Object o: use) {
-      if (mustUseClass.contains(o.getClass())) {
+      if (mustUseClass.contains(o.getClass().getName())) {
     	mustUse.add(o);
       }
       else {

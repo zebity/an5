@@ -5,11 +5,11 @@ import java.util.List;
 
 public class an5ClassInstance extends an5VariableInstance {
   static class allocationPolicy { static int STATIC = 0, DYNAMIC = 1; };
-  an5Object objectDefinition;
+  public an5Object objectDefinition;
   List<an5Object> instances = new ArrayList<>();
   int min,
       max;
-  boolean mandatory = false;
+  public boolean mandatory = false;
   int alloc = allocationPolicy.DYNAMIC;
   public an5ClassInstance(String varNm, an5Object ifDef, int mn, int mx, boolean man) {
 	super(varNm);
