@@ -50,7 +50,7 @@ interface ethernet_lag {
 }
 
 interface ethernet_vlan {
-  common = { "service=(ethernet-vlan){0,4096}" }
+  common = { "service=(ethernet_vlan){0,4096}" }
   needs = { "service=ethernet" };
   string name;
 }

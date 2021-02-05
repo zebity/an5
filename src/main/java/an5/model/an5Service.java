@@ -32,6 +32,9 @@ public class an5Service extends an5VariableInstance {
     }
     return new an5Service(s,c);
   }
+  public int size() {
+    return service.size();
+  }
   public String getService(int i) {
     String res = null;
     if (i >= 0 && i < service.size()) {

@@ -13,6 +13,9 @@ abstract public class an5Interface extends an5Object {
     signatureSet.add(0, sig);
     signatureFrom.add(0, sig.an5name);
   }
+  public List<String> getServiceSignature(int i) {
+    return signatureSet.get(i).services;
+  }
   public an5Binding getBinding(String nmPat, int i) {
 	String nm = nmPat.replace("%I", String.valueOf(i));
     an5Binding res = new an5Binding(nm, i);

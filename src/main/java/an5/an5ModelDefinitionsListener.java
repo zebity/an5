@@ -35,6 +35,12 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     symtab = new an5SymbolTable(glob);
     global = glob;
   }
+  boolean isLocked(an5TypeValue nd) {
+    if (nd.locked) {
+  	  log.ERR(0, "<log.ERR>:AN5:Locked Node Assertion Failed: Value - '" + nd.value + "' type - '" + nd.isA + "'");
+    }
+    return nd.locked;
+  }
   String checkArrayFlag(String f1, String f2) {
     String res = "";
     if (f1.equals(global.arrayFlag) || f2.equals(global.arrayFlag)) {
@@ -271,9 +277,23 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	  int[] cardinality = new int[]{0,-1};
 	  setCard = getSignatureElementPairs(sigs, pairs, services, cardinality);
 
-	  ifNd.common = sigs;
-	  ifNd.commonPair = pairs;
-	  ifNd.services = services;
+	  isLocked(ifNd);
+	  if (sigFor == an5.an5Lexer.COMMON) {
+		ifNd.common = sigs;
+		ifNd.commonPair = pairs;
+		for (String s: services)
+		  ifNd.services.add(s);
+      }
+      else if (sigFor == an5.an5Lexer.PROVIDES) {
+  		ifNd.provides = sigs;
+  		ifNd.providesPair = pairs;
+  		for (String s: services)
+  		  ifNd.services.add(s);    	
+      }
+      else if (sigFor == an5.an5Lexer.NEEDS) {
+  		ifNd.needs = sigs;
+  		ifNd.needsPair = pairs; 	  
+      }
 	  if (ifNd.cardinalityDefined && setCard) {
 		cardinalityConflict = true;
 	  }
@@ -512,6 +532,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     	  log.ERR(3, "<ERR>:AN5:Interface Exposed Type Invalid: [" + res.isA + "]" + res.value + ".");
         }
   	  }
+  	  nd.locked = true;
     }
 //    symtab.current = symtab.current.getParent();
   }
@@ -613,25 +634,26 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     
     extractTypeListKeys(ctx.typeList(), exposesKeys);
     
-    an5InterfaceValue ifNd = useInterfaceValue(ctx);
-    if (ifNd != null) {
-      ifNd.fromMemberDec = false;
+    an5InterfaceValue nd = useInterfaceValue(ctx);
+    if (nd != null) {
+      nd.fromMemberDec = false;
       for (String[] s: exposesKeys) {
         res = symtab.select(s[1]);
     	if (res == null) {
-    	  ifNd.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s[1], global.basePackage));
+    	  nd.interfacesExtended.add(new an5UnresolvedInterfaceValue("interface", s[1], global.basePackage));
     	}
     	else if (res instanceof an5UnresolvedInterfaceValue) {
     	  an5UnresolvedInterfaceValue fix = (an5UnresolvedInterfaceValue)res;
     	  fix.resolvedTo = res;
     	}
     	else if (res instanceof an5InterfaceValue) {
-    	  ifNd.interfacesExtended.add((an5InterfaceValue)res);
+    	  nd.interfacesExtended.add((an5InterfaceValue)res);
     	}
     	else {
     	  log.ERR(3, "<ERR>:AN5:Interface Extension Type Invalid: [" + res.isA + "]" + res.value + ".");
     	}
       }
+      nd.locked = true;
     }
 //    symtab.current = symtab.current.getParent();
   }
@@ -655,7 +677,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	  an5InterfaceValue ifNd = useInterfaceValue((an5Parser.InterfaceDeclarationContext)up);
 
 	  if (ifNd != null) {
-			
+	    isLocked(ifNd);
 		TypeTypeContext sigCtx = ctx.typeType();
 		StringBuilder[] typeVal = new StringBuilder[]{new StringBuilder(), new StringBuilder(), new StringBuilder()};
 		List<String[]> attrs = new ArrayList<String[]>();
@@ -692,7 +714,6 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	  an5InterfaceValue ifNd = useInterfaceValue((an5Parser.InterfaceDeclarationContext)up);
 
       if (ifNd != null) {
-		
 	    SignatureTypeContext sigCtx = ctx.signatureType();
         if (sigCtx.COMMON() != null) {
     	  extractSignatureArrayInitializer(ifNd, an5Lexer.COMMON, ctx.arrayInitializer());    	  
@@ -814,6 +835,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	  List<int[]> card = new ArrayList<>();
 	  
 	  if (nd != null) {
+		isLocked(nd);
         List<VariableInitializerContext> varInitCxt = ctx.arrayInitializer().variableInitializer();
 		for (VariableInitializerContext vCtx : varInitCxt) {
 		  srvStr.setLength(0);
