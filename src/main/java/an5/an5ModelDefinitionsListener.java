@@ -133,7 +133,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     }
   }
   boolean getServicesSet(List<String> srvs, List<String> services, List<int[]> srvCardinality) {
-	log.DBG("getSignatureElementPairs");
+	log.DBG("getServicesSet");
 	boolean setCard = false;
 	int idx;
 	int[] cardinality = new int[]{0,0};

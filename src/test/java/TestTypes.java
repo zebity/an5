@@ -1,3 +1,5 @@
+import java.util.HashMap;
+import java.util.Map;
 
 interface Jumper {
   public int jumpHeight();
@@ -83,4 +85,8 @@ class Concrete {
 
 class ArrayOfArray {
   String[][] array = new String[2][];
+}
+
+class MapofMap {
+  Map<String, Map<Object, Object>> mapOjects = new HashMap<>();
 }

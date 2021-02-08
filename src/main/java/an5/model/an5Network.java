@@ -13,7 +13,7 @@ public class an5Network extends an5Object {
 	
     an5VariableInstance s = clVars.get("service");
     if (s != null) {
-	  res =  ((an5Service)s).provides();
+	  res =  ((an5ServiceInstance)s).provides();
     }
 	return res;  
   }

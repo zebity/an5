@@ -20,4 +20,7 @@ public class an5InterfaceSignature {
     min = mn;
     max = mx;
   }
+  /* String[] getCommonHash() {
+    
+  } */
 }
