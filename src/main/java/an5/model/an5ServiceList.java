@@ -7,12 +7,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 
 public class an5ServiceList implements an5Service {
   List<String> service = new ArrayList<>();
   List<int[]> cardinality = new ArrayList<>();
-  public an5ServiceList() {
+  public an5ServiceList(an5ServiceMap from) {
+    for (an5ServiceMap.mapSrv ms: from.map.values()) {
+      service.add(new String(ms.service));
+      cardinality.add(new int[]{ms.min, ms.max});
+    }
   }
   public an5ServiceList(List<String> srvs, List<int[]> card) {
 	service = srvs;
@@ -35,7 +38,7 @@ public class an5ServiceList implements an5Service {
     	c.add(new int[]{cardinality.get(i)[0], cardinality.get(i)[1]});
       }
     }
-    return new an5ServiceMap(s,c);
+    return new an5ServiceList(s,c);
   }
   public int size() {
     return service.size();
@@ -73,5 +76,10 @@ public class an5ServiceList implements an5Service {
       }
     }
     return new an5ServiceList(srv, card);
+  }
+  public void add(an5Service srvs) {	
+  }
+  public boolean contains(String srvs) {
+    return false;
   }
 }

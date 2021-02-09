@@ -189,7 +189,7 @@ public class an5Generate {
       }
       
       cnt = 0;
-      jvStrm.println("  an5InterfaceInstance[] ifInst = new an5InterfaceInstance[]{");
+      jvStrm.println("  an5InterfaceInstance[] AN5AT_interface = new an5InterfaceInstance[]{");
       ifVar = nd.interfacesReflected.get(cnt);
       jvStrm.print("    " + global.attrPrefix + ifVar.value);
       for (cnt = 1; cnt < nd.interfacesReflected.size(); cnt++) {
@@ -198,9 +198,10 @@ public class an5Generate {
         jvStrm.print("    " + global.attrPrefix + ifVar.value);
       }
       jvStrm.println("};");
+      jvStrm.println("  an5Service AN5AT_service = new an5ServiceMap(AN5AT_interface);");
     }
     else {
-      jvStrm.println("  an5InterfaceInstance[] ifInst = new an5InterfaceInstance[0];");
+      jvStrm.println("  an5InterfaceInstance[] AN5AT_interface = new an5InterfaceInstance[0];");
     }
     return cnt;
   }
@@ -217,7 +218,7 @@ public class an5Generate {
 	      }
 	      
 	      cnt = 0;
-	      jvStrm.println("  an5ClassInstance[] clInst = new an5ClassInstance[]{");
+	      jvStrm.println("  an5ClassInstance[] AN5AT_class = new an5ClassInstance[]{");
 	      clVar = nd.contained.get(cnt);
 	      jvStrm.print("    " + global.attrPrefix + clVar.value);
 	      for (cnt = 1; cnt < nd.contained.size(); cnt++) {
@@ -228,7 +229,7 @@ public class an5Generate {
 	      jvStrm.println("};");
 	    }
 	    else {
-	      jvStrm.println("  an5ClassInstance[] clInst = new an5ClassInstance[0];");
+	      jvStrm.println("  an5ClassInstance[] AN5AT_class = new an5ClassInstance[0];");
 	    }
 	    return cnt;
 	  }
@@ -238,22 +239,22 @@ public class an5Generate {
 	    
 	if (nd.networkServices.size() > 0) {
 		
-      jvStrm.print("  String[] AN5AT_service = {");  
+      jvStrm.print("  an5Service AN5AT_service = new an5ServiceList(new String[]{");  
 	  for (an5ServiceSetValue set: nd.networkServices) {
 		jvStrm.print("\"" + set.service.get(i) + "\"");
 		for (i = 1; i < set.service.size(); i++)
 		  jvStrm.print(", \"" + set.service.get(i) + "\"");
 	  }
-	  jvStrm.println("};");
+	  jvStrm.println("},");
 	  
-      jvStrm.print("  int[][] AN5AT_service_card = {");  
+      jvStrm.print("                   new int[][]{");  
 	  for (an5ServiceSetValue set: nd.networkServices) {
 		i = 0;
 		jvStrm.print("{" + set.cardinality.get(i)[0] + ", " + set.cardinality.get(i)[1] + "}");
 		for (i = 1; i < set.cardinality.size(); i++)
 		  jvStrm.print(", {" + set.cardinality.get(i)[0] + ", " + set.cardinality.get(i)[1] + "}");
 	  }
-	  jvStrm.println("};");
+	  jvStrm.println("});");
 	}
 	return i;		
   }
@@ -288,19 +289,19 @@ public class an5Generate {
         generateClassObjectVariablesImplementation(jvStrm, clNd);
         jvStrm.println("  public " + clNm + "() {");
         jvStrm.println("    super();");
-    	jvStrm.println("    for (an5VariableInstance v: ifInst) clVars.put(v.var, v);");
-    	if (clNd.networkServices.size() > 0)
-    	  jvStrm.println("    clVars.put(\"service\", new an5Service(AN5AT_service, AN5AT_service_card));");
-    	jvStrm.println("    for (an5ClassInstance v: clInst) clVars.put(v.var, v);");
+    	jvStrm.println("    for (an5VariableInstance v: AN5AT_interface) AN5AT_vars.put(v.var, v);");
+    	jvStrm.println("    for (an5ClassInstance v: AN5AT_class) AN5AT_vars.put(v.var, v);");
+        if (clNd.interfacesReflected.size() > 0 || clNd.networkServices.size() > 0)
+          jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
     	if (clNd.abstractSpec)
       	  jvStrm.println("    abstractSpec = true;");
     	jvStrm.println("  }");
         jvStrm.println("  public " + clNm + "(an5ConstructArguments args) {");
         jvStrm.println("    super(args.getSuperArgs());");
-    	jvStrm.println("    for (an5VariableInstance v: ifInst) clVars.put(v.var, v);");
-    	if (clNd.networkServices.size() > 0)
-    	  jvStrm.println("    clVars.put(\"service\", new an5Service(AN5AT_service, AN5AT_service_card));");
-    	jvStrm.println("    for (an5ClassInstance v: clInst) clVars.put(v.var, v);");
+    	jvStrm.println("    for (an5VariableInstance v: AN5AT_interface) AN5AT_vars.put(v.var, v);");
+    	jvStrm.println("    for (an5ClassInstance v: AN5AT_class) AN5AT_vars.put(v.var, v);");
+        if (clNd.interfacesReflected.size() > 0 || clNd.networkServices.size() > 0)
+          jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
     	jvStrm.println("    varUtil.setConstrutArgs(args, this);");
     	if (clNd.abstractSpec)
           jvStrm.println("    abstractSpec = true;");

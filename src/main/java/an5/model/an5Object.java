@@ -18,7 +18,8 @@ public class an5Object {
   public boolean mandatory = false;
   public String[] uniqueId = new String[2];
   public String[] persistentUniqueId = new String[2];
-  public Map<String, an5VariableInstance> clVars = new HashMap<>();
+  public Map<String, an5VariableInstance> AN5AT_vars = new HashMap<>();
+  public an5Service AN5AT_serviceUnion = new an5ServiceMap();
   public an5VarUtil varUtil = new an5VarUtil();
   public an5Object getInstance(String nmPat, int i) {
     return null;

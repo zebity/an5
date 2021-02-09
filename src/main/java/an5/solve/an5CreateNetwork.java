@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import an5.model.an5Object;
+import an5.model.an5AvailableInterfaces;
 import an5.model.an5ClassInstance;
 import an5.model.an5Element;
 import an5.model.an5Network;
@@ -27,7 +28,9 @@ public class an5CreateNetwork extends an5Template {
   List<an5Object> mustUseOrder = new LinkedList();
   Collection<String> mustUseClass = new HashSet<>();
   List<an5Network> networks = new ArrayList<>();
-  List<an5Object> starter = new ArrayList<>();
+  List<an5Object> bestStarter = new ArrayList<>();
+  List<an5Object> altStarter = new ArrayList<>();
+  an5AvailableInterfaces availableInterface = new an5AvailableInterfaces();
   
   public an5CreateNetwork(an5Network n) {
     netType = n;
@@ -35,7 +38,7 @@ public class an5CreateNetwork extends an5Template {
   void seedGoal(List<an5Object> use) {
     mustProvide = netType.providesServices().getWhere(1, -1);
     canProvide = netType.providesServices().getWhere(0, -1);
-    for (an5VariableInstance c : netType.clVars.values()) {
+    for (an5VariableInstance c : netType.AN5AT_vars.values()) {
       if (c instanceof an5ClassInstance) {
     	an5ClassInstance cl = (an5ClassInstance)c;
     	if (cl.mandatory) {
@@ -52,7 +55,15 @@ public class an5CreateNetwork extends an5Template {
           an5Element el = (an5Element)o;
           boolean[] can = el.providesService(mustProvide, canProvide);
           if (can[0]) {
-        	starter.add(o);
+        	if (can[1]) {
+        	  bestStarter.add(o);
+        	}
+        	else {
+        	  altStarter.add(o);
+        	}
+          }
+          else if (can[1]) {
+        	altStarter.add(o);
           }
     	}
     	else if (o instanceof an5Network) {
@@ -61,6 +72,7 @@ public class an5CreateNetwork extends an5Template {
       }
       else {
     	available.put(o,o);
+    	availableInterface.add(o);
       }
     }
   }

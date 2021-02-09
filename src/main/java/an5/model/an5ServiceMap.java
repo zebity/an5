@@ -26,6 +26,7 @@ public class an5ServiceMap implements an5Service {
   boolean mappedUnique = false;
   // an5ServiceMap.mapSrv tst = new mapSrv(){service = new String("frog"), min = 1, max = 2};
   public an5ServiceMap() {
+    map = new HashMap<>();
   }
   public an5ServiceMap(List<String> srvs, List<int[]> card) {
 	map = new HashMap<>();
@@ -42,15 +43,13 @@ public class an5ServiceMap implements an5Service {
   public an5ServiceMap(an5ServiceList from, boolean unique) {
 	map = new HashMap<>();
     Collection<String> uniqueSet = new HashSet<>();
-    List<String> s = new ArrayList<>();
-    List<int[]> c = new ArrayList<>();
+    mappedUnique = unique;
     for (int i = 0; i < from.size(); i++) {
       if (unique && ! uniqueSet.contains(from.getService(i))) {
-    	mappedUnique = true;
         uniqueSet.add(from.getService(i));
         map.put(from.getService(i), new mapSrv(from.getService(i), from.getCardinality(i)[0], from.getCardinality(i)[1]));
       }
-      else {
+      else if (! unique) {
         map.put(from.getService(i), new mapSrv(from.getService(i), from.getCardinality(i)[0], from.getCardinality(i)[1]));    	  
       }
     }
@@ -59,6 +58,16 @@ public class an5ServiceMap implements an5Service {
     map = new HashMap<>();
     for (mapSrv m: from.map.values()) {
       map.put(m.service, new mapSrv(m));	
+    }
+  }
+  public an5ServiceMap(an5InterfaceInstance[] from) {
+	map = new HashMap<>();
+    for (an5InterfaceInstance v : from) {
+	  for (int i = 0; i < v.interfaceDefinition.signatureSet.size(); i++) {
+	    for (String s : v.interfaceDefinition.getServiceSignature(i)) {
+		  map.put(s, new mapSrv(s, v.min, v.max));
+	    }
+      }
     }
   }
   public an5Service provides() {
@@ -97,5 +106,26 @@ public class an5ServiceMap implements an5Service {
   }
   public an5Service getWhere(int n, int x) {
     return null;
+  }
+  public void add(an5Service srvs) {
+    if (srvs instanceof an5ServiceList) {
+      for (int i = 0; i < srvs.size(); i++) {
+    	if (mappedUnique && ! map.containsKey(srvs.getService(i))) {
+    	  map.put(srvs.getService(i), new mapSrv(srvs.getService(i), srvs.getCardinality(i)[0], srvs.getCardinality(i)[1]));
+    	}
+    	else if (! mappedUnique) {
+      	  map.put(srvs.getService(i), new mapSrv(srvs.getService(i), srvs.getCardinality(i)[0], srvs.getCardinality(i)[1]));    		
+    	}
+      }
+    }
+    else {
+      an5ServiceMap m = (an5ServiceMap)srvs;
+      for (mapSrv ms : m.map.values()) {
+    	map.put(ms.service, new mapSrv(new String(ms.service), ms.min, ms.max));
+      }
+    }
+  }
+  public boolean contains(String srv) {
+    return map.containsKey(srv);
   }
 }

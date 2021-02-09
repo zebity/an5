@@ -8,8 +8,8 @@ public class an5AvailableInterfaces {
   public an5AvailableInterfaces() {
   }
   public void add(an5Object o) {
-    for (an5VariableInstance v: o.clVars.values()) {
-      StringBuilder hashSig = new StringBuilder(v.)
+    for (an5VariableInstance v: o.AN5AT_vars.values()) {
+      /* StringBuilder hashSig = new StringBuilder(v.) */
     }
   }
 }
