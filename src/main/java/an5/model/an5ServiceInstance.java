@@ -11,14 +11,9 @@ import java.util.List;
 public class an5ServiceInstance extends an5VariableInstance {
   // an5Binding binding;
   an5Service service;
-  /* List<String> service = new ArrayList<>;
-  List<int[]> cardinality = new ArrayList<>(); */
   public an5ServiceInstance(String[] srvs, int[][] card) {
     super("service");
-    service = new an5ServiceList();
-    for (int i = 0; i < card.length; i++) {
-      service.addService(srvs[i], card[i][0], card[i][1]);
-    }
+    service = new an5ServiceList(srvs, card);
   }
   public an5ServiceInstance(List<String> srvs, List<int[]> card) {
 	super("service");
