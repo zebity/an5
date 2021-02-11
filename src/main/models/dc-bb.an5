@@ -39,7 +39,7 @@ interface ethernet_port {
  
 interface ethernet_port_base_t extends ethernet_port {
   common = { "plug=rj45"};
-  needs = {"cable=(cat([3-8].?))?", "plug=rj45",
+  needs = { "plug=rj45", "cable=(cat([3-8].?))?",
            "gender=male", "media=copper"};
   provides = {"plug=rj45", "gender=female"};
 }
@@ -81,9 +81,13 @@ class switch extends element exposes ethernet_port_base_t, ethernet_vlan, ethern
   string name;
 }
 
-interface catx_link {
-  common = {"cable=(cat([3-8].?))?", "plug=rj45",
-            "gender=male", "media=copper"};
+interface rj45_plug {
+  common = { "plug=rj45"};
+}
+ 
+interface catx_link extends rj45_plug {
+  common = {"cable=(cat([3-8].?))?", "gender=male",
+            "media=copper"};
 }
 
 interface cat6_link extends catx_link {

@@ -281,8 +281,10 @@ public class an5Generate {
         jvStrm.println("    super();");
     	jvStrm.println("    for (an5VariableInstance v: AN5AT_interface) AN5AT_vars.put(v.var, v);");
     	jvStrm.println("    for (an5ClassInstance v: AN5AT_class) AN5AT_vars.put(v.var, v);");
-        if (clNd.interfacesReflected.size() > 0 || clNd.networkServices.size() > 0)
+        if (clNd.interfacesReflected.size() > 0 || clNd.networkServices.size() > 0) {
           jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
+          jvStrm.println("    AN5SG_sigKeyUnion.add(this, AN5AT_interface);");
+        }
     	if (clNd.abstractSpec)
       	  jvStrm.println("    abstractSpec = true;");
     	jvStrm.println("  }");
@@ -290,8 +292,10 @@ public class an5Generate {
         jvStrm.println("    super(args.getSuperArgs());");
     	jvStrm.println("    for (an5VariableInstance v: AN5AT_interface) AN5AT_vars.put(v.var, v);");
     	jvStrm.println("    for (an5ClassInstance v: AN5AT_class) AN5AT_vars.put(v.var, v);");
-        if (clNd.interfacesReflected.size() > 0 || clNd.networkServices.size() > 0)
+        if (clNd.interfacesReflected.size() > 0 || clNd.networkServices.size() > 0) {
           jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
+          jvStrm.println("    AN5SG_sigKeyUnion.add(this, AN5AT_interface);");
+        }
     	jvStrm.println("    varUtil.setConstrutArgs(args, this);");
     	if (clNd.abstractSpec)
           jvStrm.println("    abstractSpec = true;");

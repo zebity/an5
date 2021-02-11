@@ -72,7 +72,7 @@ public class an5CreateNetwork extends an5Template {
       }
       else {
     	available.put(o,o);
-    	availableInterface.add(o);
+    	// availableInterface.add(o);
       }
     }
   }

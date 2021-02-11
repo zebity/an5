@@ -5,14 +5,12 @@ import java.util.List;
 
 abstract public class an5Interface extends an5Object {
   public List<an5InterfaceSignature> signatureSet = new ArrayList<>();
-  public List<String> signatureFrom = new ArrayList<>();
-  public List<String> signatureKeys = new ArrayList<>();
+  public List<String[]> signatureKeys = new ArrayList<>();
   public an5Interface() {
     super();
   }
   public void addSignatureSet(an5InterfaceSignature sig) {
     signatureSet.add(0, sig);
-    signatureFrom.add(0, sig.an5name);
     if (sig.getSignatureKey().length() > 0) {
       StringBuilder key = new StringBuilder();
       for (int i = 0; i < signatureSet.size(); i++) {
@@ -22,7 +20,7 @@ abstract public class an5Interface extends an5Object {
         }
       }
       if (key.length() > 0) {
-        signatureKeys.add(key.toString());
+        signatureKeys.add(new String[]{new String(sig.an5name), key.toString()});
       }
     }
   }
