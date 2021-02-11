@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class an5AvailableInterfaces {
+public class an5InterfaceSignatureKeys {
   public class mapIf {
     String sigKey,
            ifType;
@@ -15,8 +15,8 @@ public class an5AvailableInterfaces {
       forInterface = i;
     }
   }
-  Map<String, mapIf> ifSet = new HashMap<>();
-  public an5AvailableInterfaces() {
+  public Map<String, mapIf> ifSet = new HashMap<>();
+  public an5InterfaceSignatureKeys() {
   }
   public void add(an5Object ob, an5InterfaceInstance[] ifs) {
     for (an5InterfaceInstance ifInst : ifs) {

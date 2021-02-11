@@ -31,16 +31,19 @@ class computer extends element exposes pcie_slot {
   string name;
 }
 
-interface ethernet_port {
+interface rj45_plug {
+  common = { "plug=rj45"};
+}
+
+interface ethernet_base_t extends rj45_plug {
   common = { "service=ethernet"};
   string name,
          MAC;
 }
  
-interface ethernet_port_base_t extends ethernet_port {
-  common = { "plug=rj45"};
-  needs = { "plug=rj45", "cable=(cat([3-8].?))?",
-           "gender=male", "media=copper"};
+interface ethernet_port_base_t extends ethernet_base_t {
+  needs = { "cable=(cat([3-8].?))?",
+            "gender=male", "media=copper"};
   provides = {"plug=rj45", "gender=female"};
 }
 
@@ -79,10 +82,6 @@ class switch extends element exposes ethernet_port_base_t, ethernet_vlan, ethern
   reflects ethernet_vlan vlan[];
   reflects ethernet_lag lag[];
   string name;
-}
-
-interface rj45_plug {
-  common = { "plug=rj45"};
 }
  
 interface catx_link extends rj45_plug {

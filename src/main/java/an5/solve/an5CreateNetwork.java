@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import an5.model.an5Object;
-import an5.model.an5AvailableInterfaces;
+import an5.model.an5InterfaceSignatureKeys;
 import an5.model.an5ClassInstance;
 import an5.model.an5Element;
 import an5.model.an5Network;
@@ -30,7 +30,7 @@ public class an5CreateNetwork extends an5Template {
   List<an5Network> networks = new ArrayList<>();
   List<an5Object> bestStarter = new ArrayList<>();
   List<an5Object> altStarter = new ArrayList<>();
-  an5AvailableInterfaces availableInterface = new an5AvailableInterfaces();
+  an5InterfaceSignatureKeys availableInterface = new an5InterfaceSignatureKeys();
   
   public an5CreateNetwork(an5Network n) {
     netType = n;

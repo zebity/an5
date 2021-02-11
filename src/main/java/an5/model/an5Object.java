@@ -20,7 +20,7 @@ public class an5Object {
   public String[] persistentUniqueId = new String[2];
   public Map<String, an5VariableInstance> AN5AT_vars = new HashMap<>();
   public an5Service AN5AT_serviceUnion = new an5ServiceMap();
-  public an5AvailableInterfaces AN5SG_sigKeyUnion = new an5AvailableInterfaces();
+  public an5InterfaceSignatureKeys AN5SG_sigKeyUnion = new an5InterfaceSignatureKeys();
   public an5VarUtil varUtil = new an5VarUtil();
   public an5Object getInstance(String nmPat, int i) {
     return null;
