@@ -11,6 +11,7 @@ import java.util.Map;
 import an5.model.an5Object;
 import an5.model.an5InterfaceSignatureKeys;
 import an5.model.an5ClassInstance;
+import an5.model.an5ClassTemplate;
 import an5.model.an5Element;
 import an5.model.an5Network;
 import an5.model.an5Service;
@@ -21,6 +22,7 @@ public class an5CreateNetwork extends an5Template {
               an5Object key;
             }
   an5Network netType;
+  an5ClassTemplate stamp;
   Map<an5Object, an5Object> available =  new HashMap<>();
   an5Service mustProvide,
              canProvide;
@@ -30,10 +32,11 @@ public class an5CreateNetwork extends an5Template {
   List<an5Network> networks = new ArrayList<>();
   List<an5Object> bestStarter = new ArrayList<>();
   List<an5Object> altStarter = new ArrayList<>();
-  an5InterfaceSignatureKeys availableInterface = new an5InterfaceSignatureKeys();
+  an5AvailableInterfaces availableInterface = new an5AvailableInterfaces();
   
-  public an5CreateNetwork(an5Network n) {
-    netType = n;
+  public an5CreateNetwork(an5Object n) {
+    netType = (an5Network)n;
+    stamp = (an5ClassTemplate)n;
   }
   void seedGoal(List<an5Object> use) {
     mustProvide = netType.providesServices().getWhere(1, -1);
@@ -72,7 +75,7 @@ public class an5CreateNetwork extends an5Template {
       }
       else {
     	available.put(o,o);
-    	// availableInterface.add(o);
+    	availableInterface.available(o);
       }
     }
   }

@@ -195,58 +195,123 @@ public class an5Generate {
     }
     return cnt;
   }
-  int generateClassObjectVariablesImplementation(PrintStream jvStrm, an5ClassValue nd) {
-	    int cnt = 0;
-	    an5ClassVariableValue clVar = null;
+  int generateClassObjectVariablesImplementation(PrintStream jvStrm, an5ClassValue nd, boolean abstractSuppress) {
+	int cnt = 0;
+	an5ClassVariableValue clVar = null;
+	boolean mandatoryFlag;
 	    
-	    if (nd.contained.size() > 0) {
-	      for (cnt = 0; cnt < nd.contained.size(); cnt++) {
-	    	clVar = nd.contained.get(cnt);
-	        jvStrm.print("  an5ClassInstance " + global.attrPrefix + clVar.value);
-	        jvStrm.print(" = new an5ClassInstance(\"" + clVar.value + "\", new ");
-	        jvStrm.println(adjustClass(clVar.contained.value, global.classPrefix) + "(), 0, " + clVar.size + ", " + checkMandatoryFlag(clVar.annotation) + ");");
-	      }
-	      
-	      cnt = 0;
-	      jvStrm.println("  an5ClassInstance[] AN5AT_class = new an5ClassInstance[]{");
-	      clVar = nd.contained.get(cnt);
-	      jvStrm.print("    " + global.attrPrefix + clVar.value);
-	      for (cnt = 1; cnt < nd.contained.size(); cnt++) {
-	        clVar = nd.contained.get(cnt);
-	    	jvStrm.println(",");
-	        jvStrm.print("    " + global.attrPrefix + clVar.value);
-	      }
-	      jvStrm.println("};");
+	if (nd.contained.size() > 0) {
+
+	  for (cnt = 0; cnt < nd.contained.size(); cnt++) {
+	    clVar = nd.contained.get(cnt);
+	    mandatoryFlag = checkMandatoryFlag(clVar.annotation);
+	    if (abstractSuppress && mandatoryFlag) {
+	      mandatoryFlag = false;
 	    }
-	    else {
-	      jvStrm.println("  an5ClassInstance[] AN5AT_class = new an5ClassInstance[0];");
-	    }
-	    return cnt;
+	    jvStrm.print("  an5ClassInstance " + global.attrPrefix + clVar.value);
+	    jvStrm.print(" = new an5ClassInstance(\"" + clVar.value + "\", new ");
+	    jvStrm.println(adjustClass(clVar.contained.value, global.classPrefix) + "(), 0, " + clVar.size + ", " + mandatoryFlag + ");");
 	  }
-  int generateClassServiceSetVariablesImplementation(PrintStream jvStrm, an5ClassValue nd) {
+	      
+	  cnt = 0;
+	  jvStrm.println("  an5ClassInstance[] AN5AT_class = new an5ClassInstance[]{");
+	  clVar = nd.contained.get(cnt);
+	  jvStrm.print("    " + global.attrPrefix + clVar.value);
+	  for (cnt = 1; cnt < nd.contained.size(); cnt++) {
+	    clVar = nd.contained.get(cnt);
+	    jvStrm.println(",");
+	    jvStrm.print("    " + global.attrPrefix + clVar.value);
+	  }
+	  jvStrm.println("};");
+	} else {
+	  jvStrm.println("  an5ClassInstance[] AN5AT_class = new an5ClassInstance[0];");
+	}
+	return cnt;
+  }
+  int generateClassServiceSetVariablesImplementation(PrintStream jvStrm, an5ClassValue nd, boolean abstractSuppress) {
 	int i = 0;
 	an5InterfaceVariableValue ifVar = null;
-	    
-	if (nd.networkServices.size() > 0) {
+
+	if (abstractSuppress) {
+	  if (nd.networkServices.size() > 0) {
+	    jvStrm.println("  an5Service AN5AT_service = new an5ServiceList();");  
+	  }
+	} else {
+	  if (nd.networkServices.size() > 0) {
 		
-      jvStrm.print("  an5Service AN5AT_service = new an5ServiceList(new String[]{");  
-	  for (an5ServiceSetValue set: nd.networkServices) {
-		jvStrm.print("\"" + set.service.get(i) + "\"");
-		for (i = 1; i < set.service.size(); i++)
-		  jvStrm.print(", \"" + set.service.get(i) + "\"");
-	  }
-	  jvStrm.println("},");
+        jvStrm.print("  an5Service AN5AT_service = new an5ServiceList(new String[]{");  
+	    for (an5ServiceSetValue set: nd.networkServices) {
+		  jvStrm.print("\"" + set.service.get(i) + "\"");
+		  for (i = 1; i < set.service.size(); i++)
+		    jvStrm.print(", \"" + set.service.get(i) + "\"");
+	    }
+	    jvStrm.println("},");
 	  
-      jvStrm.print("                   new int[][]{");  
-	  for (an5ServiceSetValue set: nd.networkServices) {
-		i = 0;
-		jvStrm.print("{" + set.cardinality.get(i)[0] + ", " + set.cardinality.get(i)[1] + "}");
-		for (i = 1; i < set.cardinality.size(); i++)
-		  jvStrm.print(", {" + set.cardinality.get(i)[0] + ", " + set.cardinality.get(i)[1] + "}");
+        jvStrm.print("                   new int[][]{");  
+	    for (an5ServiceSetValue set: nd.networkServices) {
+		  i = 0;
+		  jvStrm.print("{" + set.cardinality.get(i)[0] + ", " + set.cardinality.get(i)[1] + "}");
+		  for (i = 1; i < set.cardinality.size(); i++)
+		    jvStrm.print(", {" + set.cardinality.get(i)[0] + ", " + set.cardinality.get(i)[1] + "}");
+	    }
+	    jvStrm.println("});");
 	  }
-	  jvStrm.println("});");
 	}
 	return i;		
+  }
+  int generateTemplateClassImplementations(an5ClassValue nd) throws FileNotFoundException {
+    int cnt = 0;
+    PrintStream jvStrm;
+	String clNm;
+	
+    clNm = new String(global.templatePrefix + nd.value);
+    jvStrm = new PrintStream(dirPath + packagePath + global.pathSeperator + clNm + global.fileSuffix);
+  
+    jvStrm.println("/* -- AN5 Generated Class Template File -- */");
+    jvStrm.println("package " + symtab.current.forPackage + ";");
+    jvStrm.println("import an5.model.*;");
+    jvStrm.print("public class " + clNm);
+    if (nd.classExtended != null) {
+      jvStrm.print(" extends " + adjustClass(nd.classExtended.value, global.templatePrefix));
+    }
+    jvStrm.print(" implements an5ClassTemplate ");
+    if (nd.interfacesExposed.size() > 0) {
+      for (int i = 0; i < nd.interfacesExposed.size(); i++) {
+        jvStrm.print(", " + adjustClass(nd.interfacesExposed.get(i).value, global.interfacePrefix));
+      }
+    }
+    jvStrm.println(" {");
+    jvStrm.println("  String an5name = \"" + nd.value + "\";");
+    generateClassInterfaceVariablesImplementation(jvStrm, nd);
+    generateClassServiceSetVariablesImplementation(jvStrm, nd, false);
+    generateClassObjectVariablesImplementation(jvStrm, nd, false);
+    jvStrm.println("  public an5Object createInstance() {");
+    jvStrm.println("    return new " + global.classPrefix + nd.value + "(this);");    
+	jvStrm.println("  }");
+    jvStrm.println("  public " + clNm + "() {");
+    jvStrm.println("    super();");
+	jvStrm.println("    for (an5VariableInstance v: AN5AT_interface) AN5AT_vars.put(v.var, v);");
+	jvStrm.println("    for (an5ClassInstance v: AN5AT_class) AN5AT_vars.put(v.var, v);");
+    if (nd.interfacesReflected.size() > 0 || nd.networkServices.size() > 0) {
+      jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
+      jvStrm.println("    AN5SG_sigKeyUnion.add(this, AN5AT_interface);");
+    }
+	jvStrm.println("    abstractSpec = true;");
+	jvStrm.println("  }");
+    jvStrm.println("  public " + clNm + "(an5ConstructArguments args) {");
+    jvStrm.println("    super(args.getSuperArgs());");
+	jvStrm.println("    for (an5VariableInstance v: AN5AT_interface) AN5AT_vars.put(v.var, v);");
+	jvStrm.println("    for (an5ClassInstance v: AN5AT_class) AN5AT_vars.put(v.var, v);");
+    if (nd.interfacesReflected.size() > 0 || nd.networkServices.size() > 0) {
+     jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
+     jvStrm.println("    AN5SG_sigKeyUnion.add(this, AN5AT_interface);");
+    }
+	jvStrm.println("    varUtil.setConstrutArgs(args, this);");
+    jvStrm.println("    abstractSpec = true;");
+	jvStrm.println("  }");
+    jvStrm.println("}");
+    
+    return cnt;
   }
   int generateClassImplementations() throws FileNotFoundException {
     int cnt = 0;
@@ -256,6 +321,9 @@ public class an5Generate {
     for (an5TypeValue nd : symtab.current.identifier.values()) {
       if (nd instanceof an5ClassValue) {
     	an5ClassValue clNd = (an5ClassValue)nd;
+    	if (clNd.abstractSpec) {
+    	  generateTemplateClassImplementations(clNd);
+    	}
     	clNm = new String(global.classPrefix + clNd.value);
         jvStrm = new PrintStream(dirPath + packagePath + global.pathSeperator + clNm + global.fileSuffix);
         
@@ -275,8 +343,19 @@ public class an5Generate {
         jvStrm.println(" {");
         jvStrm.println("  String an5name = \"" + clNd.value + "\";");
         generateClassInterfaceVariablesImplementation(jvStrm, clNd);
-        generateClassServiceSetVariablesImplementation(jvStrm, clNd);
-        generateClassObjectVariablesImplementation(jvStrm, clNd);
+        generateClassServiceSetVariablesImplementation(jvStrm, clNd, clNd.abstractSpec);
+        generateClassObjectVariablesImplementation(jvStrm, clNd, clNd.abstractSpec);
+    	if (clNd.abstractSpec) {
+          jvStrm.println("  public " + clNm + "(" + global.templatePrefix + clNd.value + " from) {");
+          jvStrm.println("    super();");
+          jvStrm.println("    for (an5VariableInstance v: AN5AT_interface) AN5AT_vars.put(v.var, v);");
+          jvStrm.println("    for (an5ClassInstance v: AN5AT_class) AN5AT_vars.put(v.var, v);");
+          if (clNd.interfacesReflected.size() > 0 || clNd.networkServices.size() > 0) {
+            jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
+            jvStrm.println("    AN5SG_sigKeyUnion.add(this, AN5AT_interface);");
+          }
+          jvStrm.println("  }");    		
+    	}
         jvStrm.println("  public " + clNm + "() {");
         jvStrm.println("    super();");
     	jvStrm.println("    for (an5VariableInstance v: AN5AT_interface) AN5AT_vars.put(v.var, v);");
@@ -285,8 +364,6 @@ public class an5Generate {
           jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
           jvStrm.println("    AN5SG_sigKeyUnion.add(this, AN5AT_interface);");
         }
-    	if (clNd.abstractSpec)
-      	  jvStrm.println("    abstractSpec = true;");
     	jvStrm.println("  }");
         jvStrm.println("  public " + clNm + "(an5ConstructArguments args) {");
         jvStrm.println("    super(args.getSuperArgs());");
@@ -297,8 +374,6 @@ public class an5Generate {
           jvStrm.println("    AN5SG_sigKeyUnion.add(this, AN5AT_interface);");
         }
     	jvStrm.println("    varUtil.setConstrutArgs(args, this);");
-    	if (clNd.abstractSpec)
-          jvStrm.println("    abstractSpec = true;");
     	jvStrm.println("  }");
         jvStrm.println("}");
       }

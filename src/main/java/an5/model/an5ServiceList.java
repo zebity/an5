@@ -11,6 +11,8 @@ import java.util.List;
 public class an5ServiceList implements an5Service {
   List<String> service = new ArrayList<>();
   List<int[]> cardinality = new ArrayList<>();
+  public an5ServiceList() {
+  }
   public an5ServiceList(an5ServiceMap from) {
     for (an5ServiceMap.mapSrv ms: from.map.values()) {
       service.add(new String(ms.service));

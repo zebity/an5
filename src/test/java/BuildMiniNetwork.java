@@ -66,8 +66,9 @@ public class BuildMiniNetwork {
     an5Object[] use = {sw1, cp1, cp2, cp3, nic1, nic2, nic3, nic4, cab1, cab2, cab3, cab4 };
     List<an5Object> parts = new ArrayList<>();
     for (an5Object ob : use) parts.add(ob);
-    an5Network netResult = new an5Network();
-    an5Template netType = new an5CreateNetwork(new AN5CL_ethernet_lan());
+    AN5TP_ethernet_lan  netTemplate = new AN5TP_ethernet_lan();
+    an5Network netResult = (an5Network)netTemplate.createInstance();
+    an5Template netType = new an5CreateNetwork(netTemplate);
     
     an5Goal makeNet = new an5Goal(netType, netResult, parts);
     int res = makeNet.solve();
