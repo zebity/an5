@@ -1,17 +1,18 @@
 package an5.solve;
 
+import java.util.List;
+
 import an5.model.*;
 
 abstract public class an5Template {
-  public an5Template connectElements(an5Element a, an5Element b) {
+  public an5Template connectElements(an5Network n, an5Element a, an5Element b) {
 	an5Template res = null;
 	return res;
   }
-  public an5Template createNetwork(an5Network n, an5Element[] ele) {
-    an5Template res = null;
-    return res;
+  public an5Template CreateNetwork(an5Network proto, List<an5Object> from, an5Network net) {
+    return null;
   }
-  public an5Template joinNetwork(an5Network n, an5Element ele) {
+  public an5Template joinNetwork(an5Network n, List<an5Element> ele) {
 	an5Template res = null;
 	return res;
   }

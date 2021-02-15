@@ -7,33 +7,63 @@ import java.util.Map;
 
 import an5.model.*; 
 
-public class an5Goal {
-  static class SearchType { static int DEPTH = 0, BREADTH = 1, BOUND = 2, COST = 3;};
-  static class SearchResult {static int START = 0, SOLVING = 1, FAILED = 2, FOUND = 3;};
-  an5Network network;
-  an5Template goal;
-  List<an5Object> elementsAndLinks;
-  an5Goal root,
-          parent;
-  List<an5Goal> children = new ArrayList<>();
-  Map<an5Goal, an5Goal> visited = new HashMap<>();
-  int strategy = SearchType.DEPTH;
+public class an5Goal extends an5GoalTree {
+  int strategy = SearchOptions.SCORE;
   int result = SearchResult.START;
-  int cost;
-  public an5Goal(an5Template target, an5Network net, List<an5Object> from) {
-    network = net;
-    goal = target;
-    elementsAndLinks = from;
+  int cost,
+      endScore;
+  an5Template template;
+  an5SearchStats stats;
+  public an5Goal(an5Template targ, an5SearchStats st) {
+    template = targ;
+    stats = st;
   }
   public int solve() {
     int res = 0;
-    seedGoal();
+    an5GoalTree next;
+    
+    endScore = seed();
+    
+    res = status();
+    switch (res) {
+      case SearchResult.SOLVING:
+      case SearchResult.START: stats.maxDepth++;
+                               next = getNextGoal();
+                               res = next.solve();
+                               break;
+      case SearchResult.VISITED: stats.noRevisits++;
+                                 break;
+      case SearchResult.FAILED: stats.noFailed++;
+                                break;
+      case SearchResult.FOUND: stats.noFound++;
+                               break;
+      case SearchResult.SUSPENDED:
+      default: break;
+    }
     return res;
   }
-  void seedGoal() {
-    if (goal instanceof an5CreateNetwork) {
-      an5CreateNetwork net = (an5CreateNetwork)goal;
-      net.seedGoal(elementsAndLinks);    	
+  public int seed() {
+	int res = 0;
+    if (template instanceof an5CreateNetwork) {
+      an5CreateNetwork net = (an5CreateNetwork)template;
+      res = net.seedGoal();    	
     }
+    return res;
+  }
+  public int status() {
+    return SearchResult.UNDEFINED;
+  }
+  public an5GoalTree getNextGoal() {
+    return null;
+  }
+  public void suspend() {
+  }
+  public void resume() {
+  }
+  public String[] why() {
+    return null;
+  }
+  public String[] how() {
+    return null;
   }
 }

@@ -18,30 +18,31 @@ import an5.model.an5Service;
 import an5.model.an5VariableInstance;
 
 public class an5CreateNetwork extends an5Template {
-  class xref{ Map<an5Object, an5Object> from;
-              an5Object key;
-            }
-  an5Network netType;
-  an5ClassTemplate stamp;
+  public class BuildStrategy { static final int SINGLE_NET_ADD = 1, MULTI_NET_JOIN = 2; }
+  an5Network resultNetwork;
+  an5Network prototype;
+  List<an5Object> use;
+  int strategy = BuildStrategy.SINGLE_NET_ADD;
   Map<an5Object, an5Object> available =  new HashMap<>();
   an5Service mustProvide,
              canProvide;
   Map<an5Object, an5Object> mustUse =  new HashMap<>();
-  List<an5Object> mustUseOrder = new LinkedList();
+  List<an5Object> mustUseOrder = new LinkedList<>();
   Collection<String> mustUseClass = new HashSet<>();
   List<an5Network> networks = new ArrayList<>();
   List<an5Object> bestStarter = new ArrayList<>();
   List<an5Object> altStarter = new ArrayList<>();
   an5AvailableInterfaces availableInterface = new an5AvailableInterfaces();
   
-  public an5CreateNetwork(an5Object n) {
-    netType = (an5Network)n;
-    stamp = (an5ClassTemplate)n;
+  public an5CreateNetwork(an5Network proto, List<an5Object> from, an5Network net) {
+    prototype = (an5Network)proto;
+    use = from;
+    resultNetwork = net;
   }
-  void seedGoal(List<an5Object> use) {
-    mustProvide = netType.providesServices().getWhere(1, -1);
-    canProvide = netType.providesServices().getWhere(0, -1);
-    for (an5VariableInstance c : netType.AN5AT_vars.values()) {
+  int seedGoal() {
+    mustProvide = prototype.providesServices().getWhere(1, -1);
+    canProvide = prototype.providesServices().getWhere(0, -1);
+    for (an5VariableInstance c : prototype.AN5AT_vars.values()) {
       if (c instanceof an5ClassInstance) {
     	an5ClassInstance cl = (an5ClassInstance)c;
     	if (cl.mandatory) {
@@ -78,5 +79,16 @@ public class an5CreateNetwork extends an5Template {
     	availableInterface.available(o);
       }
     }
+    return mustProvide.size() + canProvide.size() + mustUse.size() + 1;
+  }
+  public an5GoalTree getNextGoal() {
+	if (bestStarter.size() > 0) {
+      if (strategy == BuildStrategy.SINGLE_NET_ADD) {
+    	
+      } else if (strategy == BuildStrategy.MULTI_NET_JOIN) {
+        
+      }
+	}
+    return null;
   }
 }

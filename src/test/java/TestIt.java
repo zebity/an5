@@ -13,8 +13,14 @@ public class TestIt {
 	String[][] barray = new String[2][];
 	int bsize = barray.length;
 	int csize = barray[0].length; */
+	
+	class Mickey { int Val=0;
+	}
 	an5Interface obj = new AN5CL_ethernet_port_base_t();
 	
+	Mickey m = new Mickey();
+	m.Val++; m.Val++;
+	System.out.println("Mickey is: " + m.Val);
     System.out.println("Test if compiles");
     System.out.println("Sleeper snoors ? :" + snoozy.snoors());
   }

@@ -66,11 +66,12 @@ public class BuildMiniNetwork {
     an5Object[] use = {sw1, cp1, cp2, cp3, nic1, nic2, nic3, nic4, cab1, cab2, cab3, cab4 };
     List<an5Object> parts = new ArrayList<>();
     for (an5Object ob : use) parts.add(ob);
-    AN5TP_ethernet_lan  netTemplate = new AN5TP_ethernet_lan();
-    an5Network netResult = (an5Network)netTemplate.createInstance();
-    an5Template netType = new an5CreateNetwork(netTemplate);
+    AN5TP_ethernet_lan  prototype = new AN5TP_ethernet_lan();
+    an5Network netResult = (an5Network)prototype.createInstance();
+    an5Template netTemplate = new an5CreateNetwork(prototype, parts, netResult);
+    an5SearchStats stats = new an5SearchStats();
     
-    an5Goal makeNet = new an5Goal(netType, netResult, parts);
+    an5Goal makeNet = new an5Goal(netTemplate, stats);
     int res = makeNet.solve();
     
     System.out.println("switch reports as" + sw1.toString());
