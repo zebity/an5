@@ -32,8 +32,7 @@ public class an5CreateNetwork extends an5Template {
   List<an5Network> networks = new ArrayList<>();
   List<an5Object> bestStarter = new ArrayList<>();
   List<an5Object> altStarter = new ArrayList<>();
-  an5AvailableInterfaces availableInterface = new an5AvailableInterfaces();
-  
+
   public an5CreateNetwork(an5Network proto, List<an5Object> from, an5Network net) {
     prototype = (an5Network)proto;
     use = from;
@@ -76,7 +75,6 @@ public class an5CreateNetwork extends an5Template {
       }
       else {
     	available.put(o,o);
-    	availableInterface.available(o);
       }
     }
     return mustProvide.size() + canProvide.size() + mustUse.size() + 1;

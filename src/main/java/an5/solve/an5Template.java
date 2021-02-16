@@ -9,10 +9,10 @@ abstract public class an5Template {
 	an5Template res = null;
 	return res;
   }
-  public an5Template CreateNetwork(an5Network proto, List<an5Object> from, an5Network net) {
+  public an5Template createNetwork(an5Network proto, List<an5Object> from, an5Network net) {
     return null;
   }
-  public an5Template joinNetwork(an5Network n, List<an5Element> ele) {
+  public an5Template joinNetwork(an5Element proto, an5Network n, List<an5Object> ele, List<an5Object> use) {
 	an5Template res = null;
 	return res;
   }

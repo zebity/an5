@@ -36,5 +36,8 @@ public class an5Object {
     }
 	return new boolean[]{must, can};
   }
+  public an5Service providesServices() {
+	return new an5ServiceList((an5ServiceMap)AN5AT_serviceUnion);  
+  }
   public an5Object() {}
 }

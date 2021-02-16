@@ -109,3 +109,9 @@ abstract class ethernet_lan extends network {
   service = { "ethernet", "(ethernet_vlan)*" };
 }
 
+abstract class ethernet_node extends element {
+  @mandatory computer host;
+  @mandatory switch ether;
+  object[] uses;
+ }
+ 
