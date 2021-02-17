@@ -70,7 +70,7 @@ public class an5CreateNetwork extends an5Template {
           }
     	}
     	else if (o instanceof an5Network) {
-        	networks.add((an5Network)o);
+          networks.add((an5Network)o);
     	}
       }
       else {
@@ -82,6 +82,7 @@ public class an5CreateNetwork extends an5Template {
   public an5GoalTree getNextGoal() {
 	if (bestStarter.size() > 0) {
       if (strategy == BuildStrategy.SINGLE_NET_ADD) {
+        
     	
       } else if (strategy == BuildStrategy.MULTI_NET_JOIN) {
         

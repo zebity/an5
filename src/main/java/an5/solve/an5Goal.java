@@ -44,10 +44,15 @@ public class an5Goal extends an5GoalTree {
   }
   public int seed() {
 	int res = 0;
+	
     if (template instanceof an5CreateNetwork) {
       an5CreateNetwork net = (an5CreateNetwork)template;
       res = net.seedGoal();    	
+    } else if (template instanceof an5JoinNetwork) {
+      an5JoinNetwork join = (an5JoinNetwork)template;
+      res = join.seedGoal(); 
     }
+    
     return res;
   }
   public int status() {

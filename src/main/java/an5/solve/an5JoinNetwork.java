@@ -8,8 +8,12 @@
  */
 package an5.solve;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import an5.model.an5ClassInstance;
 import an5.model.an5ClassTemplate;
@@ -22,22 +26,26 @@ import an5.model.an5VariableInstance;
 public class an5JoinNetwork extends an5Template {
   an5Object prototype;
   an5Network joinNet;
-  List<an5Object> toAdd;
-  List<an5Object> available = new LinkedList<>();
+  an5Object connectTo;
+  List<an5Object> toAdd = new LinkedList<>();
+  Map<an5Object, an5Object> available = new HashMap<>();
+  Map<an5Object, an5Object> mustUse =  new HashMap<>();
   an5AvailableInterfaces availableInterface = new an5AvailableInterfaces();
   an5Service viaService;
   String srcClass,
          destClass;
+  List<an5Object> srcObjects;
   List<an5Object> use;
+  int addCount = 0;
   
-  public an5JoinNetwork(an5Object proto, an5Network net, an5Object from, List<an5Object> ele, List<an5Object> avail) {
+  public an5JoinNetwork(an5Object proto, an5Network net, an5Object to, List<an5Object> ele, List<an5Object> avail) {
     prototype = proto;
     joinNet = net;
-    toAdd = ele;
+    srcObjects = ele;
     use = avail;
+    connectTo = to;
   }
   int seedGoal() {
-    int res = 0;
     int i = 0;
     
     viaService = prototype.providesServices().getWhere(1, -1);
@@ -50,37 +58,29 @@ public class an5JoinNetwork extends an5Template {
     	  } else if  (i == 2) {
     		destClass = cl.objectDefinition.getClass().getName();
     	  }
+    	  i++;
     	}
       }
     }
-    for (int i = 0; i < use.size(); i++) {
-      an5Object o = use.get(i);
-      if (mustUseClass.contains(o.getClass().getName())) {
-      	if (o instanceof an5Element) {
-          an5Element el = (an5Element)o;
-          boolean[] can = el.providesService(mustProvide, canProvide);
-          if (can[0]) {
-          	if (can[1]) {
-          	  bestStarter.add(o);
-          	}
-          	else {
-          	  altStarter.add(o);
-          	}
-          }
-          else if (can[1]) {
-          	altStarter.add(o);
-          }
-      	}
-      	else if (o instanceof an5Network) {
-          	networks.add((an5Network)o);
-      	}
+    if (destClass != null & destClass.equals(connectTo.getClass().getName())) {
+      mustUse.put(connectTo, connectTo);
+      for (i = 0; i < srcObjects.size(); i++) {
+        if (srcClass.equals(srcObjects.get(i))) {
+          mustUse.put(srcObjects.get(i), srcObjects.get(i));
+          toAdd.add(srcObjects.get(i));
+        }
       }
-      else {
-      	available.put(o,o);
-      	availableInterface.available(o);
+      if (toAdd.size() > 0) {
+        for (i = 0; i < use.size(); i++) {
+          an5Object o = use.get(i);
+          if (! mustUse.containsKey(o)) {
+            available.put(o,o);
+            availableInterface.available(o);
+          }
+        }
       }
     }
-    return res;
+    return mustUse.size() - 1;
   }
   an5Template[] getNextGoals() {
     an5Template[] res = null;
