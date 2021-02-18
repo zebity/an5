@@ -17,4 +17,12 @@ public class an5VarUtil {
 	  }
 	}
   }
+  public void copyVars(an5Object src, an5Object dest) {
+    for (an5VariableInstance v : src.AN5AT_vars.values()) {
+	  if (v instanceof an5InterfaceInstance) {
+		an5InterfaceInstance ifVar = (an5InterfaceInstance)v;
+		ifVar.allocateBinding(ifVar);
+      }
+	}
+  }
 }

@@ -13,7 +13,7 @@ package an5.model;
 import java.util.HashMap;
 import java.util.Map;
 
-public class an5Object {
+public class an5Object implements an5ClassTemplate {
   public boolean abstractSpec = false;
   public boolean mandatory = false;
   public String[] uniqueId = new String[2];
@@ -22,6 +22,28 @@ public class an5Object {
   public an5Service AN5AT_serviceUnion = new an5ServiceMap();
   public an5InterfaceSignatureKeys AN5SG_sigKeyUnion = new an5InterfaceSignatureKeys();
   public an5VarUtil varUtil = new an5VarUtil();
+  public String getGUID() {
+	String res = null;
+    if (persistentUniqueId[0] != null) {
+      res = new String(persistentUniqueId[0] + "=" + persistentUniqueId[1]);
+    } else if (uniqueId[0] != null) {
+      res = new String(uniqueId[0] + "=" + uniqueId[1]);
+    } else {
+      uniqueId[0] = new String("java-oid");
+      uniqueId[1] = new String(toString());
+      res = new String(uniqueId[0] + "=" + uniqueId[1]);
+    }
+    return res;
+  }
+  public Object clone() {
+    Object res = null;
+    try {
+      res = super.clone();
+    } catch (CloneNotSupportedException e) {
+      // To Do
+    }
+    return res;
+  }
   public an5Object getInstance(String nmPat, int i) {
     return null;
   }
@@ -40,4 +62,14 @@ public class an5Object {
 	return new an5ServiceList((an5ServiceMap)AN5AT_serviceUnion);  
   }
   public an5Object() {}
+  public an5Object(an5Object o) {
+    abstractSpec = o.abstractSpec;
+	mandatory = o.mandatory;
+	o.getGUID();
+	uniqueId = new String[]{new String(o.uniqueId[0]), new String(o.uniqueId[1])};
+	persistentUniqueId = new String[]{new String(o.persistentUniqueId[0]), new String(o.persistentUniqueId[1])};
+  }
+  public an5Object createInstance() {
+    return null;
+  }
 }

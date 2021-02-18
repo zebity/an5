@@ -32,4 +32,7 @@ abstract public class an5Interface extends an5Object {
     an5Binding res = new an5Binding(nm, i);
     return res;
   }
+  public an5Binding getBinding(an5Binding bd) {
+    return new an5Binding(bd);
+  }
 }

@@ -16,6 +16,16 @@ public class an5InterfaceInstance extends an5VariableInstance {
     min = mn;
     max = mx;
   }
+  public int allocateBinding(an5InterfaceInstance ifInst) {
+	int i = 0;
+    min = ifInst.min;
+    max = ifInst.max;
+    alloc = ifInst.alloc;
+    for (;i < ifInst.bindings.size(); i++) {
+      bindings.add(ifInst.interfaceDefinition.getBinding(ifInst.bindings.get(i)));
+    }
+    return i;
+  }
   public int allocateBinding(int sz, String Nm) {
     int i = 0,
         adj = sz;

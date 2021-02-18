@@ -9,7 +9,7 @@ abstract public class an5GoalTree {
   abstract public int solve();
   abstract public int seed();
   abstract public int status();
-  abstract public an5GoalTree getNextGoal();
+  abstract public an5GoalTree getNextGoal(an5SearchStats st);
   abstract public void suspend();
   abstract public void resume();
   abstract public String[] why();

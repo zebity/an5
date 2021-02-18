@@ -375,6 +375,19 @@ public class an5Generate {
         }
     	jvStrm.println("    varUtil.setConstrutArgs(args, this);");
     	jvStrm.println("  }");
+        jvStrm.println("  public " + clNm + "(" + clNm + " o) {");
+        jvStrm.println("    super(o);");
+    	jvStrm.println("    for (an5VariableInstance v: o.AN5AT_interface) AN5AT_vars.put(v.var, v);");
+    	jvStrm.println("    for (an5ClassInstance v: o.AN5AT_class) AN5AT_vars.put(v.var, v);");
+        if (clNd.interfacesReflected.size() > 0 || clNd.networkServices.size() > 0) {
+          jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
+          jvStrm.println("    AN5SG_sigKeyUnion.add(this, AN5AT_interface);");
+        }
+    	jvStrm.println("    varUtil.copyVars(o, this);");
+    	jvStrm.println("  }");
+        jvStrm.println("  public Object clone() {");
+        jvStrm.println("    return new " + clNm + "(this);");
+    	jvStrm.println("  }");
         jvStrm.println("}");
       }
     }

@@ -14,6 +14,7 @@ public class an5Goal extends an5GoalTree {
       endScore;
   an5Template template;
   an5SearchStats stats;
+  
   public an5Goal(an5Template targ, an5SearchStats st) {
     template = targ;
     stats = st;
@@ -28,7 +29,7 @@ public class an5Goal extends an5GoalTree {
     switch (res) {
       case SearchResult.SOLVING:
       case SearchResult.START: stats.maxDepth++;
-                               next = getNextGoal();
+                               next = getNextGoal(stats);
                                res = next.solve();
                                break;
       case SearchResult.VISITED: stats.noRevisits++;
@@ -58,7 +59,7 @@ public class an5Goal extends an5GoalTree {
   public int status() {
     return SearchResult.UNDEFINED;
   }
-  public an5GoalTree getNextGoal() {
+  public an5GoalTree getNextGoal(an5SearchStats st) {
     return null;
   }
   public void suspend() {
