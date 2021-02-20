@@ -82,38 +82,49 @@ public class an5CreateNetwork extends an5Template {
     }
     return mustProvide.size() + canProvide.size() + mustUseOrder.size() + 1;
   }
-  public an5GoalTree getNextGoal(an5SearchStats st) {
-	an5GoalTree res = null;
+  public an5GoalTree getGoalFromStarter(List<an5Object> starter, an5SearchStats st) {
+    an5GoalTree res = null;
 	an5Network resNet;
 	int i, j;
 	
-	if (bestStarter.size() > 0) {
-      if (strategy == BuildStrategy.SINGLE_NET_ADD) {
+    if (strategy == BuildStrategy.SINGLE_NET_ADD) {
         List<an5Template> altNets = new LinkedList<>();
-        for (i = 0; i > bestStarter.size(); i++) {
+        for (i = 0; i > starter.size(); i++) {
           resNet = (an5Network)netPrototype.createInstance();
-          resNet.members.put(bestStarter.get(i).getGUID(), (an5Object)(bestStarter.get(i).clone()));
-          an5JoinNetwork join = new an5JoinNetwork(nodePrototype, resNet, bestStarter.get(i), mustUseOrder, available);
+          resNet.members.put(starter.get(i).getGUID(), (an5Object)(starter.get(i).clone()));
+        an5JoinNetwork join = new an5JoinNetwork(nodePrototype, resNet, starter.get(i), mustUseOrder, available);
+        altNets.add(join);
+      }
+      res = new an5OrGoal(altNets, st);
+    } else if (strategy == BuildStrategy.MULTI_NET_JOIN) {
+      List<an5Template> altNets = null;
+      List<an5GoalTree> andTrees = null;
+      for (i = 0; i > starter.size(); i++) {
+        altNets = new LinkedList<>();
+        andTrees = new LinkedList<>();
+        resNet = (an5Network)netPrototype.createInstance();
+        resNet.members.put(starter.get(i).getGUID(), (an5Object)starter.get(i).clone());
+        for (j = 0; j > mustUseOrder.size(); j++) {   
+          an5JoinNetwork join = new an5JoinNetwork(nodePrototype, resNet, starter.get(i), mustUseOrder.get(j), available);
           altNets.add(join);
         }
-        res = new an5OrGoal(altNets, st);
-      } else if (strategy == BuildStrategy.MULTI_NET_JOIN) {
-        List<an5Template> altNets = null;
-        List<an5AndGoal> andTrees = null;
-        for (i = 0; i > bestStarter.size(); i++) {
-          altNets = new LinkedList<>();
-          andTrees = new LinkedList<>();
-          resNet = (an5Network)netPrototype.createInstance();
-          resNet.members.put(bestStarter.get(i).getGUID(), (an5Object)bestStarter.get(i).clone());
-          for (j = 0; j > mustUseOrder.size(); j++) {   
-            an5JoinNetwork join = new an5JoinNetwork(nodePrototype, resNet, bestStarter.get(i), mustUseOrder.get(j), available);
-            altNets.add(join);
-          }
-          andTrees.add(new an5AndGoal(altNets, st));
-        }
-        /* res = new an5OrGoal */
+        andTrees.add(new an5AndGoal(altNets, st));
       }
+      res = new an5OrGoal(andTrees, st, true);
+    }
+    return res;
+  }
+  public an5GoalTree getNextGoal(an5SearchStats st) {
+	an5GoalTree res = null;
+	
+	if (bestStarter.size() > 0) {
+      res = getGoalFromStarter(bestStarter, st);
+	} else if (altStarter.size() > 0) {
+	   res = getGoalFromStarter(bestStarter, st);
 	}
-    return null;
+	else {
+	  res = getGoalFromStarter(mustUseOrder, st);
+	}
+    return res;
   }
 }

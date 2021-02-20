@@ -52,8 +52,10 @@ public class an5Goal extends an5GoalTree {
     } else if (template instanceof an5JoinNetwork) {
       an5JoinNetwork join = (an5JoinNetwork)template;
       res = join.seedGoal(); 
+    } else if (template instanceof an5ConnectNetworks) {
+      an5ConnectNetworks connect = (an5ConnectNetworks)template;
+      res = connect.seedGoal();
     }
-    
     return res;
   }
   public int status() {

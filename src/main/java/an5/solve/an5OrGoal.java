@@ -1,12 +1,8 @@
 package an5.solve;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import an5.model.*;
-import an5.solve.an5GoalTree.SearchResult; 
 
 public class an5OrGoal extends an5GoalTree {
   an5SearchStats stats;
@@ -14,6 +10,9 @@ public class an5OrGoal extends an5GoalTree {
   public an5OrGoal(List<an5Template> t, an5SearchStats s) {
     template = t;
     stats = s;
+  }
+  public an5OrGoal(List<an5GoalTree> tree, an5SearchStats st, boolean andTree) {
+    stats = st;
   }
   public int seed() {
 	int res = 0;
