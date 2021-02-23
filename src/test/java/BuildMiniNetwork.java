@@ -70,9 +70,9 @@ public class BuildMiniNetwork {
     AN5TP_ethernet_node nodePrototype = new AN5TP_ethernet_node();
     an5Network netResult = (an5Network)netPrototype.createInstance();
     an5Template netTemplate = new an5CreateNetwork(new an5Object[]{netPrototype, nodePrototype}, parts, netResult);
-    an5SearchStats stats = new an5SearchStats();
+    an5SearchControl ctrl = new an5SearchControl();
     
-    an5Goal makeNet = new an5Goal(netTemplate, stats);
+    an5Goal makeNet = new an5Goal(netTemplate, ctrl);
     int res = makeNet.solve();
     
     System.out.println("switch reports as" + sw1.toString());

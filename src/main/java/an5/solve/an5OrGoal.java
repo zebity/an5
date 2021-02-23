@@ -5,14 +5,14 @@ import java.util.List;
 import an5.model.*;
 
 public class an5OrGoal extends an5GoalTree {
-  an5SearchStats stats;
+  an5SearchControl ctrlAndStats;
   List<an5Template> template;
-  public an5OrGoal(List<an5Template> t, an5SearchStats s) {
+  public an5OrGoal(List<an5Template> t, an5SearchControl s) {
     template = t;
-    stats = s;
+    ctrlAndStats = s;
   }
-  public an5OrGoal(List<an5GoalTree> tree, an5SearchStats st, boolean andTree) {
-    stats = st;
+  public an5OrGoal(List<an5GoalTree> tree, an5SearchControl st, boolean andTree) {
+    ctrlAndStats = st;
   }
   public int seed() {
 	int res = 0;
@@ -22,9 +22,15 @@ public class an5OrGoal extends an5GoalTree {
   	return 0;
   }
   public int status() {
-	return SearchResult.UNDEFINED;
+	return an5SearchControl.SearchResult.UNDEFINED;
   }
-  public an5GoalTree getNextGoal(an5SearchStats st) {
+  public int score() {
+	return 0;
+  }
+  public int cost() {
+	return 0;
+  }
+  public an5GoalTree getNextGoal(an5SearchControl ctrl) {
     return null;
   }
   public void suspend() {

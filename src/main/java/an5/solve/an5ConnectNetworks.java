@@ -41,7 +41,8 @@ public class an5ConnectNetworks extends an5Template {
   String srcClass,
          destClass;
   List<an5Object> srcObjects; */
-  int addCount = 0;
+  int addCount = 0,
+	  status = an5SearchControl.SearchResult.UNDEFINED;
   
   public an5ConnectNetworks(an5Object proto, an5Network n1, an5Element a,
 		   an5Network n2, an5Element b, List<an5Object> avail, an5Network res) {
@@ -53,7 +54,7 @@ public class an5ConnectNetworks extends an5Template {
     use = avail;
     resultNet = res;
   }
-  int seedGoal() {
+  public int seedGoal() {
     int i = 0;
     
     /*
@@ -89,10 +90,15 @@ public class an5ConnectNetworks extends an5Template {
         }
       }
     } */
+    status = an5SearchControl.SearchResult.START;
     return i;
   }
-  an5Template[] getNextGoals(an5SearchStats st) {
-    an5Template[] res = null;
+  public an5GoalTree getNextGoal(an5SearchControl ctrl) {
+    an5GoalTree res = null;
+    status = an5SearchControl.SearchResult.SOLVING;
     return res;
+  }
+  public int status() {
+	return status;
   }
 }

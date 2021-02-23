@@ -39,8 +39,8 @@ public class an5JoinNetwork extends an5Template {
   an5Service viaService;
   String srcClass,
          destClass;
-
-  int addCount = 0;
+  int addCount = 0,
+	  status = an5SearchControl.SearchResult.UNDEFINED;
   
   public an5JoinNetwork(an5Object proto, an5Network net, an5Object to, List<an5Object> ele, List<an5Object> avail) {
     prototype = proto;
@@ -57,7 +57,13 @@ public class an5JoinNetwork extends an5Template {
 	use = avail;
     connectTo = to;
   }
-  int seedGoal() {
+  public int score() {
+	return 0;
+  }
+  public int cost() {
+	return 0;
+  }
+  public int seedGoal() {
     int i = 0;
     
     viaService = prototype.providesServices().getWhere(1, -1);
@@ -92,10 +98,15 @@ public class an5JoinNetwork extends an5Template {
         }
       }
     }
+    status = an5SearchControl.SearchResult.START;
     return mustUse.size() - 1;
   }
-  an5Template[] getNextGoals() {
-    an5Template[] res = null;
+  public an5GoalTree getNextGoal(an5SearchControl crtl) {
+    an5GoalTree res = null;
+    status = an5SearchControl.SearchResult.SOLVING;
     return res;
+  }
+  public int status() {
+	return status;
   }
 }
