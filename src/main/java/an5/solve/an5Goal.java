@@ -1,10 +1,10 @@
 package an5.solve; 
 
 public class an5Goal extends an5GoalTree {
-  int result = an5SearchControl.SearchResult.START;
   an5Template template;
   an5SearchControl ctrlAndStats;
-  int endScore;
+  int endScore,
+      status = an5SearchControl.SearchResult.UNDEFINED;
   
   public an5Goal(an5Template targ, an5SearchControl st) {
     template = targ;
@@ -12,20 +12,18 @@ public class an5Goal extends an5GoalTree {
   }
   public int solve() {
     int res = 0;
-    an5GoalTree next;
+    an5GoalTree next = this;
     boolean stopSearch = false;
     
     endScore = seed();
     
-    res = status();
-    
+    addToQueue(next);
     while (! stopSearch) {
+      res = next.status();
       switch (res) {
         case an5SearchControl.SearchResult.SOLVING:
         case an5SearchControl.SearchResult.START:
-    	       ctrlAndStats.stats.maxDepth++;
-               next = getNextGoal(ctrlAndStats);
-               addToQueue(next);
+    	       ctrlAndStats.stats.noIntermediate++;
                break;
         case an5SearchControl.SearchResult.VISITED:
     	       ctrlAndStats.stats.noRevisits++;
@@ -34,7 +32,7 @@ public class an5Goal extends an5GoalTree {
     	       ctrlAndStats.stats.noFailed++;
                break;
         case an5SearchControl.SearchResult.BOUND:
-               ctrlAndStats.stats.noBounded++;
+               ctrlAndStats.stats.noBounded++;               
         case an5SearchControl.SearchResult.FOUND:
     	       ctrlAndStats.stats.noFound++;
                break;
@@ -42,7 +40,9 @@ public class an5Goal extends an5GoalTree {
         default: break;
       }
       
-      queueDispatch();
+      next = next.getNextGoal(ctrlAndStats);
+      addToQueue(next);
+      /* queueDispatch(); */
       
       if (ctrlAndStats.strategy == an5SearchControl.SearchOptions.OPTIMAL) {
     	stopSearch = ctrlAndStats.queue.isEmpty();  
@@ -55,20 +55,20 @@ public class an5Goal extends an5GoalTree {
   }
   public int seed() {
 	int res = 0;
-	
     if ((template instanceof an5CreateNetwork) ||
         (template instanceof an5JoinNetwork) ||
         (template instanceof an5ConnectNetworks)) {
       res = template.seedGoal();    	
     }
+    status = an5SearchControl.SearchResult.START;
     return res;
   }
   public int status() {
 	int res = an5SearchControl.SearchResult.UNDEFINED;
-    if ((template instanceof an5CreateNetwork) ||
-	    (template instanceof an5JoinNetwork) ||
-	    (template instanceof an5ConnectNetworks)) {
-	  res = template.status();    	
+	if ((template instanceof an5CreateNetwork) ||
+		(template instanceof an5JoinNetwork) ||
+		(template instanceof an5ConnectNetworks)) {
+      res = template.status();    	
 	}
 	return res;
   }
@@ -77,16 +77,23 @@ public class an5Goal extends an5GoalTree {
   }
   public an5GoalTree getNextGoal(an5SearchControl ctrl) {
 	an5GoalTree res = null;
+	ctrl.queue.remove(0);
 	if ((template instanceof an5CreateNetwork) ||
 	    (template instanceof an5JoinNetwork) ||
 	    (template instanceof an5ConnectNetworks)) {
-	  res = template.getNextGoal(ctrl);    	
+	  res = template.getNextGoal(ctrl);
 	}
     return res;
   }
-  public void queueDispatch() {
+  /* public void queueDispatch() {
+	int bound = -1;
+    an5GoalTree next = ctrlAndStats.queue.remove(0);
     
-  }
+    if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.BOUND) != 0) {
+      bound = ctrlAndStats.bound;
+    }
+    
+  } */
   public void addToQueue(an5GoalTree t) {
     if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.BREADTH) != 0) {
       ctrlAndStats.queue.add(t);
@@ -143,6 +150,9 @@ public class an5Goal extends an5GoalTree {
     return null;
   }
   public int score() {
-    return 0;
+    int  max = template.score();
+    return max;
+  }
+  public void release() {
   }
 }

@@ -18,10 +18,17 @@ public class an5VarUtil {
 	}
   }
   public void copyVars(an5Object src, an5Object dest) {
-    for (an5VariableInstance v : src.AN5AT_vars.values()) {
-	  if (v instanceof an5InterfaceInstance) {
-		an5InterfaceInstance ifVar = (an5InterfaceInstance)v;
-		ifVar.allocateBinding(ifVar);
+	an5InterfaceInstance sIfVar,
+	                     dIfVar;
+    an5VariableInstance dv;
+    for (an5VariableInstance sv : src.AN5AT_vars.values()) {
+	  if (sv instanceof an5InterfaceInstance) {
+		sIfVar = (an5InterfaceInstance)sv;
+		dv = dest.AN5AT_vars.get(sIfVar.var);
+		if (dv instanceof an5InterfaceInstance) {
+		  dIfVar = (an5InterfaceInstance)dv;
+		  dIfVar.allocateBinding(sIfVar);
+		}
       }
 	}
   }

@@ -39,17 +39,19 @@ public class an5JoinNetwork extends an5Template {
   an5Service viaService;
   String srcClass,
          destClass;
-  int addCount = 0,
+  int joinCount = 0,
 	  status = an5SearchControl.SearchResult.UNDEFINED;
   
-  public an5JoinNetwork(an5Object proto, an5Network net, an5Object to, List<an5Object> ele, List<an5Object> avail) {
+  public an5JoinNetwork(an5Template par, an5Object proto, an5Network net, an5Object to, List<an5Object> ele, List<an5Object> avail) {
+    super(par);	  
     prototype = proto;
     joinNet = net;
     srcObjects = ele;
     use = avail;
     connectTo = to;
   }
-  public an5JoinNetwork(an5Object proto, an5Network net, an5Object to, an5Object ele, List<an5Object> avail) {
+  public an5JoinNetwork(an5Template par, an5Object proto, an5Network net, an5Object to, an5Object ele, List<an5Object> avail) {
+	super(par);
 	prototype = proto;
 	joinNet = net;
 	srcObjects = new ArrayList<>();
@@ -58,7 +60,11 @@ public class an5JoinNetwork extends an5Template {
     connectTo = to;
   }
   public int score() {
-	return 0;
+	int sc = joinCount;
+	if (parent != null) {
+      sc += parent.score();
+	}
+	return sc;
   }
   public int cost() {
 	return 0;

@@ -5,9 +5,14 @@ import java.util.List;
 import an5.model.*;
 
 abstract public class an5Template {
+  public an5Template parent;
+  public an5Template(an5Template p) {
+    parent = p;
+  }
   abstract public int seedGoal();
   abstract public an5GoalTree getNextGoal(an5SearchControl ctrl);
   abstract public int status();
+  abstract public int score();
   public an5Template connectElements(an5Network n, an5Element a, an5Element b) {
 	an5Template res = null;
 	return res;

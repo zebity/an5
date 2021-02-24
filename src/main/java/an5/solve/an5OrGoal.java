@@ -25,7 +25,13 @@ public class an5OrGoal extends an5GoalTree {
 	return an5SearchControl.SearchResult.UNDEFINED;
   }
   public int score() {
-	return 0;
+	int max = 0;
+    if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.SCORE) != 0) {
+      max = template.get(0).score();
+    } else {
+      /* traverse through list to get maximum */	
+    }
+	return max;
   }
   public int cost() {
 	return 0;
@@ -42,5 +48,7 @@ public class an5OrGoal extends an5GoalTree {
   }
   public String[] how() {
 	return null;
+  }
+  public void release() {
   }
 }

@@ -14,7 +14,8 @@ public class an5SearchControl {
   an5SearchStats stats = new an5SearchStats();
   Map<String, an5Object> visited = new HashMap<>();
   List<an5GoalTree> queue = new LinkedList<>();
-  int strategy = an5SearchControl.SearchOptions.SCORE;
+  int strategy = an5SearchControl.SearchOptions.SCORE,
+	  networkBuildStrategy = an5SearchControl.BuildStrategy.SINGLE_NET_ADD;
   int min,
       max,
       bound;

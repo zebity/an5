@@ -11,6 +11,7 @@ abstract public class an5GoalTree {
   abstract public an5GoalTree getNextGoal(an5SearchControl ctrl);
   abstract public void suspend();
   abstract public void resume();
+  abstract public void release();
   abstract public String[] why();
   abstract public String[] how();
 }

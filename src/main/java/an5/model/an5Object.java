@@ -67,7 +67,11 @@ public class an5Object implements an5ClassTemplate {
 	mandatory = o.mandatory;
 	o.getGUID();
 	uniqueId = new String[]{new String(o.uniqueId[0]), new String(o.uniqueId[1])};
-	persistentUniqueId = new String[]{new String(o.persistentUniqueId[0]), new String(o.persistentUniqueId[1])};
+	if (o.persistentUniqueId[0] == null) {
+	  persistentUniqueId = new String[2];
+	} else {
+	  persistentUniqueId = new String[]{new String(o.persistentUniqueId[0]), new String(o.persistentUniqueId[1])};
+	}
   }
   public an5Object createInstance() {
     return null;

@@ -44,8 +44,9 @@ public class an5ConnectNetworks extends an5Template {
   int addCount = 0,
 	  status = an5SearchControl.SearchResult.UNDEFINED;
   
-  public an5ConnectNetworks(an5Object proto, an5Network n1, an5Element a,
+  public an5ConnectNetworks(an5Template p, an5Object proto, an5Network n1, an5Element a,
 		   an5Network n2, an5Element b, List<an5Object> avail, an5Network res) {
+	super(p);
     prototype = proto;
     netA = n1;
     netB = n2;
@@ -100,5 +101,12 @@ public class an5ConnectNetworks extends an5Template {
   }
   public int status() {
 	return status;
+  }
+  public int score() {
+	int sc = resultNet.members.size();
+	if (parent != null) {
+	  sc += parent.score();	
+	}
+	return sc;
   }
 }

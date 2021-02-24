@@ -21,8 +21,9 @@ public class an5InterfaceInstance extends an5VariableInstance {
     min = ifInst.min;
     max = ifInst.max;
     alloc = ifInst.alloc;
+    // bindings = new ArrayList<>();
     for (;i < ifInst.bindings.size(); i++) {
-      bindings.add(ifInst.interfaceDefinition.getBinding(ifInst.bindings.get(i)));
+      bindings.add(interfaceDefinition.getBinding(ifInst.bindings.get(i)));
     }
     return i;
   }

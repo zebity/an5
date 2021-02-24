@@ -1,7 +1,5 @@
 // package an5.test;
 
-// import java.util.Scanner;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +67,7 @@ public class BuildMiniNetwork {
     AN5TP_ethernet_lan  netPrototype = new AN5TP_ethernet_lan();
     AN5TP_ethernet_node nodePrototype = new AN5TP_ethernet_node();
     an5Network netResult = (an5Network)netPrototype.createInstance();
-    an5Template netTemplate = new an5CreateNetwork(new an5Object[]{netPrototype, nodePrototype}, parts, netResult);
+    an5Template netTemplate = new an5CreateNetwork(null, new an5Object[]{netPrototype, nodePrototype}, parts, netResult);
     an5SearchControl ctrl = new an5SearchControl();
     
     an5Goal makeNet = new an5Goal(netTemplate, ctrl);

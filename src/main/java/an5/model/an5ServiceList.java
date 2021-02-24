@@ -19,6 +19,12 @@ public class an5ServiceList implements an5Service {
       cardinality.add(new int[]{ms.min, ms.max});
     }
   }
+  public an5ServiceList(an5ServiceList from) {
+	for (int i = 0; i < from.service.size(); i++) {
+	  service.add(new String(from.service.get(i)));
+	  cardinality.add(new int[]{cardinality.get(i)[0], cardinality.get(i)[1]});
+    }
+  }
   public an5ServiceList(List<String> srvs, List<int[]> card) {
 	service = srvs;
 	cardinality = card;

@@ -8,7 +8,7 @@ class an5Binding {
   enum bindState { OPEN, BASE_MATCH, REFLECTING, COMMITTED };
   an5Interface aRef = null,
 			   bRef = null;
-  an5Service member;
+  an5Service member = null;
   int id;
   String name;
   bindState state = bindState.OPEN;
@@ -20,7 +20,13 @@ class an5Binding {
 	state = bd.state;
     name = bd.name;
     id = bd.id;
-    member = new an5ServiceMap((an5ServiceMap)bd.member);
+    if (bd.member != null) {
+      if (bd.member instanceof an5ServiceMap) {
+        member = new an5ServiceMap((an5ServiceMap)bd.member);
+      } else if (bd.member instanceof an5ServiceList) {
+        member = new an5ServiceList((an5ServiceList)bd.member); 
+      }
+    }
     aRef = bd.aRef;
     bRef = bd.bRef;
   }

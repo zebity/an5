@@ -40,4 +40,6 @@ public class an5AndGoal extends an5GoalTree {
   public String[] how() {
 	return null;
   }
+  public void release() {
+  }
 }
