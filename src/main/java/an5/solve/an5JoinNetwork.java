@@ -9,16 +9,12 @@
 package an5.solve;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import an5.model.an5ClassInstance;
-import an5.model.an5ClassTemplate;
-import an5.model.an5Element;
 import an5.model.an5Network;
 import an5.model.an5Object;
 import an5.model.an5Service;
@@ -59,15 +55,13 @@ public class an5JoinNetwork extends an5Template {
 	use = avail;
     connectTo = to;
   }
-  public int score() {
+  public int[] gauge() {
 	int sc = joinCount;
+	int[] parGauge = new int[]{0,1};
 	if (parent != null) {
-      sc += parent.score();
+      parGauge = parent.gauge();
 	}
-	return sc;
-  }
-  public int cost() {
-	return 0;
+	return new int[]{(sc * parGauge[1]) + parGauge[0], parGauge[1]};
   }
   public int seedGoal() {
     int i = 0;
@@ -77,9 +71,9 @@ public class an5JoinNetwork extends an5Template {
       if (c instanceof an5ClassInstance) {
     	an5ClassInstance cl = (an5ClassInstance)c;
     	if (cl.mandatory) {
-    	  if (i == 0) {
+    	  if (cl.order == 0) {
     	    srcClass = cl.objectDefinition.getClass().getName();
-    	  } else if  (i == 2) {
+    	  } else if (cl.order == 1) {
     		destClass = cl.objectDefinition.getClass().getName();
     	  }
     	  i++;
@@ -89,7 +83,7 @@ public class an5JoinNetwork extends an5Template {
     if (destClass != null & destClass.equals(connectTo.getClass().getName())) {
       mustUse.put(connectTo, connectTo);
       for (i = 0; i < srcObjects.size(); i++) {
-        if (srcClass.equals(srcObjects.get(i))) {
+        if (srcClass.equals(srcObjects.get(i).getClass().getName())) {
           mustUse.put(srcObjects.get(i), srcObjects.get(i));
           toAdd.add(srcObjects.get(i));
         }

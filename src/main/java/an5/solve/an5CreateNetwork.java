@@ -132,11 +132,12 @@ public class an5CreateNetwork extends an5Template {
   public int status() {
 	return status;
   }
-  public int score() {
+  public int[] gauge() {
 	int sc = bestStarter.size() + altStarter.size();
+	int[] parGauge = new int[]{0,1};
 	if (parent != null) {
-	  sc += parent.score();	
+	  parGauge = parent.gauge();	
 	}
-	return sc;
+	return new int[]{(sc * parGauge[1]) + parGauge[0], parGauge[1]};
   }
 }

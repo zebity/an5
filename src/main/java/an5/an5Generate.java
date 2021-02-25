@@ -210,7 +210,7 @@ public class an5Generate {
 	    }
 	    jvStrm.print("  an5ClassInstance " + global.attrPrefix + clVar.value);
 	    jvStrm.print(" = new an5ClassInstance(\"" + clVar.value + "\", new ");
-	    jvStrm.println(adjustClass(clVar.contained.value, global.classPrefix) + "(), 0, " + clVar.size + ", " + mandatoryFlag + ");");
+	    jvStrm.println(adjustClass(clVar.contained.value, global.classPrefix) + "(), 0, " + clVar.size + ", " + cnt + ", " + mandatoryFlag + ");");
 	  }
 	      
 	  cnt = 0;

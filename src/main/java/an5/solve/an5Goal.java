@@ -2,6 +2,7 @@ package an5.solve;
 
 public class an5Goal extends an5GoalTree {
   an5Template template;
+  an5SearchQueue<an5GoalTree> queue = new an5SearchQueue<>();
   an5SearchControl ctrlAndStats;
   int endScore,
       status = an5SearchControl.SearchResult.UNDEFINED;
@@ -36,6 +37,10 @@ public class an5Goal extends an5GoalTree {
         case an5SearchControl.SearchResult.FOUND:
     	       ctrlAndStats.stats.noFound++;
                break;
+        case an5SearchControl.SearchResult.UNDEFINED:
+               ctrlAndStats.stats.noUnseeded++;
+               next.seed();
+               break;
         case an5SearchControl.SearchResult.SUSPENDED:
         default: break;
       }
@@ -45,10 +50,10 @@ public class an5Goal extends an5GoalTree {
       /* queueDispatch(); */
       
       if (ctrlAndStats.strategy == an5SearchControl.SearchOptions.OPTIMAL) {
-    	stopSearch = ctrlAndStats.queue.isEmpty();  
+    	stopSearch = queue.isEmpty();  
       } else {
     	stopSearch = res == an5SearchControl.SearchResult.FOUND ||
-    			       ctrlAndStats.queue.isEmpty();
+    			       queue.isEmpty();
       }
     }
     return res;
@@ -72,12 +77,9 @@ public class an5Goal extends an5GoalTree {
 	}
 	return res;
   }
-  public int cost() {
-	return 0;
-  }
   public an5GoalTree getNextGoal(an5SearchControl ctrl) {
 	an5GoalTree res = null;
-	ctrl.queue.remove(0);
+	queue.remove(0);
 	if ((template instanceof an5CreateNetwork) ||
 	    (template instanceof an5JoinNetwork) ||
 	    (template instanceof an5ConnectNetworks)) {
@@ -95,7 +97,7 @@ public class an5Goal extends an5GoalTree {
     
   } */
   public void addToQueue(an5GoalTree t) {
-    ctrlAndStats.queue.addToQueue(t, ctrlAndStats);
+    queue.addToQueue(t, ctrlAndStats);
   }
   public void suspend() {
   }
@@ -107,9 +109,9 @@ public class an5Goal extends an5GoalTree {
   public String[] how() {
     return null;
   }
-  public int score() {
-    int  max = template.score();
-    return max;
+  public int[] gauge() {
+	int[] g = template.gauge();
+    return g;
   }
   public void release() {
   }

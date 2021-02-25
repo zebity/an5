@@ -1,8 +1,6 @@
 package an5.solve;
 
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import an5.model.*;
@@ -13,10 +11,7 @@ public class an5SearchControl {
   public static class BuildStrategy { static final int SINGLE_NET_ADD = 1, MULTI_NET_JOIN = 2; }
   an5SearchStats stats = new an5SearchStats();
   Map<String, an5Object> visited = new HashMap<>();
-  an5SearchQueue<an5GoalTree> queue = new an5SearchQueue<>();
   int strategy = an5SearchControl.SearchOptions.SCORE,
 	  networkBuildStrategy = an5SearchControl.BuildStrategy.SINGLE_NET_ADD;
-  int min,
-      max,
-      bound;
+  int bound;
 }

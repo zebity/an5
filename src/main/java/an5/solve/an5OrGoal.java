@@ -2,39 +2,39 @@ package an5.solve;
 
 import java.util.List;
 
-import an5.model.*;
+import an5.solve.an5SearchControl.SearchResult;
 
 public class an5OrGoal extends an5GoalTree {
   an5SearchControl ctrlAndStats;
-  List<an5Template> template;
-  public an5OrGoal(List<an5Template> t, an5SearchControl s) {
-    template = t;
+  an5SearchQueue<an5Template> queue = new an5SearchQueue<>();
+  int status = an5SearchControl.SearchResult.UNDEFINED;
+  
+  public an5OrGoal(List<an5Template> tl, an5SearchControl s) {
     ctrlAndStats = s;
+    for (an5Template t: tl) {
+      queue.addToQueue(t, ctrlAndStats);	
+    }
   }
   public an5OrGoal(List<an5GoalTree> tree, an5SearchControl st, boolean andTree) {
     ctrlAndStats = st;
   }
   public int seed() {
 	int res = 0;
+	res = queue.get(0).seedGoal();
+	status = an5SearchControl.SearchResult.START;
     return res;
   }
-  /* public int solve() {
-  	return 0;
-  } */
   public int status() {
-	return an5SearchControl.SearchResult.UNDEFINED;
+	return status;
   }
-  public int score() {
-	int max = 0;
+  public int[] gauge() {
+	int[] max = new int[]{0,1};
     if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.SCORE) != 0) {
-      max = template.get(0).score();
+      max = queue.get(0).gauge();
     } else {
       /* traverse through list to get maximum */	
     }
 	return max;
-  }
-  public int cost() {
-	return 0;
   }
   public an5GoalTree getNextGoal(an5SearchControl ctrl) {
     return null;

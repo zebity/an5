@@ -10,9 +10,6 @@ public class an5AndGoal extends an5GoalTree {
 	template = t;
 	ctrlAndStats = c;
   }
-  /* public int solve() {
-    return an5SearchControl.SearchResult.UNDEFINED;
-  } */
   public int seed() {
 	int res = 0;
     return res;
@@ -21,11 +18,8 @@ public class an5AndGoal extends an5GoalTree {
 	int res = an5SearchControl.SearchResult.UNDEFINED;
     return res;
   }
-  public int score() {
-	return 0;
-  }
-  public int cost() {
-	return 0;
+  public int[] gauge() {
+	return new int[]{0,1};
   }
   public an5GoalTree getNextGoal(an5SearchControl ctrl) {
     return null;

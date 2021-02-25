@@ -9,13 +9,15 @@ public class an5ClassInstance extends an5VariableInstance {
   List<an5Object> instances = new ArrayList<>();
   int min,
       max;
+  public int order;
   public boolean mandatory = false;
   int alloc = allocationPolicy.DYNAMIC;
-  public an5ClassInstance(String varNm, an5Object ifDef, int mn, int mx, boolean man) {
+  public an5ClassInstance(String varNm, an5Object ifDef, int mn, int mx, int ord, boolean man) {
 	super(varNm);
     objectDefinition = ifDef;
     min = mn;
     max = mx;
+    order = ord;
     mandatory = man;
   }
   public int allocateInstance(int sz, String Nm) {

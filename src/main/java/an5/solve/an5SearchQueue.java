@@ -3,28 +3,30 @@ package an5.solve;
 import java.util.LinkedList;
 import java.util.List;
 
-public class an5SearchQueue<TQ> {
-  public class queueNode<T> {
-    T goal;
+public class an5SearchQueue<TQ extends an5SearchGauge> {
+  public class queueNode {
+    TQ goal;
     boolean seeded = false;
     int[] score = new int[]{0,0};
     int status = an5SearchControl.SearchResult.UNDEFINED;
-    public queueNode(T t) {
+    public queueNode(TQ t) {
       goal = t;
     }
   }
-  List<queueNode<TQ>> queue = new LinkedList<>();  
+  List<queueNode> queue = new LinkedList<>();
+  int[] min,
+        max; 
   public an5SearchQueue() {
   }
   public boolean isEmpty() {
     return queue.isEmpty();
   }
   public boolean add(TQ t) {
-	queueNode<TQ> n = new queueNode<>(t);
+	queueNode n = new queueNode(t);
     return queue.add(n);
   }
   public void add(int i, TQ t) {
-	queueNode<TQ> n = new queueNode<>(t);
+	queueNode n = new queueNode(t);
     queue.add(i, n);
   }
   public TQ get(int i) {
@@ -32,7 +34,7 @@ public class an5SearchQueue<TQ> {
   }
   public TQ remove(int i) {
 	TQ r = null;
-    queueNode<TQ> n = queue.remove(i);
+    queueNode n = queue.remove(i);
     if (n != null) {
       r = n.goal;
     }
@@ -61,54 +63,37 @@ public class an5SearchQueue<TQ> {
     }
     
   } */
-  public void addToQueue(TQ t, an5SearchControl ctrl) {
+  public void addToQueue(TQ t,an5SearchControl ctrl) {
     if ((ctrl.strategy & an5SearchControl.SearchOptions.BREADTH) != 0) {
-      ctrl.queue.add(t);
+      add(t);
     } else if ((ctrl.strategy & an5SearchControl.SearchOptions.DEPTH) != 0) {
-      ctrl.queue.add(0, t);   	
-    } else if ((ctrl.strategy & an5SearchControl.SearchOptions.SCORE) != 0) {
-      int score = t.score();
-      if (ctrl.queue.isEmpty()) {
-        ctrl.queue.add(t);
-        ctrl.max = ctrl.min = score;
-      } else if (score <= ctrl.min) {
-    	ctrl.queue.add(t);
-    	ctrl.min = score;
-      } else if (score >= ctrl.max) {
-      	ctrl.queue.add(0, t);
-      	ctrl.max = score;    	  
+      add(0, t);   	
+    } else if ((ctrl.strategy & an5SearchControl.SearchOptions.SCORE) != 0 ||
+               (ctrl.strategy & an5SearchControl.SearchOptions.COST) != 0) {
+      int[] score = t.gauge();
+      if (isEmpty()) {
+        add(t);
+        max = min = score;
+      } else if ((score[0] *  score[1] * min[1]) - (min[0] *  score[1] * min[1]) <= 0) {
+    	add(t);
+    	min = score;
+      } else if ((score[0] *  score[1] * max[1]) - (max[0] *  score[1] * max[1]) >= 0) {
+      	add(0, t);
+      	max = score;
       } else {
-    	for (int i = 1; i < ctrl.queue.size(); i++) {
-    	  if (ctrl.queue.get(i).score() >= score) {
-    	    ctrl.queue.add(i, t);
-    	    i = ctrl.queue.size();
-    	  }
-    	}
-      }
-    } else if ((ctrl.strategy & an5SearchControl.SearchOptions.COST) != 0) {
-      int cost = t.cost();
-      if (ctrl.queue.isEmpty()) {
-        ctrl.queue.add(t);
-        ctrl.max = ctrl.min = cost;
-      } else if (cost <= ctrl.min) {
-    	ctrl.queue.add(0, t);
-    	ctrl.min = cost;
-      } else if (cost >= ctrl.max) {
-      	ctrl.queue.add(t);
-      	ctrl.max = cost;    	  
-      } else {
-    	for (int i = 1; i < ctrl.queue.size(); i++) {
-    	  if (ctrl.queue.get(i).cost() >= cost) {
-    	    ctrl.queue<>.add(i, t);
-    	    i = ctrl.queue.size();
+    	for (int i = 1; i < size(); i++) {
+    	  int[] ndScore = get(i).gauge();
+    	  if ((ndScore[0] *  score[1] * ndScore[1]) - (score[0] *  score[1] * ndScore[1]) >= 0) {
+    	    add(i, t);
+    	    i = size();
     	  }
     	}
       }
     }
   }
-  public int score() {
-    int  max = 0; /* template.score(); */
-    return max;
+  public int[] gauge() {
+    int[] mx = new int[]{0,1}; /* template.score(); */
+    return mx;
   }
   public void release() {
   }
