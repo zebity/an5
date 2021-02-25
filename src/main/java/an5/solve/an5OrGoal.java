@@ -18,9 +18,9 @@ public class an5OrGoal extends an5GoalTree {
 	int res = 0;
     return res;
   }
-  public int solve() {
+  /* public int solve() {
   	return 0;
-  }
+  } */
   public int status() {
 	return an5SearchControl.SearchResult.UNDEFINED;
   }

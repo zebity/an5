@@ -95,49 +95,7 @@ public class an5Goal extends an5GoalTree {
     
   } */
   public void addToQueue(an5GoalTree t) {
-    if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.BREADTH) != 0) {
-      ctrlAndStats.queue.add(t);
-    } else if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.DEPTH) != 0) {
-      ctrlAndStats.queue.add(0, t);   	
-    } else if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.SCORE) != 0) {
-      int score = t.score();
-      if (ctrlAndStats.queue.isEmpty()) {
-        ctrlAndStats.queue.add(t);
-        ctrlAndStats.max = ctrlAndStats.min = score;
-      } else if (score <= ctrlAndStats.min) {
-    	ctrlAndStats.queue.add(t);
-    	ctrlAndStats.min = score;
-      } else if (score >= ctrlAndStats.max) {
-      	ctrlAndStats.queue.add(0, t);
-      	ctrlAndStats.max = score;    	  
-      } else {
-    	for (int i = 1; i < ctrlAndStats.queue.size(); i++) {
-    	  if (ctrlAndStats.queue.get(i).score() >= score) {
-    	    ctrlAndStats.queue.add(i, t);
-    	    i = ctrlAndStats.queue.size();
-    	  }
-    	}
-      }
-    } else if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.COST) != 0) {
-      int cost = t.cost();
-      if (ctrlAndStats.queue.isEmpty()) {
-        ctrlAndStats.queue.add(t);
-        ctrlAndStats.max = ctrlAndStats.min = cost;
-      } else if (cost <= ctrlAndStats.min) {
-    	ctrlAndStats.queue.add(0, t);
-    	ctrlAndStats.min = cost;
-      } else if (cost >= ctrlAndStats.max) {
-      	ctrlAndStats.queue.add(t);
-      	ctrlAndStats.max = cost;    	  
-      } else {
-    	for (int i = 1; i < ctrlAndStats.queue.size(); i++) {
-    	  if (ctrlAndStats.queue.get(i).cost() >= cost) {
-    	    ctrlAndStats.queue.add(i, t);
-    	    i = ctrlAndStats.queue.size();
-    	  }
-    	}
-      }
-    }
+    ctrlAndStats.queue.addToQueue(t, ctrlAndStats);
   }
   public void suspend() {
   }

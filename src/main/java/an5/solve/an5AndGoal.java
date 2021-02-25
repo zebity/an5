@@ -10,9 +10,9 @@ public class an5AndGoal extends an5GoalTree {
 	template = t;
 	ctrlAndStats = c;
   }
-  public int solve() {
+  /* public int solve() {
     return an5SearchControl.SearchResult.UNDEFINED;
-  }
+  } */
   public int seed() {
 	int res = 0;
     return res;

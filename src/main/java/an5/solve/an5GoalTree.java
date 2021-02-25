@@ -3,7 +3,7 @@ package an5.solve;
 import an5.model.*; 
 
 abstract public class an5GoalTree {  
-  abstract public int solve();
+  // abstract public int solve();
   abstract public int seed();
   abstract public int status();
   abstract public int score();

@@ -13,7 +13,7 @@ public class an5SearchControl {
   public static class BuildStrategy { static final int SINGLE_NET_ADD = 1, MULTI_NET_JOIN = 2; }
   an5SearchStats stats = new an5SearchStats();
   Map<String, an5Object> visited = new HashMap<>();
-  List<an5GoalTree> queue = new LinkedList<>();
+  an5SearchQueue<an5GoalTree> queue = new an5SearchQueue<>();
   int strategy = an5SearchControl.SearchOptions.SCORE,
 	  networkBuildStrategy = an5SearchControl.BuildStrategy.SINGLE_NET_ADD;
   int min,
