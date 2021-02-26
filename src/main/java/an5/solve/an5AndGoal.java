@@ -21,7 +21,7 @@ public class an5AndGoal extends an5GoalTree {
   public int[] gauge() {
 	return new int[]{0,1};
   }
-  public an5GoalTree getNextGoal(an5SearchControl ctrl) {
+  public an5GoalTree getNextGoal() {
     return null;
   }
   public void suspend() {

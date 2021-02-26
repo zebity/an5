@@ -45,7 +45,7 @@ public class an5Goal extends an5GoalTree {
         default: break;
       }
       
-      next = next.getNextGoal(ctrlAndStats);
+      next = next.getNextGoal();
       addToQueue(next);
       /* queueDispatch(); */
       
@@ -77,13 +77,13 @@ public class an5Goal extends an5GoalTree {
 	}
 	return res;
   }
-  public an5GoalTree getNextGoal(an5SearchControl ctrl) {
+  public an5GoalTree getNextGoal() {
 	an5GoalTree res = null;
 	queue.remove(0);
 	if ((template instanceof an5CreateNetwork) ||
 	    (template instanceof an5JoinNetwork) ||
 	    (template instanceof an5ConnectNetworks)) {
-	  res = template.getNextGoal(ctrl);
+	  res = template.getNextGoal(ctrlAndStats);
 	}
     return res;
   }

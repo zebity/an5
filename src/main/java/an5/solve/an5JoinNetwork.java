@@ -64,8 +64,7 @@ public class an5JoinNetwork extends an5Template {
 	return new int[]{(sc * parGauge[1]) + parGauge[0], parGauge[1]};
   }
   public int seedGoal() {
-    int i = 0;
-    
+	int i = 0;
     viaService = prototype.providesServices().getWhere(1, -1);
     for (an5VariableInstance c : prototype.AN5AT_vars.values()) {
       if (c instanceof an5ClassInstance) {
@@ -76,7 +75,6 @@ public class an5JoinNetwork extends an5Template {
     	  } else if (cl.order == 1) {
     		destClass = cl.objectDefinition.getClass().getName();
     	  }
-    	  i++;
     	}
       }
     }
@@ -103,6 +101,9 @@ public class an5JoinNetwork extends an5Template {
   }
   public an5GoalTree getNextGoal(an5SearchControl crtl) {
     an5GoalTree res = null;
+    for (int i = 0; i < use.size(); i++) {
+    	
+    }
     status = an5SearchControl.SearchResult.SOLVING;
     return res;
   }

@@ -15,7 +15,7 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
   }
   List<queueNode> queue = new LinkedList<>();
   int[] min,
-        max; 
+        max;
   public an5SearchQueue() {
   }
   public boolean isEmpty() {
@@ -46,9 +46,6 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
   public int status() {
 	int res = an5SearchControl.SearchResult.UNDEFINED;
 	return res;
-  }
-  public int cost() {
-	return 0;
   }
   public TQ getNextGoal(an5SearchControl ctrl) {
 	TQ res = null;
@@ -81,6 +78,7 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
       	add(0, t);
       	max = score;
       } else {
+    	/* note: should do insert by splitting in middle to allow for long queues */
     	for (int i = 1; i < size(); i++) {
     	  int[] ndScore = get(i).gauge();
     	  if ((ndScore[0] *  score[1] * ndScore[1]) - (score[0] *  score[1] * ndScore[1]) >= 0) {
