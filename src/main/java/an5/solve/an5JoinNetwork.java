@@ -18,6 +18,7 @@ import an5.model.an5ClassInstance;
 import an5.model.an5Network;
 import an5.model.an5Object;
 import an5.model.an5Service;
+import an5.model.an5Binding;
 import an5.model.an5VariableInstance;
 
 public class an5JoinNetwork extends an5Template {
@@ -29,8 +30,8 @@ public class an5JoinNetwork extends an5Template {
   
   /* Working */
   List<an5Object> toAdd = new LinkedList<>();
-  Map<an5Object, an5Object> available = new HashMap<>();
-  Map<an5Object, an5Object> mustUse =  new HashMap<>();
+  Map<String, an5Object> available = new HashMap<>();
+  Map<String, an5Object> mustUse =  new HashMap<>();
   an5AvailableInterfaces availableInterface = new an5AvailableInterfaces();
   an5Service viaService;
   String srcClass,
@@ -45,6 +46,15 @@ public class an5JoinNetwork extends an5Template {
     srcObjects = ele;
     use = avail;
     connectTo = to;
+  }
+  public an5JoinNetwork(an5Template par, an5Object proto, an5Network net, an5Object to, List<an5Object> ele, Map<String, an5Object> avail) {
+	super(par);	  
+	prototype = proto;
+	joinNet = net;
+	srcObjects = ele;
+	for (an5Object o: avail.values())
+	  use.add(o);
+	connectTo = to;
   }
   public an5JoinNetwork(an5Template par, an5Object proto, an5Network net, an5Object to, an5Object ele, List<an5Object> avail) {
 	super(par);
@@ -79,18 +89,18 @@ public class an5JoinNetwork extends an5Template {
       }
     }
     if (destClass != null & destClass.equals(connectTo.getClass().getName())) {
-      mustUse.put(connectTo, connectTo);
+      mustUse.put(connectTo.getGUID(), connectTo);
       for (i = 0; i < srcObjects.size(); i++) {
         if (srcClass.equals(srcObjects.get(i).getClass().getName())) {
-          mustUse.put(srcObjects.get(i), srcObjects.get(i));
+          mustUse.put(srcObjects.get(i).getGUID(), srcObjects.get(i));
           toAdd.add(srcObjects.get(i));
         }
       }
       if (toAdd.size() > 0) {
         for (i = 0; i < use.size(); i++) {
           an5Object o = use.get(i);
-          if (! mustUse.containsKey(o)) {
-            available.put(o,o);
+          if (! mustUse.containsKey(o.getGUID())) {
+            available.put(o.getGUID(),o);
             availableInterface.available(o);
           }
         }
@@ -101,8 +111,23 @@ public class an5JoinNetwork extends an5Template {
   }
   public an5GoalTree getNextGoal(an5SearchControl crtl) {
     an5GoalTree res = null;
-    for (int i = 0; i < use.size(); i++) {
-    	
+    List<an5Template> alts = new LinkedList<>();
+    an5Object o, c;
+    an5Network n;
+    an5Binding[] b;
+    for (int i = 0; i < toAdd.size(); i++) {
+      int j = toAdd.get(i).canBind(connectTo, joinNet.providesServices());
+      if (j > 0) {
+    	o = (an5Object)toAdd.remove(i).clone();
+    	n = (an5Network)joinNet.clone();
+    	c = n.members.get(connectTo.getGUID());
+    	b = o.bind(c, n.providesServices());
+    	n.members.put(o.getGUID(), o);
+    	availableInterface.notAvailable(b);
+    	alts.add(new an5JoinNetwork(this, prototype, n, c, toAdd, available));
+      } else {
+    	  
+      }
     }
     status = an5SearchControl.SearchResult.SOLVING;
     return res;

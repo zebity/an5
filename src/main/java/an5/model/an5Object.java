@@ -47,7 +47,7 @@ public class an5Object implements an5ClassTemplate {
   public an5Object getInstance(String nmPat, int i) {
     return null;
   }
-  public boolean[] providesService(an5Service mustProvide, an5Service canProvide) {
+  public boolean[] checkServicesProvided(an5Service mustProvide, an5Service canProvide) {
 	boolean must = true,
 			can = true;
 	for (int i = 0; i < mustProvide.size(); i++) {
@@ -60,6 +60,14 @@ public class an5Object implements an5ClassTemplate {
   }
   public an5Service providesServices() {
 	return new an5ServiceList((an5ServiceMap)AN5AT_serviceUnion);  
+  }
+  public int canBind(an5Object o, an5Service s) {
+    int res = 0;
+    return res;
+  }
+  public an5Binding[] bind(an5Object o, an5Service s) {
+	an5Binding[] res = null;
+    return res;
   }
   public an5Object() {}
   public an5Object(an5Object o) {

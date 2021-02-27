@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import an5.model.an5Binding;
 import an5.model.an5MapIf;
 import an5.model.an5Object;
 
@@ -24,6 +25,6 @@ public class an5AvailableInterfaces {
      ifCollection.put(k.sigKey, listO); 
    }
   }
-  public void notAvailable(an5Object o) {
+  public void notAvailable(an5Binding[] b) {
   }
 }

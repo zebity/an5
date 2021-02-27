@@ -59,7 +59,7 @@ public class an5CreateNetwork extends an5Template {
     	mustUseOrder.add(o);
     	if (o instanceof an5Element) {
           an5Element el = (an5Element)o;
-          boolean[] can = el.providesService(mustProvide, canProvide);
+          boolean[] can = el.checkServicesProvided(mustProvide, canProvide);
           if (can[0]) {
         	if (can[1]) {
         	  bestStarter.add(o);
