@@ -7,22 +7,19 @@ import an5.solve.an5SearchControl.SearchResult;
 
 public class an5OrGoal extends an5GoalTree {
   an5SearchControl ctrlAndStats;
-  an5SearchQueue<an5Template> queue = new an5SearchQueue<>();
-  public List<an5Template> success = new LinkedList<>();
+  public an5SearchQueue<an5GoalTree> queue = new an5SearchQueue<>();
+  public List<an5GoalTree> success = new LinkedList<>();
   int status = an5SearchControl.SearchResult.UNDEFINED;
   
-  public an5OrGoal(List<an5Template> tl, an5SearchControl s) {
+  public an5OrGoal(List<an5GoalTree> tl, an5SearchControl s) {
     ctrlAndStats = s;
-    for (an5Template t: tl) {
+    for (an5GoalTree t: tl) {
       queue.addToQueue(t, ctrlAndStats);	
     }
   }
-  public an5OrGoal(List<an5GoalTree> tree, an5SearchControl st, boolean andTree) {
-    ctrlAndStats = st;
-  }
   public int seed() {
 	int res = 0;
-	res = queue.get(0).seedGoal();
+	res = queue.get(0).seed();
 	status = an5SearchControl.SearchResult.START;
     return res;
   }
@@ -41,15 +38,15 @@ public class an5OrGoal extends an5GoalTree {
   public an5GoalTree getNextGoal() {
     an5GoalTree res = null;
     if (queue.size() > 0) {
-      an5Template hq = queue.remove(0);
+      an5GoalTree hq = queue.remove(0);
       if (hq.status() == an5SearchControl.SearchResult.FOUND) {
         success.add(hq);
         if (queue.size() > 0) {
           hq = queue.remove(0);
-          res = hq.getNextGoal(ctrlAndStats);
+          res = hq.getNextGoal();
         }
       } else {
-        res = hq.getNextGoal(ctrlAndStats);
+        res = hq.getNextGoal();
       }
     }
     return res;

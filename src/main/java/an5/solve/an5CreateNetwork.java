@@ -89,16 +89,16 @@ public class an5CreateNetwork extends an5Template {
 	int i, j;
 	
     if (ctrl.networkBuildStrategy == an5SearchControl.BuildStrategy.SINGLE_NET_ADD) {
-        List<an5Template> altNets = new LinkedList<>();
+        List<an5GoalTree> altNets = new LinkedList<>();
         for (i = 0; i < starter.size(); i++) {
           resNet = (an5Network)netPrototype.createInstance();
           resNet.members.put(starter.get(i).getGUID(), (an5Object)(starter.get(i).clone()));
         an5JoinNetwork join = new an5JoinNetwork(this, nodePrototype, resNet, starter.get(i), mustUseOrder, available);
-        altNets.add(join);
+        altNets.add(new an5SimpleGoal(join,ctrl));
       }
       res = new an5OrGoal(altNets, ctrl);
     } else if (ctrl.networkBuildStrategy == an5SearchControl.BuildStrategy.MULTI_NET_JOIN) {
-      List<an5Template> altNets = null;
+      List<an5GoalTree> altNets = null;
       List<an5GoalTree> andTrees = null;
       for (i = 0; i < starter.size(); i++) {
         altNets = new LinkedList<>();
@@ -107,11 +107,11 @@ public class an5CreateNetwork extends an5Template {
         resNet.members.put(starter.get(i).getGUID(), (an5Object)starter.get(i).clone());
         for (j = 0; j > mustUseOrder.size(); j++) {   
           an5JoinNetwork join = new an5JoinNetwork(this, nodePrototype, resNet, starter.get(i), mustUseOrder.get(j), available);
-          altNets.add(join);
+          altNets.add(new an5SimpleGoal(join, ctrl));
         }
         andTrees.add(new an5AndGoal(altNets, ctrl));
       }
-      res = new an5OrGoal(andTrees, ctrl, true);
+      res = new an5OrGoal(andTrees, ctrl);
     }
     return res;
   }

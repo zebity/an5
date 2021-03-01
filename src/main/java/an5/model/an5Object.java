@@ -61,11 +61,11 @@ public class an5Object implements an5ClassTemplate {
   public an5Service providesServices() {
 	return new an5ServiceList((an5ServiceMap)AN5AT_serviceUnion);  
   }
-  public int canBind(an5Object o, an5Service s) {
+  public int canBind(an5Object o, an5Service netSrv, an5Service protoSrv) {
     int res = 0;
     return res;
-  }
-  public an5Binding[] bind(an5Object o, an5Service s) {
+  } 
+  public an5Binding[] bind(an5Object o, an5Service netSrv, an5Service protoSrv) {
 	an5Binding[] res = null;
     return res;
   }

@@ -17,6 +17,7 @@ import java.util.Map;
 import an5.model.an5ClassInstance;
 import an5.model.an5Network;
 import an5.model.an5Object;
+import an5.model.an5Path;
 import an5.model.an5Service;
 import an5.model.an5Binding;
 import an5.model.an5VariableInstance;
@@ -33,7 +34,7 @@ public class an5JoinNetwork extends an5Template {
   Map<String, an5Object> available = new HashMap<>();
   Map<String, an5Object> mustUse =  new HashMap<>();
   an5AvailableInterfaces availableInterface = new an5AvailableInterfaces();
-  an5Service viaService;
+  an5Service viaService; /* Should be also be using network services */
   String srcClass,
          destClass;
   int joinCount = 0,
@@ -109,26 +110,52 @@ public class an5JoinNetwork extends an5Template {
     status = an5SearchControl.SearchResult.START;
     return mustUse.size() - 1;
   }
-  public an5GoalTree getNextGoal(an5SearchControl crtl) {
+  public Map<String, an5Object> notAvailable(an5Object o) {
+    Map<String, an5Object> to = new HashMap<>();
+    for (an5Object from : available.values())
+      to.put(from.getGUID(), from);
+    if (o instanceof an5Path) {
+      an5Path p = (an5Path)o;
+      to.remove(p.path.get(p.path.size() - 1).getGUID());
+    } else {
+      to.remove(o.getGUID());
+    }
+    return to;
+  }
+  public an5GoalTree getNextGoal(an5SearchControl ctrl) {
     an5GoalTree res = null;
-    List<an5Template> alts = new LinkedList<>();
+    List<an5GoalTree> andGoals = new LinkedList<>();
     an5Object o, c;
     an5Network n;
     an5Binding[] b;
+    an5Path[] p;
     for (int i = 0; i < toAdd.size(); i++) {
-      int j = toAdd.get(i).canBind(connectTo, joinNet.providesServices());
+      int j = toAdd.get(i).canBind(connectTo, joinNet.providesServices(), viaService);
       if (j > 0) {
     	o = (an5Object)toAdd.remove(i).clone();
-    	n = (an5Network)joinNet.clone();
+    	n = (an5Network)joinNet.clone(); /* only need "little" part of target network */
     	c = n.members.get(connectTo.getGUID());
-    	b = o.bind(c, n.providesServices());
+    	b = o.bind(c, n.providesServices(), viaService);
     	n.members.put(o.getGUID(), o);
     	availableInterface.notAvailable(b);
-    	alts.add(new an5JoinNetwork(this, prototype, n, c, toAdd, available));
+    	andGoals.add(new an5SimpleGoal(new an5JoinNetwork(this, prototype, n, c, toAdd, available), ctrl));
       } else {
-    	  
+    	 int k = availableInterface.canMatchInterface(toAdd.get(i), joinNet.providesServices(), viaService);
+    	 if (k > 0) {
+    	   List<an5GoalTree> alts = new LinkedList<>();
+    	   o = (an5Object)toAdd.remove(i).clone();
+    	   p = availableInterface.probePaths(o, joinNet.providesServices(), viaService);
+    	   Map<String, an5Object> a = null;   	   
+    	   /* have alternate paths with uncommitted bindings */
+      	   for (int l = 0; i < k; l++) {
+        	 a = notAvailable(p[l]);
+      	     alts.add(new an5SimpleGoal(new an5JoinNetwork(this, prototype, joinNet, p[l], toAdd, a), ctrl));
+      	   }
+      	   andGoals.add(new an5OrGoal(alts, ctrl));
+    	 }
       }
     }
+    res = new an5AndGoal(andGoals, ctrl);
     status = an5SearchControl.SearchResult.SOLVING;
     return res;
   }

@@ -1,14 +1,19 @@
 package an5.solve;
 
+import java.util.LinkedList;
 import java.util.List; 
 
 public class an5AndGoal extends an5GoalTree {
   an5SearchControl ctrlAndStats;
-  List<an5Template> template;
+  public an5SearchQueue<an5GoalTree> queue = new an5SearchQueue<>();
+  public List<an5GoalTree> success = new LinkedList<>();
+  int status = an5SearchControl.SearchResult.UNDEFINED;
   
-  public an5AndGoal(List<an5Template> t, an5SearchControl c) {
-	template = t;
+  public an5AndGoal(List<an5GoalTree> tl, an5SearchControl c) {
 	ctrlAndStats = c;
+	for (an5GoalTree t: tl) {
+	  queue.addToQueue(t, ctrlAndStats);	
+	}
   }
   public int seed() {
 	int res = 0;
