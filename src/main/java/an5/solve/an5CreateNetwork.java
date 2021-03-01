@@ -98,20 +98,30 @@ public class an5CreateNetwork extends an5Template {
       }
       res = new an5OrGoal(altNets, ctrl);
     } else if (ctrl.networkBuildStrategy == an5SearchControl.BuildStrategy.MULTI_NET_JOIN) {
-      List<an5GoalTree> altNets = null;
-      List<an5GoalTree> andTrees = null;
+      /* This strategy can only work if you can share "parts buckets" across nets */
+      List<an5GoalTree> altStarts = new LinkedList<>();
+      List<an5GoalTree> andJoins = null;
+      List<an5GoalTree> joinSet = null;
+      List<an5Network> smallNets = null;
+      an5GoalTree connectGoal = null;
+
       for (i = 0; i < starter.size(); i++) {
-        altNets = new LinkedList<>();
-        andTrees = new LinkedList<>();
+        andJoins = new LinkedList<>();
+        joinSet = new LinkedList<>();
+        smallNets = new LinkedList<>();
         resNet = (an5Network)netPrototype.createInstance();
         resNet.members.put(starter.get(i).getGUID(), (an5Object)starter.get(i).clone());
         for (j = 0; j > mustUseOrder.size(); j++) {   
           an5JoinNetwork join = new an5JoinNetwork(this, nodePrototype, resNet, starter.get(i), mustUseOrder.get(j), available);
-          altNets.add(new an5SimpleGoal(join, ctrl));
+          joinSet.add(new an5SimpleGoal(join, ctrl));
         }
-        andTrees.add(new an5AndGoal(altNets, ctrl));
+        andJoins.add(new an5AndGoal(joinSet, ctrl));
+        smallNets.add(resNet);
+        connectGoal = new an5SimpleGoal(new an5ConnectNetworks(this, null, smallNets, resultNetwork), ctrl);
+        andJoins.add(connectGoal);
+        altStarts.add(new an5OrGoal(andJoins, ctrl));
       }
-      res = new an5OrGoal(andTrees, ctrl);
+      res = new an5OrGoal(altStarts, ctrl);
     }
     return res;
   }

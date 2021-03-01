@@ -40,6 +40,12 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
     }
 	return r;
   }
+  public void purge() {
+    if (! isEmpty()) {
+      queue = new LinkedList<>();
+      min = max = null;
+    }
+  }
   public int size() {
 	return queue.size();
   }
@@ -47,10 +53,10 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
 	int res = an5SearchControl.SearchResult.UNDEFINED;
 	return res;
   }
-  public TQ getNextGoal(an5SearchControl ctrl) {
+  /* public TQ getNextGoal(an5SearchControl ctrl) {
 	TQ res = null;
     return res;
-  }
+  } */
   /* public void queueDispatch() {
 	int bound = -1;
     an5GoalTree next = ctrlAndStats.queue.remove(0);
@@ -61,31 +67,33 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
     
   } */
   public void addToQueue(TQ t,an5SearchControl ctrl) {
-    if ((ctrl.strategy & an5SearchControl.SearchOptions.BREADTH) != 0) {
-      add(t);
-    } else if ((ctrl.strategy & an5SearchControl.SearchOptions.DEPTH) != 0) {
-      add(0, t);   	
-    } else if ((ctrl.strategy & an5SearchControl.SearchOptions.SCORE) != 0 ||
-               (ctrl.strategy & an5SearchControl.SearchOptions.COST) != 0) {
-      int[] score = t.gauge();
-      if (isEmpty()) {
+	if (t != null) {
+      if ((ctrl.strategy & an5SearchControl.SearchOptions.BREADTH) != 0) {
         add(t);
-        max = min = score;
-      } else if ((score[0] *  score[1] * min[1]) - (min[0] *  score[1] * min[1]) <= 0) {
-    	add(t);
-    	min = score;
-      } else if ((score[0] *  score[1] * max[1]) - (max[0] *  score[1] * max[1]) >= 0) {
-      	add(0, t);
-      	max = score;
-      } else {
-    	/* note: should do insert by splitting in middle to allow for long queues */
-    	for (int i = 1; i < size(); i++) {
-    	  int[] ndScore = get(i).gauge();
-    	  if ((ndScore[0] *  score[1] * ndScore[1]) - (score[0] *  score[1] * ndScore[1]) >= 0) {
-    	    add(i, t);
-    	    i = size();
+      } else if ((ctrl.strategy & an5SearchControl.SearchOptions.DEPTH) != 0) {
+        add(0, t);   	
+      } else if ((ctrl.strategy & an5SearchControl.SearchOptions.SCORE) != 0 ||
+                 (ctrl.strategy & an5SearchControl.SearchOptions.COST) != 0) {
+        int[] score = t.gauge();
+        if (isEmpty()) {
+          add(t);
+          max = min = score;
+        } else if ((score[0] *  score[1] * min[1]) - (min[0] *  score[1] * min[1]) <= 0) {
+          add(t);
+          min = score;
+        } else if ((score[0] *  score[1] * max[1]) - (max[0] *  score[1] * max[1]) >= 0) {
+      	  add(0, t);
+      	  max = score;
+        } else {
+    	  /* note: should do insert by splitting in middle to allow for long queues */
+    	  for (int i = 1; i < size(); i++) {
+    	    int[] ndScore = get(i).gauge();
+    	    if ((ndScore[0] *  score[1] * ndScore[1]) - (score[0] *  score[1] * ndScore[1]) >= 0) {
+    	      add(i, t);
+    	      i = size();
+    	    }
     	  }
-    	}
+        }
       }
     }
   }

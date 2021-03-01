@@ -124,7 +124,7 @@ public class an5JoinNetwork extends an5Template {
   }
   public an5GoalTree getNextGoal(an5SearchControl ctrl) {
     an5GoalTree res = null;
-    List<an5GoalTree> andGoals = new LinkedList<>();
+    List<an5GoalTree> andJoins = new LinkedList<>();
     an5Object o, c;
     an5Network n;
     an5Binding[] b;
@@ -138,24 +138,26 @@ public class an5JoinNetwork extends an5Template {
     	b = o.bind(c, n.providesServices(), viaService);
     	n.members.put(o.getGUID(), o);
     	availableInterface.notAvailable(b);
-    	andGoals.add(new an5SimpleGoal(new an5JoinNetwork(this, prototype, n, c, toAdd, available), ctrl));
+    	andJoins.add(new an5SimpleGoal(new an5JoinNetwork(this, prototype, n, c, toAdd, available), ctrl));
       } else {
     	 int k = availableInterface.canMatchInterface(toAdd.get(i), joinNet.providesServices(), viaService);
     	 if (k > 0) {
-    	   List<an5GoalTree> alts = new LinkedList<>();
+    	   List<an5GoalTree> altPaths = new LinkedList<>();
     	   o = (an5Object)toAdd.remove(i).clone();
     	   p = availableInterface.probePaths(o, joinNet.providesServices(), viaService);
     	   Map<String, an5Object> a = null;   	   
     	   /* have alternate paths with uncommitted bindings */
       	   for (int l = 0; i < k; l++) {
         	 a = notAvailable(p[l]);
-      	     alts.add(new an5SimpleGoal(new an5JoinNetwork(this, prototype, joinNet, p[l], toAdd, a), ctrl));
+      	     altPaths.add(new an5SimpleGoal(new an5JoinNetwork(this, prototype, joinNet, p[l], toAdd, a), ctrl));
       	   }
-      	   andGoals.add(new an5OrGoal(alts, ctrl));
+      	   andJoins.add(new an5OrGoal(altPaths, ctrl));
+    	 } else {
+    	   andJoins.add(new an5FailedGoal());
     	 }
       }
     }
-    res = new an5AndGoal(andGoals, ctrl);
+    res = new an5AndGoal(andJoins, ctrl);
     status = an5SearchControl.SearchResult.SOLVING;
     return res;
   }

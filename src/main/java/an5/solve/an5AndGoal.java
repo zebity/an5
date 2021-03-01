@@ -17,17 +17,40 @@ public class an5AndGoal extends an5GoalTree {
   }
   public int seed() {
 	int res = 0;
+	if (queue.size() > 0) {
+	  res = queue.get(0).seed();
+	}
+	status = an5SearchControl.SearchResult.START;
     return res;
   }
   public int status() {
-	int res = an5SearchControl.SearchResult.UNDEFINED;
+	int i,
+	    res = status;
+	int worst = an5SearchControl.SearchResult.FOUND;
+	for (i = 0; i < queue.size(); i++) {
+      worst = Integer.min(worst, queue.get(i).status());
+	}
+	if (i > 0) {
+	  res = worst;
+	  status = res;
+	}
     return res;
   }
   public int[] gauge() {
 	return new int[]{0,1};
   }
   public an5GoalTree getNextGoal() {
-    return null;
+	an5GoalTree res = null;
+	if (status == an5SearchControl.SearchResult.FAILED) {
+	  if (queue.size() > 0) {
+	    queue.purge();
+	  }
+	} else {
+	  if (queue.size() > 0) {
+		res = queue.get(0).getNextGoal();
+	  }
+	}
+    return res;
   }
   public void suspend() {
   }

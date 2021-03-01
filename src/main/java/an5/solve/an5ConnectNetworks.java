@@ -1,7 +1,7 @@
 /**
  ConnectNetwork == bring two networks together to create new network.
    There are multiple scenarios that need to be supported
-   a. There are common elements with two networks that can act as joinPoints
+   a. There are common elements within two networks that can act as joinPoints
    b. There are no common elements and should join at provided connection points
    c. Joined networks will expose union of services of individual networks
  */
@@ -29,10 +29,12 @@ public class an5ConnectNetworks extends an5Template {
   an5Object connectA,
             connectB;
   List<an5Object> use;
+  List<an5Network> mergeNets;
   an5Network resultNet;
   
   /* Working */
   Collection<an5Object> unique = new HashSet<>();
+  Map<String, an5Object> common = new HashMap<>();
   
   /* Map<an5Object, an5Object> available = new HashMap<>();
   Map<an5Object, an5Object> mustUse =  new HashMap<>();
@@ -53,6 +55,12 @@ public class an5ConnectNetworks extends an5Template {
     connectA = a;
     connectB = b;
     use = avail;
+    resultNet = res;
+  }
+  public an5ConnectNetworks(an5Template p, an5Object proto, List<an5Network> nets, an5Network res) {
+    super(p);
+    prototype = proto;
+    mergeNets = nets;
     resultNet = res;
   }
   public int seedGoal() {
