@@ -14,11 +14,11 @@ import an5.model.an5Path;
 import an5.model.an5Service;
 
 public class an5AvailableInterfaces {
-  Map<String, List<an5MapIf>> ifCollection;
-  an5AvailableInterfaces() {
+  public Map<String, List<an5MapIf>> ifCollection;
+  public an5AvailableInterfaces() {
 	ifCollection = new HashMap<>();  
   }
-  an5AvailableInterfaces(an5AvailableInterfaces from) {
+  public an5AvailableInterfaces(an5AvailableInterfaces from) {
 	ifCollection = new HashMap<>();
 	an5Object ref = null;
 	Collection<String> got = new HashSet<>();
@@ -45,8 +45,6 @@ public class an5AvailableInterfaces {
      ifCollection.put(k.sigKey, listO); 
    }
   }
-  public void notAvailable(an5Binding[] b) {
-  }
   public int canMatchInterface(an5Object o, an5Service netSrv, an5Service protoSrvs) {
     int res = 0;
     return res;
@@ -55,6 +53,7 @@ public class an5AvailableInterfaces {
     an5Path[] res = null;
 	return res;
   }
+  
   public Object clone() {
 	an5AvailableInterfaces cl = new an5AvailableInterfaces(this);
     return cl;

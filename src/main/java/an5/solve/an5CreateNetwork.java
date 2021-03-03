@@ -24,7 +24,7 @@ public class an5CreateNetwork extends an5Template {
   List<an5Object> use;
   
   /* Working */
-  List<an5Object> available =  new ArrayList<>();
+  an5AvailableResource available;
   an5Service mustProvide,
              canProvide;
   List<an5Object> mustUseOrder = new LinkedList<>();
