@@ -9,6 +9,8 @@
 package an5.solve;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +32,27 @@ public class an5JoinNetwork extends an5Template {
       paths = new ArrayList<>();
       pool = new HashMap<>();
     }
-  }	
+  }
+  class sortPathCnts implements Comparable<sortPathCnts> {
+    public int cnt = 0,
+               idx = 0,
+               chunkSize = 0,
+               increment = 0;
+    public sortPathCnts(int c, int i) {
+      cnt = c;
+      idx = i;
+    }
+    public int compareTo(sortPathCnts b) {
+    // Biggest to smallest
+      return b.cnt - cnt;
+    }
+  }
+  class sortByIndex implements Comparator<sortPathCnts> {
+    public int compare(sortPathCnts a, sortPathCnts b) {
+    // Smallest to biggest
+      return a.idx - b.idx;		
+    }
+  }
   an5Object prototype;
   an5Network joinNet;
   an5Object connectTo;
@@ -125,6 +147,7 @@ public class an5JoinNetwork extends an5Template {
     an5Path[] p;
     int i, j, k, l;
     int[][] pathCnt = new int[toAdd.size()][3];
+    List<sortPathCnts> sortCnts = new ArrayList<>();
     int fail = 0, maxBind = 0, alts = 0, maxBnd = 0,
     	fndMin = pathCnt.length,
     	fndMax = 0, minBnd = pathCnt.length,
@@ -144,6 +167,7 @@ public class an5JoinNetwork extends an5Template {
            pathCnt[i][0] = 0;
            pathCnt[i][1] = k;
            pathCnt[i][2] = i;
+           sortCnts.add(new sortPathCnts(k, i));
            alts++;
            pathExpand = pathExpand * k;
            maxBind = Integer.max(maxBind, k);
@@ -178,20 +202,33 @@ public class an5JoinNetwork extends an5Template {
       pathsAndPool[][] addFrom = new pathsAndPool[pathExpand][alts];
       an5AvailableResource pool = (an5AvailableResource)available.clone();
       pool.load();
+      Collections.sort(sortCnts);
+      sortCnts.get(0).chunkSize = sortCnts.get(0).cnt;
+      sortCnts.get(0).increment = 1;  
+      for (i = 1; i < sortCnts.size(); i++) {
+        sortCnts.get(i).chunkSize = sortCnts.get(i).cnt *  sortCnts.get(i-1).chunkSize;
+        sortCnts.get(i).increment = sortCnts.get(i).chunkSize / sortCnts.get(i).cnt; 
+      }
+      Collections.sort(sortCnts, new sortByIndex());
       /* Have: fixed network with success cases as "candidate"
        *        Now have alternates of:
        *           connecting "element" list
        *           available resources pool
        */
-      j = 0;
-      for (i = minBnd; i <= maxBnd; i++) {
-        if (pathCnt[i][1] > 0) {
-     	  o = (an5Object)toAdd.get(i).clone();
-     	  p = pool.probePaths(o, joinNet.providesServices(), viaService);
-     	  for (k = 0; k < pathExpand; k++) {
-     	    addFrom[k][0].paths.add(p[(k + j) % pathCnt[i][1]]);
+      for (int m = 0; m < sortCnts.size(); m++) {
+    	i = sortCnts.get(m).idx;
+        j = 0;
+     	o = (an5Object)toAdd.get(i).clone();
+     	p = pool.probePaths(o, joinNet.providesServices(), viaService);
+     	if (p.length == sortCnts.get(m).cnt) {
+     	  for (k = 0; k < pathExpand; k += sortCnts.get(m).increment) {
+     		for (l = 0; l < sortCnts.get(m).increment; l++) {
+     	      addFrom[k+l][0].paths.add(p[j]);
+     		}
+     		j = (j + 1) % sortCnts.get(m).cnt;
           }
-     	  j++;
+        } else {
+        	
         }
       }
  	  for (k = 0; k < pathExpand; k++) {
