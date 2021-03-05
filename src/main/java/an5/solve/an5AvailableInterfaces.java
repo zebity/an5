@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import an5.model.an5Binding;
 import an5.model.an5MapIf;
@@ -46,8 +47,21 @@ public class an5AvailableInterfaces {
    }
   }
   public int canMatchInterface(an5Object o, an5Service netSrv, an5Service protoSrvs) {
-    int res = 0;
-    return res;
+    int cnt = 0;
+    List<an5MapIf> lookUp = null;
+    Set<String> ifFnd = new HashSet<>();
+    for (an5MapIf ifInfo: o.AN5SG_sigKeyUnion.ifSet.values()) {
+      lookUp = ifCollection.get(ifInfo.sigKey);
+      if (lookUp != null) {
+    	for (an5MapIf availIf: lookUp) {
+    	  if (! ifFnd.contains(availIf.forInterface.interfaceDefinition.getGUID())) {
+    	    ifFnd.add(availIf.forInterface.interfaceDefinition.getGUID());
+    	    cnt++;
+    	  }
+    	}
+      }
+    }
+	return cnt;
   }
   public an5Path[] probePaths(an5Object o, an5Service netSrv, an5Service protoSrvs) {
     an5Path[] res = null;

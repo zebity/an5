@@ -5,7 +5,7 @@ import java.util.List;
 
 public class an5InterfaceInstance extends an5VariableInstance {
   static class allocationPolicy { static int STATIC = 0, DYNAMIC = 1; };
-  an5Interface interfaceDefinition;
+  public an5Interface interfaceDefinition;
   List<an5Binding> bindings = new ArrayList<>();
   int min,
       max;

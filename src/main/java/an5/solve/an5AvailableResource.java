@@ -12,11 +12,17 @@ import an5.model.an5Path;
 import an5.model.an5Service;
 
 public class an5AvailableResource {
-  List<an5Object> loadSet;
+  List<an5Object> loadSet = null;
   Map<String, an5Object> available = new HashMap<>();
   an5AvailableInterfaces availableInterface = new an5AvailableInterfaces();
   boolean loaded = false;
   an5AvailableResource(an5AvailableResource from) {
+    if (from.loaded) {
+      loaded = true;
+      for (an5Object o: from.available.values()) {
+    	put((an5Object)o.clone());
+      }
+    }
   }
   public an5AvailableResource(List<an5Object> a) {
    loadSet = a;
@@ -47,6 +53,12 @@ public class an5AvailableResource {
   }
   int[] load() {
 	/* load for optimised access */
+	if ((! loaded) && (loadSet != null)) {
+	  loaded = true;
+	  for (an5Object o: loadSet) {
+	    put(o);
+	  }
+	}
     return new int[]{available.size(), availableInterface.ifCollection.size()};
   }
   public boolean add(an5Object o) {
@@ -96,8 +108,12 @@ public class an5AvailableResource {
 	return to;
   }
   public int canMatchInterface(an5Object o, an5Service netSrv, an5Service protoSrvs) {
-    int res = 0;
-    return res;
+    int cnt = 0;
+    if (! loaded) {
+      load();
+    }
+    cnt = availableInterface.canMatchInterface(o, netSrv, protoSrvs);
+	return cnt;
   }
   public an5Path[] probePaths(an5Object o, an5Service netSrv, an5Service protoSrvs) {
     an5Path[] res = null;
