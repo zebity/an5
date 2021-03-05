@@ -25,14 +25,14 @@ import an5.model.an5Binding;
 import an5.model.an5VariableInstance;
 
 public class an5JoinNetwork extends an5Template {
-  class pathsAndPool {
+  /* class pathsAndPool {
 	public List<an5Object> paths;
     public Map<String, an5Object> pool;
     public pathsAndPool() {
       paths = new ArrayList<>();
       pool = new HashMap<>();
     }
-  }
+  } */
   class sortPathCnts implements Comparable<sortPathCnts> {
     public int cnt = 0,
                idx = 0,
@@ -142,9 +142,9 @@ public class an5JoinNetwork extends an5Template {
     an5GoalTree res = null;
     List<an5GoalTree> orJoins = new LinkedList<>();
     an5Object o, c;
-    an5Network n;
-    an5Binding[] b;
-    an5Path[] p;
+    an5Network targetNet;
+    an5Path[] foundPaths;
+    an5Binding[] bindings;
     int i, j, k, l;
     int[][] pathCnt = new int[toAdd.size()][3];
     List<sortPathCnts> sortCnts = new ArrayList<>();
@@ -187,21 +187,19 @@ public class an5JoinNetwork extends an5Template {
       status = an5SearchControl.SearchResult.FAILED;
       res = new an5OrGoal(orJoins, ctrl);      
     } else {
-      n = (an5Network)joinNet.clone(); /* only need "little" part of target network */
-      c = n.members.get(connectTo.getGUID());
+      targetNet = (an5Network)joinNet.clone(); /* only need "little" part of target network */
+      c = targetNet.members.get(connectTo.getGUID());
       for (i = fndMin; i <= fndMax; i++) {
         o = (an5Object)toAdd.get(i).clone();
         if (pathCnt[i][0] > 0) {
-          c = n.members.get(connectTo.getGUID());
+          c = targetNet.members.get(connectTo.getGUID());
     	  o = (an5Object)toAdd.get(i).clone();
-    	  b = o.bind(c, n.providesServices(), viaService);
+    	  bindings = o.bind(c, targetNet.providesServices(), viaService);
     	  /* connectTo object already in network, so just add toAdd[i] object */
-    	  n.candidates.put(o.getGUID(), o);
+    	  targetNet.candidates.put(o.getGUID(), o);
         }
       }
-      pathsAndPool[][] addFrom = new pathsAndPool[pathExpand][alts];
-      an5AvailableResource pool = (an5AvailableResource)available.clone();
-      pool.load();
+      an5Object[][] addPaths = new an5Object[pathExpand][alts];
       Collections.sort(sortCnts);
       sortCnts.get(0).chunkSize = sortCnts.get(0).cnt;
       sortCnts.get(0).increment = 1;  
@@ -210,6 +208,7 @@ public class an5JoinNetwork extends an5Template {
         sortCnts.get(i).increment = sortCnts.get(i).chunkSize / sortCnts.get(i).cnt; 
       }
       Collections.sort(sortCnts, new sortByIndex());
+      an5AvailableResource pool = null;
       /* Have: fixed network with success cases as "candidate"
        *        Now have alternates of:
        *           connecting "element" list
@@ -218,27 +217,40 @@ public class an5JoinNetwork extends an5Template {
       for (int m = 0; m < sortCnts.size(); m++) {
     	i = sortCnts.get(m).idx;
         j = 0;
+        pool = (an5AvailableResource)available.clone();
+        pool.load();
      	o = (an5Object)toAdd.get(i).clone();
-     	p = pool.probePaths(o, joinNet.providesServices(), viaService);
-     	if (p.length == sortCnts.get(m).cnt) {
+     	foundPaths = pool.probePaths(o, joinNet.providesServices(), viaService);
+     	if (foundPaths.length == sortCnts.get(m).cnt) {
      	  for (k = 0; k < pathExpand; k += sortCnts.get(m).increment) {
      		for (l = 0; l < sortCnts.get(m).increment; l++) {
-     	      addFrom[k+l][0].paths.add(p[j]);
+     	      addPaths[k+l][m] = foundPaths[j];
      		}
      		j = (j + 1) % sortCnts.get(m).cnt;
           }
         } else {
-        	
+          System.out.println("AN5:ERR:Inconsistent Probe Path Counts: " + foundPaths.length + " vs : " + sortCnts.get(m));
         }
       }
+      an5Object removed = null;
+      List<an5Object> toJoin = null;
+      boolean skip;
  	  for (k = 0; k < pathExpand; k++) {
- 		Map<String, an5Object> a = available.copyMap();
+ 		skip = false;
+ 		toJoin = new ArrayList<>();
+ 		Map<String, an5Object> avail = available.copyMap();
  		for (l = 0; l < alts; l++) {
- 		  /* a.remove(addFrom[k][l].) */
+ 		  toJoin.add(addPaths[k][l]);
+ 		  removed = avail.remove(addPaths[k][l].getGUID());
+ 		  if (removed == null) {
+ 		    skip = true; /* skip due to resource depletion */
+ 		  }
  		}
-   	    // addFrom[k][0].paths.add(p[k % pathCnt[i][1]]);
+ 		if (! skip) {
+          orJoins.add(new an5SimpleGoal(new an5JoinNetwork(this, prototype, targetNet, connectTo, toJoin, avail), ctrl));
+ 		}
       }
-      // res = new an5AndGoal(andJoins, ctrl);
+      res = new an5OrGoal(orJoins, ctrl);
       status = an5SearchControl.SearchResult.SOLVING;
     }
     return res;
