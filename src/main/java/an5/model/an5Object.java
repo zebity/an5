@@ -62,7 +62,7 @@ public class an5Object implements an5ClassTemplate {
 	return new an5ServiceList((an5ServiceMap)AN5AT_serviceUnion);  
   }
   public int canBind(an5Object o, an5Service netSrv, an5Service protoSrv) {
-    int res = 0;
+    int res = AN5SG_sigKeyUnion.canBind(o, netSrv, protoSrv);
     return res;
   } 
   public an5Binding[] bind(an5Object o, an5Service netSrv, an5Service protoSrv) {
