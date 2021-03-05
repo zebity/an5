@@ -2,6 +2,7 @@ package an5.solve;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,11 +18,15 @@ public class an5AvailableResource {
   boolean loaded = false;
   an5AvailableResource(an5AvailableResource from) {
   }
-  public void availableResource(List<an5Object> a) {
+  public an5AvailableResource(List<an5Object> a) {
    loadSet = a;
   }
-  public void availableResource() {
-    loaded = true;
+  public an5AvailableResource(boolean load) {
+	if (load) {
+      loaded = true;
+	} else {
+      loadSet = new LinkedList<>();		
+	}
   }
   public void available(an5Object[] a) {
     loadSet = new ArrayList<>();

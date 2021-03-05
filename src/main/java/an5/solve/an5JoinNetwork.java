@@ -62,7 +62,7 @@ public class an5JoinNetwork extends an5Template {
   /* Working */
   List<an5Object> toAdd = new LinkedList<>();
   Map<String, an5Object> mustUse =  new HashMap<>();
-  an5AvailableResource available;
+  an5AvailableResource available = new an5AvailableResource(true);
   an5Service viaService; /* Should be also be using network services */
   String srcClass,
          destClass;
