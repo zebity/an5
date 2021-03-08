@@ -46,6 +46,10 @@ public class an5InterfaceInstance extends an5VariableInstance {
   }
   public an5Binding bind(an5Object from, an5Object to, an5InterfaceInstance i, an5Service netSrv, an5Service protoSrv) {
 	an5Binding res = null;
+	
+	/* check interface match */
+	an5InterfaceMatch sigMatch = interfaceDefinition.matchSignature(i.interfaceDefinition);
+	
 	return res;
   }
 }

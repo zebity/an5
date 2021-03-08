@@ -55,7 +55,7 @@ public class an5Generate {
         
         jvStrm.println("/* -- AN5 Generated Interface Definition File -- */");
         jvStrm.println("package " + symtab.current.forPackage + ";");
-        jvStrm.println("import an5.model.*;");
+        /* jvStrm.println("import an5.model.*;"); */
         jvStrm.print("public interface " + ifNm);
         if (ifNd.interfacesExtended.size() > 0) {
           jvStrm.print(" extends " + global.interfacePrefix + ifNd.interfacesExtended.get(0).value);
@@ -137,8 +137,8 @@ public class an5Generate {
         
         jvStrm.println("/* -- AN5 Generated Interface Class File -- */");
         jvStrm.println("package " + symtab.current.forPackage + ";");
-        jvStrm.println("import java.util.List;");
-        jvStrm.println("import java.util.ArrayList;");
+        /* jvStrm.println("import java.util.List;");
+        jvStrm.println("import java.util.ArrayList;"); */
         jvStrm.println("import an5.model.*;");
         jvStrm.print("public class " + ifNm);
         if (ifNd.interfacesExtended.size() > 0) {
@@ -157,7 +157,7 @@ public class an5Generate {
             }
         }
         jvStrm.println(" {");
-        jvStrm.println("  /*  review and workout */");
+        // jvStrm.println("  /*  review and workout */");
         jvStrm.println("  String an5name = \"" + ifNd.value + "\";");
         generateInterfaceSignatureConstructor(jvStrm, ifNd, ifNm, ifNd.cardinalityMin, ifNd.cardinalityMax);
         jvStrm.println("}");
@@ -233,12 +233,12 @@ public class an5Generate {
 
 	if (abstractSuppress) {
 	  if (nd.networkServices.size() > 0) {
-	    jvStrm.println("  an5Service AN5AT_service = new an5ServiceList();");  
+	    jvStrm.println("  an5Service AN5AT_service = new an5ServiceMap();");  
 	  }
 	} else {
 	  if (nd.networkServices.size() > 0) {
 		
-        jvStrm.print("  an5Service AN5AT_service = new an5ServiceList(new String[]{");  
+        jvStrm.print("  an5Service AN5AT_service = new an5ServiceMap(new String[]{");  
 	    for (an5ServiceSetValue set: nd.networkServices) {
 		  jvStrm.print("\"" + set.service.get(i) + "\"");
 		  for (i = 1; i < set.service.size(); i++)

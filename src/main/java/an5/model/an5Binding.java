@@ -23,9 +23,10 @@ public class an5Binding {
     if (bd.member != null) {
       if (bd.member instanceof an5ServiceMap) {
         member = new an5ServiceMap((an5ServiceMap)bd.member);
-      } else if (bd.member instanceof an5ServiceList) {
-        member = new an5ServiceList((an5ServiceList)bd.member); 
-      }
+      } /* else if (bd.member instanceof an5ServiceList) { */
+    	/* change to only use an5ServiceMap */
+        /* member = new an5ServiceMap((an5ServiceMap)bd.member);
+      } */
     }
     aRef = bd.aRef;
     bRef = bd.bRef;

@@ -10,11 +10,13 @@ public class an5ServiceInstance extends an5VariableInstance {
   an5Service service;
   public an5ServiceInstance(String[] srvs, int[][] card) {
     super("service");
-    service = new an5ServiceList(srvs, card);
+    /* change to only use an5ServiceMap */
+    service = new an5ServiceMap(srvs, card);
   }
   public an5ServiceInstance(List<String> srvs, List<int[]> card) {
 	super("service");
-	service = new an5ServiceList(srvs, card);
+	/* Ditto */
+	service = new an5ServiceMap(srvs, card);
 
   }
   public an5Service provides() {

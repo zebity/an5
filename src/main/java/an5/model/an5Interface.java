@@ -1,6 +1,7 @@
 package an5.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 abstract public class an5Interface extends an5Object {
@@ -24,8 +25,8 @@ abstract public class an5Interface extends an5Object {
       }
     }
   }
-  public List<String> getServiceSignature(int i) {
-    return signatureSet.get(i).services;
+  public Collection<String> getServiceSignatureValues(int i) {
+    return signatureSet.get(i).services.values();
   }
   public an5Binding getBinding(String nmPat, int i) {
 	String nm = nmPat.replace("%I", String.valueOf(i));
@@ -34,5 +35,10 @@ abstract public class an5Interface extends an5Object {
   }
   public an5Binding getBinding(an5Binding bd) {
     return new an5Binding(bd);
+  }
+  public an5InterfaceMatch matchSignature(an5Interface to) {
+    an5InterfaceMatch res = new an5InterfaceMatch();
+    res.matchSignature(this, to);
+    return res;
   }
 }

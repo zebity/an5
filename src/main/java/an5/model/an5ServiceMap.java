@@ -2,8 +2,9 @@ package an5.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,22 +27,22 @@ public class an5ServiceMap implements an5Service {
   boolean mappedUnique = false;
   // an5ServiceMap.mapSrv tst = new mapSrv(){service = new String("frog"), min = 1, max = 2};
   public an5ServiceMap() {
-    map = new HashMap<>();
+    map = new LinkedHashMap<>();
   }
   public an5ServiceMap(List<String> srvs, List<int[]> card) {
-	map = new HashMap<>();
+	map = new LinkedHashMap<>();
 	for (int i = 0; i < srvs.size(); i++) {
       map.put(srvs.get(i), new mapSrv(srvs.get(i), card.get(i)[0], card.get(i)[1]));
     }
   }
   public an5ServiceMap(String[] srvs, int[][] card) {
-	map = new HashMap<>();
+	map = new LinkedHashMap<>();
 	for (int i = 0; i < srvs.length; i++) {
 	  map.put(srvs[i], new mapSrv(srvs[i], card[i][0], card[i][1]));
 	}
   }
   public an5ServiceMap(an5ServiceList from, boolean unique) {
-	map = new HashMap<>();
+	map = new LinkedHashMap<>();
     Collection<String> uniqueSet = new HashSet<>();
     mappedUnique = unique;
     for (int i = 0; i < from.size(); i++) {
@@ -55,16 +56,16 @@ public class an5ServiceMap implements an5Service {
     }
   }
   public an5ServiceMap(an5ServiceMap from) {
-    map = new HashMap<>();
+    map = new LinkedHashMap<>();
     for (mapSrv m: from.map.values()) {
       map.put(m.service, new mapSrv(m));	
     }
   }
   public an5ServiceMap(an5InterfaceInstance[] from) {
-	map = new HashMap<>();
+	map = new LinkedHashMap<>();
     for (an5InterfaceInstance v : from) {
-	  for (int i = 0; i < v.interfaceDefinition.signatureSet.size(); i++) {
-	    for (String s : v.interfaceDefinition.getServiceSignature(i)) {
+	  for (an5InterfaceSignature sg : v.interfaceDefinition.signatureSet) {
+	    for (String s : sg.services.values()) {
 		  map.put(s, new mapSrv(s, v.min, v.max));
 	    }
       }
@@ -91,21 +92,45 @@ public class an5ServiceMap implements an5Service {
     return res;
   }
   public int size() {
-    return 0;
+    return map.size();
   }
   public String getService(int i) {
-    String res = null;
-    return res;
+    mapSrv nxt = null;
+    Collection<mapSrv> col = map.values();
+    Iterator<mapSrv> it = col.iterator();
+    nxt = it.next();
+    for (int j = 0; j < i; j++)
+      nxt = it.next();
+    return nxt.service;
   }
   public int[] getCardinality(int i) {
-    return new int[0];
+	mapSrv nxt = null;
+	Collection<mapSrv> col = map.values();
+	Iterator<mapSrv> it = col.iterator();
+	nxt = it.next();
+	for (int j = 0; j < i; j++)
+	  nxt = it.next();
+    return new int[]{nxt.min, nxt.max};
   }
   public boolean addService(String srv, int n, int x) {
     mapSrv res = map.put(srv, new mapSrv(new String(srv), n, x));
     return res != null;
   }
   public an5Service getWhere(int n, int x) {
-    return null;
+	List<String> srv = new ArrayList<>();
+	List<int[]> card = new ArrayList<>();
+	mapSrv[] arSrv = map.values().toArray(new mapSrv[0]);
+	for (int i = 0; i < arSrv.length; i++) {
+	  if (n > 0 && arSrv[i].min >= n) {
+	    srv.add(arSrv[i].service);
+	    card.add(new int[]{arSrv[i].min, arSrv[i].max});
+	  }
+	  else if (n == 0 && (arSrv[i].min >= n && arSrv[i].max <= x)) {
+	    srv.add(arSrv[i].service);
+	    card.add(new int[]{arSrv[i].min, arSrv[i].max});
+	  }
+	}
+	return new an5ServiceMap(srv, card);
   }
   public void add(an5Service srvs) {
     if (srvs instanceof an5ServiceList) {
@@ -127,5 +152,8 @@ public class an5ServiceMap implements an5Service {
   }
   public boolean contains(String srv) {
     return map.containsKey(srv);
+  }
+  public void check() {
+  /* does nothing, just forces retiremet of an5ServiceList */
   }
 }

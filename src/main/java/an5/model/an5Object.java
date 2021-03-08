@@ -63,7 +63,8 @@ public class an5Object implements an5ClassTemplate {
 	return new boolean[]{must, can};
   }
   public an5Service providesServices() {
-	return new an5ServiceList((an5ServiceMap)AN5AT_serviceUnion);  
+	/* Change to only use ServiceMap */
+	return new an5ServiceMap((an5ServiceMap)AN5AT_serviceUnion);
   }
   public int canBind(an5Object o, an5InterfaceInstance i, an5Service netSrv, an5Service protoSrv) {
     int cnt = 0,
