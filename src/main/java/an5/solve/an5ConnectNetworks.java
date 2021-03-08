@@ -10,17 +10,13 @@ package an5.solve;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import an5.model.an5ClassInstance;
-import an5.model.an5ClassTemplate;
 import an5.model.an5Element;
 import an5.model.an5Network;
 import an5.model.an5Object;
-import an5.model.an5Service;
-import an5.model.an5VariableInstance;
+
 
 public class an5ConnectNetworks extends an5Template {
   an5Object prototype;

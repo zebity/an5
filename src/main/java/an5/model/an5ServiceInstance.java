@@ -3,9 +3,6 @@
  */
 package an5.model;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
 
 public class an5ServiceInstance extends an5VariableInstance {

@@ -154,7 +154,7 @@ public class an5JoinNetwork extends an5Template {
     	pathExpand = 1;
     /* Before going to trouble of expanding paths make sure it is worth it.. */
     for (i = 0; i < pathCnt.length; i++) {
-      j = toAdd.get(i).canBind(connectTo, joinNet.providesServices(), viaService);
+      j = toAdd.get(i).canBind(connectTo, null, joinNet.providesServices(), viaService);
       if (j > 0) {
          pathCnt[i][0] = j;
          pathCnt[i][1] = 0;

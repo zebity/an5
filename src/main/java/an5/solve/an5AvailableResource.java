@@ -117,6 +117,10 @@ public class an5AvailableResource {
   }
   public an5Path[] probePaths(an5Object o, an5Service netSrv, an5Service protoSrvs) {
     an5Path[] res = null;
+    if (! loaded) {
+        load();
+      }
+      res = availableInterface.probePaths(o, netSrv, protoSrvs);
 	return res;
   }
 }

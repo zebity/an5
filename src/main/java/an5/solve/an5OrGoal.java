@@ -3,8 +3,6 @@ package an5.solve;
 import java.util.LinkedList;
 import java.util.List;
 
-import an5.solve.an5SearchControl.SearchResult;
-
 public class an5OrGoal extends an5GoalTree {
   an5SearchControl ctrlAndStats;
   public an5SearchQueue<an5GoalTree> queue = new an5SearchQueue<>();

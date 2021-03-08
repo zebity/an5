@@ -11,7 +11,6 @@ import java.util.List;
 import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
-import an5.an5Parser.AnnotationContext;
 import an5.an5Parser.AnnotationFieldDeclarationContext;
 import an5.an5Parser.ClassOrInterfaceModifierContext;
 import an5.an5Parser.ExpressionContext;

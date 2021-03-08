@@ -230,7 +230,6 @@ public class an5Generate {
   }
   int generateClassServiceSetVariablesImplementation(PrintStream jvStrm, an5ClassValue nd, boolean abstractSuppress) {
 	int i = 0;
-	an5InterfaceVariableValue ifVar = null;
 
 	if (abstractSuppress) {
 	  if (nd.networkServices.size() > 0) {

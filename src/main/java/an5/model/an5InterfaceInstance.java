@@ -40,4 +40,12 @@ public class an5InterfaceInstance extends an5VariableInstance {
     }
     return i;
   }
+  public int canBind(an5Object o, an5InterfaceInstance i, an5Service netSrv, an5Service protoSrv) {
+    int res = 0;
+    return res;
+  }
+  public an5Binding bind(an5Object from, an5Object to, an5InterfaceInstance i, an5Service netSrv, an5Service protoSrv) {
+	an5Binding res = null;
+	return res;
+  }
 }
