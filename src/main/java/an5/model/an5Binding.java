@@ -5,9 +5,11 @@
 package an5.model;
 
 public class an5Binding {
-  enum bindState { OPEN, BASE_MATCH, REFLECTING, COMMITTED };
-  an5Interface aRef = null,
-			   bRef = null;
+  public enum bindState { OPEN, BASE_MATCH, REFLECTING, COMMITTED };
+  an5InterfaceInstance aIRef = null,
+			           bIRef = null;
+  an5Object aORef = null,
+		    bORef = null;
   an5Service member = null;
   int id;
   String name;
@@ -28,7 +30,19 @@ public class an5Binding {
         /* member = new an5ServiceMap((an5ServiceMap)bd.member);
       } */
     }
-    aRef = bd.aRef;
-    bRef = bd.bRef;
+    aIRef = bd.aIRef;
+    bIRef = bd.bIRef;
+    aORef = bd.aORef;
+    bORef = bd.bORef;
+  }
+  int bind(an5Object ao, an5InterfaceInstance ai, an5Object bo, an5InterfaceInstance bi, an5InterfaceMatch match) {
+	/* ignore cardinality, reflecting and service exposed for initial test */
+    int res = 0;
+    aORef = ao;
+    aIRef = ai;
+    bORef = bo;
+    bIRef = bi;
+    state = bindState.BASE_MATCH;
+    return res;
   }
 }

@@ -82,6 +82,7 @@ public class an5JoinNetwork extends an5Template {
 	prototype = proto;
 	joinNet = net;
 	srcObjects = ele;
+	use = new an5AvailableResource(false);
 	for (an5Object o: avail.values())
 	  use.add(o);
 	connectTo = to;
@@ -121,7 +122,7 @@ public class an5JoinNetwork extends an5Template {
     if (destClass != null & destClass.equals(connectTo.getClass().getName())) {
       mustUse.put(connectTo.getGUID(), connectTo);
       for (i = 0; i < srcObjects.size(); i++) {
-        if (srcClass.equals(srcObjects.get(i).getClass().getName())) {
+        if (srcClass.equals(srcObjects.get(i).getFirst().getClass().getName())) {
           mustUse.put(srcObjects.get(i).getGUID(), srcObjects.get(i));
           toAdd.add(srcObjects.get(i));
         }
@@ -154,7 +155,7 @@ public class an5JoinNetwork extends an5Template {
     	pathExpand = 1;
     /* Before going to trouble of expanding paths make sure it is worth it.. */
     for (i = 0; i < pathCnt.length; i++) {
-      j = toAdd.get(i).canBind(connectTo, null, joinNet.providesServices(), viaService);
+      j = toAdd.get(i).getLast().canBind(connectTo, null, joinNet.providesServices(), viaService);
       if (j > 0) {
          pathCnt[i][0] = j;
          pathCnt[i][1] = 0;
@@ -162,7 +163,7 @@ public class an5JoinNetwork extends an5Template {
          fndMin = Integer.min(i, fndMin);
          fndMax = Integer.max(i, fndMax);
       } else { 
-      	 k = available.canMatchInterface(toAdd.get(i), joinNet.providesServices(), viaService);
+      	 k = available.canMatchInterface(toAdd.get(i).getLast(), joinNet.providesServices(), viaService);
          if (k > 0) {
            pathCnt[i][0] = 0;
            pathCnt[i][1] = k;
@@ -241,7 +242,7 @@ public class an5JoinNetwork extends an5Template {
  		Map<String, an5Object> avail = available.copyMap();
  		for (l = 0; l < alts; l++) {
  		  toJoin.add(addPaths[k][l]);
- 		  removed = avail.remove(addPaths[k][l].getGUID());
+ 		  removed = avail.remove(addPaths[k][l].getLast().getGUID());
  		  if (removed == null) {
  		    skip = true; /* skip due to resource depletion */
  		  }

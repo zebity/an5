@@ -11,10 +11,11 @@ public class an5InterfaceMatch {
 	         toSetSz = 0;
   public boolean[] keyMatch = null;
   public char[][] sigMatch = null;
+  public int[][] servicesEnabled = null;
   
   void matchSignature(an5Interface from, an5Interface to) {
-	int i, j, k, l,
-	    min, max,
+	int i, j, k,
+	    min, max, overall,
 	    matched = 0, notMatched = 0;
 	boolean sameSz = true;
     fromKeySz = from.signatureKeys.size();
@@ -37,11 +38,23 @@ public class an5InterfaceMatch {
       
     min = Integer.min(fromSetSz, toSetSz);
     max = Integer.max(fromSetSz, toSetSz);
-    sigMatch = new char[max][3];
+    overall = max + 1;
+    sigMatch = new char[overall][3];
+    for (k = 0; k < 3; k++) {
+      sigMatch[overall-1][k] = empty;
+    }
+    servicesEnabled = new int[max][4];
+    for (k = 0; k < max; k++) {
+      servicesEnabled[k][0] = servicesEnabled[k][1] = servicesEnabled[k][2] = servicesEnabled[k][3] = -1;
+    }
     
     for (k = 0; i > 0 && j > 0; i--, j--, k++) {
       /* common <-> common */
       matched = notMatched = 0;
+      servicesEnabled[k][0] = i - 1;
+      servicesEnabled[k][1] = from.signatureSet.get(i - 1).services.size();
+      servicesEnabled[k][2] = j - 1;
+      servicesEnabled[k][3] = to.signatureSet.get(j - 1).services.size();
       sameSz = from.signatureSet.get(i - 1).common.size() == from.signatureSet.get(j - 1).common.size();
       for (String[] fromNamVal : from.signatureSet.get(i - 1).common.values()) {
         toNamVal = to.signatureSet.get(j - 1).common.get(fromNamVal[0]);
@@ -53,7 +66,7 @@ public class an5InterfaceMatch {
     	  }
         }
       }
-      matchDetails(k, 0, sameSz, matched, notMatched, sigMatch);
+      matchDetails(k, 0, sameSz, matched, notMatched, sigMatch, overall - 1);
       /* needs <-> provides */
       matched = notMatched = 0;
       sameSz = from.signatureSet.get(i - 1).needs.size() == from.signatureSet.get(j - 1).provides.size();
@@ -67,7 +80,7 @@ public class an5InterfaceMatch {
     	  }
         }
       }
-      matchDetails(k, 1, sameSz, matched, notMatched, sigMatch);
+      matchDetails(k, 1, sameSz, matched, notMatched, sigMatch, overall - 1);
       /* provides <-> needs */
       matched = notMatched = 0;
       sameSz = from.signatureSet.get(i - 1).provides.size() == from.signatureSet.get(j - 1).needs.size();
@@ -81,10 +94,10 @@ public class an5InterfaceMatch {
     	  }
         }
       }
-      matchDetails(k, 2, sameSz, matched, notMatched, sigMatch);
+      matchDetails(k, 2, sameSz, matched, notMatched, sigMatch, overall -1);
     }
   }
-  public void matchDetails(int k, int cnp, boolean sameSz, int matched, int notMatched, char[][] sigMatch) {
+  public void matchDetails(int k, int cnp, boolean sameSz, int matched, int notMatched, char[][] sigMatch, int ovIdx) {
     if (sameSz && matched == 0 && notMatched == 0) {
       sigMatch[k][cnp] = empty;
     } else if (sameSz && matched > 0 && notMatched == 0) {
@@ -93,6 +106,14 @@ public class an5InterfaceMatch {
       sigMatch[k][cnp] = partial;
     } else if (matched == 0 && notMatched > 0) {
       sigMatch[k][cnp] = none;
+    }
+    /* provide overall union of results */
+    if (sigMatch[ovIdx][cnp] == empty || sigMatch[k][cnp] == partial) {
+      sigMatch[ovIdx][cnp] = sigMatch[k][cnp];
+    } else if (sigMatch[ovIdx][cnp] == sigMatch[k][cnp]) {
+      /* leave set to all */
+    } else if (sigMatch[ovIdx][cnp] == all && sigMatch[k][cnp] == none) {
+      sigMatch[ovIdx][cnp] = partial;
     }
   }
 }

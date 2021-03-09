@@ -66,18 +66,19 @@ public class an5Object implements an5ClassTemplate {
 	/* Change to only use ServiceMap */
 	return new an5ServiceMap((an5ServiceMap)AN5AT_serviceUnion);
   }
-  public int canBind(an5Object o, an5InterfaceInstance i, an5Service netSrv, an5Service protoSrv) {
+  public int canBind(an5Object obj, an5InterfaceInstance iface, an5Service netSrv, an5Service protoSrv) {
+	/* Note that netSrv & protoSrv are hints to help select across multiple bind options */
     int cnt = 0,
               match;
     an5MapIf lookUp = null;
     Set<Object> ifFnd = new HashSet<>();
         
-    if (i == null) {
-      for (an5MapIf ifInfo: o.AN5SG_sigKeyUnion.ifSet.values()) {
+    if (iface == null) {
+      for (an5MapIf ifInfo: obj.AN5SG_sigKeyUnion.ifSet.values()) {
         lookUp = AN5SG_sigKeyUnion.ifSet.get(ifInfo.sigKey);
         if (lookUp != null) { 
           if (! ifFnd.contains(ifInfo.forInterface)) {
-            match = ifInfo.forInterface.canBind(o, ifInfo.forInterface, netSrv, protoSrv);
+            match = ifInfo.forInterface.canBind(obj, ifInfo.forInterface, netSrv, protoSrv);
             if (match > 0) {
         	  ifFnd.add(ifInfo.forInterface);
         	  cnt += match;
@@ -89,13 +90,14 @@ public class an5Object implements an5ClassTemplate {
     
       int j = 0;
       boolean fndIf = false;
-      while ((! fndIf) && j < i.interfaceDefinition.signatureKeys.size()) {
-    	lookUp = AN5SG_sigKeyUnion.ifSet.get(i.interfaceDefinition.signatureKeys.get(j)[1]);
+      while ((! fndIf) && j < iface.interfaceDefinition.signatureKeys.size()) {
+    	lookUp = AN5SG_sigKeyUnion.ifSet.get(iface.interfaceDefinition.signatureKeys.get(j)[1]);
     	if (lookUp != null) {
-    	  match = lookUp.forInterface.canBind(o, i, netSrv, protoSrv);
+    	  match = lookUp.forInterface.canBind(obj, iface, netSrv, protoSrv);
     	  fndIf = match > 0;
     	  cnt += match;
     	}
+    	j++;
       }
     }
     return cnt;
@@ -158,5 +160,11 @@ public class an5Object implements an5ClassTemplate {
   }
   public an5Object createInstance() {
     return null;
+  }
+  public an5Object getFirst() {
+	return this;
+  }
+  public an5Object getLast() {
+	return this;
   }
 }
