@@ -9,7 +9,6 @@ import java.util.Map;
 import an5.model.an5Binding;
 import an5.model.an5Object;
 import an5.model.an5Path;
-import an5.model.an5Service;
 
 public class an5AvailableResource {
   List<an5Object> loadSet = null;
@@ -106,21 +105,5 @@ public class an5AvailableResource {
 	  to.available.remove(o.getGUID());
 	}
 	return to;
-  }
-  public int canMatchInterface(an5Object o, an5Service netSrv, an5Service protoSrvs) {
-    int cnt = 0;
-    if (! loaded) {
-      load();
-    }
-    cnt = availableInterface.canMatchInterface(o, netSrv, protoSrvs);
-	return cnt;
-  }
-  public an5Path[] probePaths(an5Object o, an5Service netSrv, an5Service protoSrvs) {
-    an5Path[] res = null;
-    if (! loaded) {
-        load();
-      }
-      res = availableInterface.probePaths(o, netSrv, protoSrvs);
-	return res;
   }
 }

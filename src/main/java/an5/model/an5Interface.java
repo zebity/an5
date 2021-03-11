@@ -2,11 +2,15 @@ package an5.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 abstract public class an5Interface extends an5Object {
+  public static class keyItem { static final int keyName = 0, keySig = 1;};
   public List<an5InterfaceSignature> signatureSet = new ArrayList<>();
-  public List<String[]> signatureKeys = new ArrayList<>();
+  public Map<String, String[]> signatureKeys = new LinkedHashMap<>();
+  String lastKey = new String();
   public an5Interface() {
     super();
   }
@@ -21,7 +25,8 @@ abstract public class an5Interface extends an5Object {
         }
       }
       if (key.length() > 0) {
-        signatureKeys.add(new String[]{new String(sig.an5name), key.toString()});
+        signatureKeys.put(key.toString(), new String[]{new String(sig.an5name), key.toString()});
+        lastKey = new String(key.toString());
       }
     }
   }
@@ -40,5 +45,8 @@ abstract public class an5Interface extends an5Object {
     an5InterfaceMatch res = new an5InterfaceMatch();
     res.matchSignature(this, to);
     return res;
+  }
+  public String getLastKey() {
+    return lastKey;
   }
 }

@@ -66,21 +66,21 @@ public class an5Object implements an5ClassTemplate {
 	/* Change to only use ServiceMap */
 	return new an5ServiceMap((an5ServiceMap)AN5AT_serviceUnion);
   }
-  public int canBind(an5Object obj, an5InterfaceInstance iface, an5Service netSrv, an5Service protoSrv) {
+  public int canBind(an5InterfaceInstance viaI, an5Object toO, an5Service netSrv, an5Service protoSrv) {
 	/* Note that netSrv & protoSrv are hints to help select across multiple bind options */
     int cnt = 0,
               match;
-    an5MapIf lookUp = null;
+    an5MapIf fromI = null;
     Set<Object> ifFnd = new HashSet<>();
         
-    if (iface == null) {
-      for (an5MapIf ifInfo: obj.AN5SG_sigKeyUnion.ifSet.values()) {
-        lookUp = AN5SG_sigKeyUnion.ifSet.get(ifInfo.sigKey);
-        if (lookUp != null) { 
-          if (! ifFnd.contains(ifInfo.forInterface)) {
-            match = ifInfo.forInterface.canBind(obj, ifInfo.forInterface, netSrv, protoSrv);
+    if (viaI == null) {
+      for (an5MapIf toI: toO.AN5SG_sigKeyUnion.ifSet.values()) {
+        fromI = AN5SG_sigKeyUnion.ifSet.get(toI.sigKey);
+        if (fromI != null) { 
+          if (! ifFnd.contains(fromI.forInterface)) {
+            match = fromI.forInterface.canBind(this, toI.forInterface, netSrv, protoSrv);
             if (match > 0) {
-        	  ifFnd.add(ifInfo.forInterface);
+        	  ifFnd.add(fromI.forInterface);
         	  cnt += match;
         	}
           }
@@ -88,49 +88,56 @@ public class an5Object implements an5ClassTemplate {
       }
     } else {
     
-      int j = 0;
-      boolean fndIf = false;
-      while ((! fndIf) && j < iface.interfaceDefinition.signatureKeys.size()) {
-    	lookUp = AN5SG_sigKeyUnion.ifSet.get(iface.interfaceDefinition.signatureKeys.get(j)[1]);
-    	if (lookUp != null) {
-    	  match = lookUp.forInterface.canBind(obj, iface, netSrv, protoSrv);
-    	  fndIf = match > 0;
-    	  cnt += match;
-    	}
-    	j++;
+      an5MapIf toI = null;
+      /* Verify Interface */
+      fromI = AN5SG_sigKeyUnion.ifSet.get(viaI.interfaceDefinition.getLastKey());
+      if (fromI != null) {
+    	for (String[] fromKey : viaI.interfaceDefinition.signatureKeys.values()) {          
+    	  toI = toO.AN5SG_sigKeyUnion.ifSet.get(fromKey[1]);
+    	  if (toI != null) {
+            if (! ifFnd.contains(toI.forInterface)) {
+              match = fromI.forInterface.canBind(this, toI.forInterface, netSrv, protoSrv);
+              if (match > 0) {
+              	ifFnd.add(toI.forInterface);
+              	cnt += match;
+              }
+    	    }
+    	  }
+        }
       }
     }
     return cnt;
   } 
-  public an5Binding bind(an5Object o, an5InterfaceInstance i, an5Service netSrv, an5Service protoSrv) {
+  /* public an5Binding bind(an5Object toO, an5InterfaceInstance toI, an5Service netSrv, an5Service protoSrv) {
 	an5Binding res = null;
-    an5MapIf lookUp = null;
+    an5MapIf fromI = null;
       
-    if (o != null && i != null) {
+    if (toO != null && toI != null) {
       int j = 0;
       boolean fndIf = false;
-      while ((! fndIf) && j < i.interfaceDefinition.signatureKeys.size()) {
-        lookUp = AN5SG_sigKeyUnion.ifSet.get(i.interfaceDefinition.signatureKeys.get(j)[1]);
-  	    if (lookUp != null) {
-  	      res = lookUp.forInterface.bind(this, o, i, netSrv, protoSrv);
+      while ((! fndIf) && j < toI.interfaceDefinition.signatureKeys.size()) {
+        fromI = AN5SG_sigKeyUnion.ifSet.get(toI.interfaceDefinition.signatureKeys.get(j)[1]);
+  	    if (this != null) {
+  	      res = fromI.forInterface.bind(this, toO, toI, netSrv, protoSrv);
   	      fndIf = res != null;
   	    }
+  	    j++;
       }
     }
     return res;
-  }
-  public an5Binding[] bind(an5Object o, an5Service netSrv, an5Service protoSrv) {
+  } */
+  public an5Binding[] bind(an5Object toO, an5Service netSrv, an5Service protoSrv) {
 	an5Binding[] res = null;
-    an5MapIf lookUp = null;
+    an5MapIf fromI = null;
     Set<Object> ifFnd = new HashSet<>();
     List<an5Binding> bindings = new LinkedList<>();   
     an5Binding bind = null;
 	
-    for (an5MapIf ifInfo: o.AN5SG_sigKeyUnion.ifSet.values()) {
-      lookUp = AN5SG_sigKeyUnion.ifSet.get(ifInfo.sigKey);
-      if (lookUp != null) { 
+    for (an5MapIf ifInfo: toO.AN5SG_sigKeyUnion.ifSet.values()) {
+      fromI = AN5SG_sigKeyUnion.ifSet.get(ifInfo.sigKey);
+      if (fromI != null) { 
         if (! ifFnd.contains(ifInfo.forInterface)) {
-          bind = ifInfo.ref.bind(o, ifInfo.forInterface, netSrv, protoSrv);
+          bind = fromI.forInterface.bind(this, toO, ifInfo.forInterface, netSrv, protoSrv);
           if (bind != null) {
       	    ifFnd.add(ifInfo.forInterface);
       	    bindings.add(bind);

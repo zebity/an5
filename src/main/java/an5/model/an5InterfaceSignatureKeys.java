@@ -9,7 +9,7 @@ public class an5InterfaceSignatureKeys {
   }
   public void add(an5Object ob, an5InterfaceInstance[] ifs) {
     for (an5InterfaceInstance ifInst : ifs) {
-      for (String [] sigKey : ifInst.interfaceDefinition.signatureKeys) {
+      for (String [] sigKey : ifInst.interfaceDefinition.signatureKeys.values()) {
         ifSet.put(sigKey[1], new an5MapIf(sigKey[1], sigKey[0], ifInst, ob));
       }
     }

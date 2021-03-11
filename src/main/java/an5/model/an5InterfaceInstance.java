@@ -41,40 +41,38 @@ public class an5InterfaceInstance extends an5VariableInstance {
     }
     return i;
   }
-  public int canBind(an5Object o, an5InterfaceInstance i, an5Service netSrv, an5Service protoSrv) {
+  public int canBind(an5Object fromO, an5InterfaceInstance toI, an5Service netSrv, an5Service protoSrv) {
     int res = 0;
     
-	/* check interface match */
-	an5InterfaceMatch match = interfaceDefinition.matchSignature(i.interfaceDefinition);
-	if (match.sigMatch[match.sigMatch.length-1][0] == match.all &&
-	    match.sigMatch[match.sigMatch.length-1][1] == match.all &&
-		match.sigMatch[match.sigMatch.length-1][2] == match.all) {
+	/* check interface match - fromI == this */
+	an5InterfaceMatch match = interfaceDefinition.matchSignature(toI.interfaceDefinition);
+	if (match.matchResult == an5InterfaceMatch.matchState.all ||
+		match.matchResult == an5InterfaceMatch.matchState.partial) {
 	  res = 1;
 	}
     
     return res;
   }
-  public an5Binding bind(an5Object from, an5Object to, an5InterfaceInstance i, an5Service netSrv, an5Service protoSrv) {
+  public an5Binding bind(an5Object fromO, an5Object toO, an5InterfaceInstance toI, an5Service netSrv, an5Service protoSrv) {
 	an5Binding res = null;
 	boolean found = false;
-	/* check interface match */
-	an5InterfaceMatch match = interfaceDefinition.matchSignature(i.interfaceDefinition);
+	/* check interface match - fromI == this */
+	an5InterfaceMatch match = interfaceDefinition.matchSignature(toI.interfaceDefinition);
 	
-	if (match.sigMatch[match.sigMatch.length-1][0] == match.all &&
-		match.sigMatch[match.sigMatch.length-1][1] == match.all &&
-		match.sigMatch[match.sigMatch.length-1][2] == match.all) {
+	if (match.matchResult == an5InterfaceMatch.matchState.all ||
+		match.matchResult == an5InterfaceMatch.matchState.partial) {
 	  if (alloc == allocationPolicy.STATIC) {
 		for (int j = 0; (! found) && (j < bindings.size()); j++) {
 		  res = bindings.get(j);
 		  if (res.state == an5Binding.bindState.OPEN) {
 			found = true;
-			res.bind(from, this, to, i, match);
+			res.bind(fromO, this, toO, toI, match);
 		  }
 		}
 	  } else {
 		int k = bindings.size();
 		res = interfaceDefinition.getBinding(nameTemplate, k);
-		res.bind(from, this, to, i, match);
+		res.bind(fromO, this, toO, toI, match);
 	  }
 	}
 	return res;

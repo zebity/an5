@@ -7,10 +7,16 @@ public class an5Logging {
   int verbosity = 1,
 	  diags = 5;
 
-  void ERR(int level, String msg) {
+  public an5Logging() {
+  }
+  public an5Logging(int v, int d) {
+    verbosity = v;
+    diags = d;
+  }
+  public void ERR(int level, String msg) {
     System.err.println(msg);
   }
-  void DBG(String msg) {
+  public void DBG(String msg) {
     switch (verbosity) {
 	  case 7: System.out.println(msg);
       case 6:
@@ -21,7 +27,7 @@ public class an5Logging {
 	  case 1: 
 	}
   }
-  void DBG(int level, String msg) {
+  public void DBG(int level, String msg) {
     switch (level) {
 	  case 7:
       case 6: System.out.println(msg);

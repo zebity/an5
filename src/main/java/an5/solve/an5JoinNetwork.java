@@ -142,20 +142,21 @@ public class an5JoinNetwork extends an5Template {
   public an5GoalTree getNextGoal(an5SearchControl ctrl) {
     an5GoalTree res = null;
     List<an5GoalTree> orJoins = new LinkedList<>();
-    an5Object o, c;
+    an5Object fromO, toO;
     an5Network targetNet;
     an5Path[] foundPaths;
     an5Binding[] bindings;
     int i, j, k, l;
     int[][] pathCnt = new int[toAdd.size()][3];
     List<sortPathCnts> sortCnts = new ArrayList<>();
+    an5InterfaceFinder finder = new an5InterfaceFinder();
     int fail = 0, maxBind = 0, alts = 0, maxBnd = 0,
     	fndMin = pathCnt.length,
     	fndMax = 0, minBnd = pathCnt.length,
     	pathExpand = 1;
     /* Before going to trouble of expanding paths make sure it is worth it.. */
     for (i = 0; i < pathCnt.length; i++) {
-      j = toAdd.get(i).getLast().canBind(connectTo, null, joinNet.providesServices(), viaService);
+      j = toAdd.get(i).getLast().canBind(null, connectTo, joinNet.providesServices(), viaService);
       if (j > 0) {
          pathCnt[i][0] = j;
          pathCnt[i][1] = 0;
@@ -163,7 +164,7 @@ public class an5JoinNetwork extends an5Template {
          fndMin = Integer.min(i, fndMin);
          fndMax = Integer.max(i, fndMax);
       } else { 
-      	 k = available.canMatchInterface(toAdd.get(i).getLast(), joinNet.providesServices(), viaService);
+      	 k = finder.canMatchInterface(toAdd.get(i).getLast(), joinNet.providesServices(), viaService, available);
          if (k > 0) {
            pathCnt[i][0] = 0;
            pathCnt[i][1] = k;
@@ -189,15 +190,15 @@ public class an5JoinNetwork extends an5Template {
       res = new an5OrGoal(orJoins, ctrl);      
     } else {
       targetNet = (an5Network)joinNet.clone(); /* only need "little" part of target network */
-      c = targetNet.members.get(connectTo.getGUID());
+      toO = targetNet.members.get(connectTo.getGUID());
       for (i = fndMin; i <= fndMax; i++) {
-        o = (an5Object)toAdd.get(i).clone();
+        toO = (an5Object)toAdd.get(i).clone();
         if (pathCnt[i][0] > 0) {
-          c = targetNet.members.get(connectTo.getGUID());
-    	  o = (an5Object)toAdd.get(i).clone();
-    	  bindings = o.bind(c, targetNet.providesServices(), viaService);
+          toO = targetNet.members.get(connectTo.getGUID());
+    	  fromO = (an5Object)toAdd.get(i).clone();
+    	  bindings = fromO.bind(toO, targetNet.providesServices(), viaService);
     	  /* connectTo object already in network, so just add toAdd[i] object */
-    	  targetNet.candidates.put(o.getGUID(), o);
+    	  targetNet.candidates.put(fromO.getGUID(), fromO);
         }
       }
       an5Object[][] addPaths = new an5Object[pathExpand][alts];
@@ -220,8 +221,8 @@ public class an5JoinNetwork extends an5Template {
         j = 0;
         pool = (an5AvailableResource)available.clone();
         pool.load();
-     	o = (an5Object)toAdd.get(i).clone();
-     	foundPaths = pool.probePaths(o, joinNet.providesServices(), viaService);
+     	fromO = (an5Object)toAdd.get(i).clone();
+     	foundPaths = finder.probePaths(fromO, joinNet.providesServices(), viaService, pool);
      	if (foundPaths.length == sortCnts.get(m).cnt) {
      	  for (k = 0; k < pathExpand; k += sortCnts.get(m).increment) {
      		for (l = 0; l < sortCnts.get(m).increment; l++) {

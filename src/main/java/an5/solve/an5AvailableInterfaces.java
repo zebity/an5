@@ -47,54 +47,6 @@ public class an5AvailableInterfaces {
      ifCollection.put(k.sigKey, listO); 
    }
   }
-  public int canMatchInterface(an5Object o, an5Service netSrv, an5Service protoSrvs) {
-    int cnt = 0,
-    	bindRes;
-    List<an5MapIf> lookUp = null;
-    Set<String> ifFnd = new HashSet<>();
-    for (an5MapIf ifInfo: o.AN5SG_sigKeyUnion.ifSet.values()) {
-      lookUp = ifCollection.get(ifInfo.sigKey);
-      if (lookUp != null) {
-    	for (an5MapIf availIf: lookUp) {
-    	  if (! ifFnd.contains(availIf.forInterface.interfaceDefinition.getGUID())) {
-    	    ifFnd.add(availIf.forInterface.interfaceDefinition.getGUID());
-      	    /* check interface match */
-    		bindRes = availIf.ref.canBind(o, ifInfo.forInterface, netSrv, protoSrvs);
-    	    cnt += bindRes;
-    	  }
-    	}
-      }
-    }
-	return cnt;
-  }
-  public an5Path[] probePaths(an5Object o, an5Service netSrv, an5Service protoSrvs) {
-    an5Path[] res = null;
-    
-    List<an5MapIf> lookUp = null;
-    an5Binding bind = null;
-    List<an5Binding> bindings = new LinkedList<>();
-    for (an5MapIf ifInfo: o.AN5SG_sigKeyUnion.ifSet.values()) {
-      lookUp = ifCollection.get(ifInfo.sigKey);
-      if (lookUp != null) {
-    	for (an5MapIf availIf: lookUp) {
-    	  bind = o.bind(availIf.ref, availIf.forInterface, netSrv, protoSrvs);
-    	  if (bind != null) {
-    		bindings.add(bind);
-    	  }
-    	}
-      }
-    }
-    if (bindings.size() > 0) {
-      res = new an5Path[bindings.size()];
-      int i = 0;
-      for (an5Binding b: bindings) {
-    	res[i] = new an5Path(o, b);
-    	i++;
-      }
-    }
-	return res;
-  }
-  
   public Object clone() {
 	an5AvailableInterfaces cl = new an5AvailableInterfaces(this);
     return cl;

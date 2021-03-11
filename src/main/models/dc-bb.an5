@@ -35,16 +35,16 @@ interface rj45_plug {
   common = { "plug=rj45"};
 }
 
-interface ethernet_base_t extends rj45_plug {
-  common = { "service=ethernet"};
-  string name,
-         MAC;
-}
- 
-interface ethernet_port_base_t extends ethernet_base_t {
+interface base_t_sink extends rj45_plug {
   needs = { "cable=(cat([3-8].?))?",
             "gender=male", "media=copper"};
   provides = {"plug=rj45", "gender=female"};
+}
+ 
+interface ethernet_port_base_t extends base_t_sink {
+  common = { "service=ethernet"};
+  string name,
+         MAC;
 }
 
 interface ethernet_lag {
@@ -85,13 +85,13 @@ class switch extends element exposes ethernet_port_base_t, ethernet_vlan, ethern
 }
  
 interface catx_link extends rj45_plug {
-  common = {"cable=(cat([3-8].?))?", "gender=male",
+  provides = {"cable=(cat([3-8].?))?", "gender=male",
             "media=copper"};
+  needs = {"plug=rj45", "gender=female"};
 }
 
 interface cat6_link extends catx_link {
-  provides = {"cable=cat6"} ;
-  needs = {"plug=rj45", "gender=female"};
+  provides = {"cable=cat6"};
 }
   
 class cat6_cable extends link exposes catx_link {
