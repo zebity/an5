@@ -23,6 +23,17 @@ public class an5Path extends an5Object {
     path.put(b.bORef.getGUID(), b.bORef);
     lastEntry = new String(b.bORef.getGUID());
   }
+  public an5Path(an5Path p) {
+    firstEntry = new String(p.firstEntry);
+    lastEntry = new String(p.lastEntry);
+    for (an5Object o: p.path.values()) {
+      path.put(o.getGUID(), (an5Object)o.clone());
+    }
+    relinkBindings();
+  }
+  public Object clone() {
+    return new an5Path(this);
+  }
   public String getGUID() {
     String res = null;
 	if (persistentUniqueId[0] != null) {
@@ -48,5 +59,7 @@ public class an5Path extends an5Object {
   int commit() {
     int res = 0;
     return res;
+  }
+  void relinkBindings() {
   }
 }

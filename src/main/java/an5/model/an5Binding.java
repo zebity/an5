@@ -35,7 +35,7 @@ public class an5Binding {
     aORef = bd.aORef;
     bORef = bd.bORef;
   }
-  int bind(an5Object ao, an5InterfaceInstance ai, an5Object bo, an5InterfaceInstance bi, an5InterfaceMatch match) {
+  int bind(an5Object ao, an5InterfaceInstance ai, an5Object bo, an5InterfaceInstance bi, an5Binding link, an5InterfaceMatch match) {
 	/* ignore cardinality, reflecting and service exposed for initial test */
     int res = 0;
     aORef = ao;
@@ -43,6 +43,11 @@ public class an5Binding {
     bORef = bo;
     bIRef = bi;
     state = bindState.BASE_MATCH;
+    link.aORef = bo;
+    link.aIRef = bi;
+    link.bORef = ao;
+    link.bIRef = ai;
+    link.state = bindState.BASE_MATCH;
     return res;
   }
 }

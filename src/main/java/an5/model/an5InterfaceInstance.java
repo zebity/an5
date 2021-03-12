@@ -54,7 +54,9 @@ public class an5InterfaceInstance extends an5VariableInstance {
     return res;
   }
   public an5Binding bind(an5Object fromO, an5Object toO, an5InterfaceInstance toI, an5Service netSrv, an5Service protoSrv) {
-	an5Binding res = null;
+	an5Binding resFrom = null,
+			   resTo = null,
+	           next;
 	boolean found = false;
 	/* check interface match - fromI == this */
 	an5InterfaceMatch match = interfaceDefinition.matchSignature(toI.interfaceDefinition);
@@ -63,19 +65,46 @@ public class an5InterfaceInstance extends an5VariableInstance {
 		match.matchResult == an5InterfaceMatch.matchState.partial) {
 	  if (alloc == allocationPolicy.STATIC) {
 		for (int j = 0; (! found) && (j < bindings.size()); j++) {
-		  res = bindings.get(j);
-		  if (res.state == an5Binding.bindState.OPEN) {
+		  next = bindings.get(j);
+		  if (next.state == an5Binding.bindState.OPEN) {
 			found = true;
-			res.bind(fromO, this, toO, toI, match);
+			resTo = toI.getAvailableBinding(next);
+			if (resTo != null) {
+			  next.bind(fromO, this, toO, toI, resTo, match);
+			  resFrom = next;
+			}
 		  }
 		}
 	  } else {
 		int k = bindings.size();
-		res = interfaceDefinition.getBinding(nameTemplate, k);
-		res.bind(fromO, this, toO, toI, match);
+		next = interfaceDefinition.getBinding(nameTemplate, k);
+		resTo = toI.getAvailableBinding(next);
+		if (resTo != null) {
+		  next.bind(fromO, this, toO, toI, resTo, match);
+		  resFrom = next;
+		}
 	  }
 	}
-	return res;
+	return resFrom;
+  }
+  public an5Binding getAvailableBinding(an5Binding toLink) {
+	an5Binding res = null,
+			   next;
+	boolean found = false;
+	
+	if (alloc == allocationPolicy.STATIC) {
+	  for (int j = 0; (! found) && (j < bindings.size()); j++) {
+	    next = bindings.get(j);
+		if (next.state == an5Binding.bindState.OPEN && next != toLink) {
+		  found = true;
+		  res = next;
+		 }
+	  }
+	} else {
+	  int k = bindings.size();
+	  res = interfaceDefinition.getBinding(nameTemplate, k);
+	}
+	return res;  
   }
   public void setNameTemplate(String nt) {
     nameTemplate = new String(nt);

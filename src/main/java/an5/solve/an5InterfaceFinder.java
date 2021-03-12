@@ -37,14 +37,20 @@ public class an5InterfaceFinder {
     }
 	return cnt;
   }
-  public an5Path[] probePaths(an5Object fromO, an5Service netSrv, an5Service protoSrvs, an5AvailableInterfaces avail) {
+  public an5Path[] probePaths(an5Object startO, an5Service netSrv, an5Service protoSrvs, an5AvailableInterfaces avail) {
     an5Path[] res = null;
+    an5Object fromO;
     
     List<an5MapIf> candidateIf = null;
     Collection<Object> testIf = new HashSet<>();
     an5Binding binds = null;
     List<an5Binding> bindings = new LinkedList<>();
     
+    if (startO instanceof an5Path) {
+      fromO = (an5Object)startO.getLast().clone();
+    } else {
+      fromO = (an5Object)startO;
+    }
     for (an5MapIf fromI: fromO.AN5SG_sigKeyUnion.ifSet.values()) {
       candidateIf = avail.ifCollection.get(fromI.sigKey);
       if (candidateIf != null) {
@@ -60,7 +66,7 @@ public class an5InterfaceFinder {
       res = new an5Path[bindings.size()];
       int i = 0;
       for (an5Binding b: bindings) {
-    	res[i] = new an5Path(fromO, b);
+    	res[i] = new an5Path(startO, b);
     	i++;
       }
     }
