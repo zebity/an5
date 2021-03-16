@@ -5,7 +5,9 @@
 package an5.model;
 
 public class an5Binding {
-  public enum bindState { OPEN, BASE_MATCH, REFLECTING, COMMITTED };
+  public static class bindState { final static int OPEN = 0x01, BASE_MATCH = 0x02, REFLECTING = 0x04,
+	                                COMMITTED = 0x08, BOUND = 0x0E; }
+
   an5InterfaceInstance aIRef = null,
 			           bIRef = null;
   an5Object aORef = null,
@@ -13,7 +15,7 @@ public class an5Binding {
   an5Service member = null;
   int id;
   String name;
-  bindState state = bindState.OPEN;
+  int state = bindState.OPEN;
   public an5Binding(String nm, int n) {
     name = nm;
     id = n;
@@ -48,6 +50,12 @@ public class an5Binding {
     link.bORef = ao;
     link.bIRef = ai;
     link.state = bindState.BASE_MATCH;
+    return res;
+  }
+  int reBind(an5Object origAO, an5Object cloneAO, an5Object OrigBO, an5Object cloneBO) {
+	/* ignore cardinality, reflecting and service exposed for initial test */
+    int res = 0;
+
     return res;
   }
 }

@@ -10,6 +10,7 @@
 
 package an5.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -50,6 +51,29 @@ public class an5Object implements an5ClassTemplate {
   }
   public an5Object getInstance(String nmPat, int i) {
     return null;
+  }
+  public an5Binding[] enumerateBindings(int whereState) {
+    an5Binding[] res = null;
+    List<an5Binding> links = new ArrayList<>();
+    
+    /* Should refactor to use reflection to walk up object and find interface vars directly */
+    for (an5VariableInstance var : AN5AT_vars.values()) {
+      if (var instanceof an5InterfaceInstance)	{
+    	an5InterfaceInstance ifI = (an5InterfaceInstance)var;
+    	for (an5Binding bind : ifI.bindings) {
+          if ((whereState & bind.state) != 0) {
+            links.add(bind);
+          }
+    	}
+      }
+    }
+    if (links.size() > 0) {
+      res = new an5Binding[links.size()];
+      for (int i = 0; i < res.length; i++) {
+    	res[i] = links.get(i);
+      }
+    }
+    return res;
   }
   public boolean[] checkServicesProvided(an5Service mustProvide, an5Service canProvide) {
 	boolean must = true,

@@ -24,12 +24,33 @@ public class an5Path extends an5Object {
     lastEntry = new String(b.bORef.getGUID());
   }
   public an5Path(an5Path p) {
+	int i = 0;
+	an5Object cloneA = null, cloneB = null, priorO = null;
+	an5Binding[] links;
+	
     firstEntry = new String(p.firstEntry);
     lastEntry = new String(p.lastEntry);
-    for (an5Object o: p.path.values()) {
-      path.put(o.getGUID(), (an5Object)o.clone());
+
+    
+    for (an5Object currentO : p.path.values()) {
+      if (i == 0) {
+        priorO = currentO;
+        cloneA = (an5Object)priorO.clone();
+        path.put(cloneA.getGUID(), cloneA);
+      } else {
+        cloneB = (an5Object)currentO.clone();
+      }
+      
+      links = cloneA.enumerateBindings(an5Binding.bindState.BOUND);
+      for (an5Binding bd : links) {
+        if (bd.bORef.getGUID().equals(cloneB.getGUID())) {
+          bd.reBind(priorO, cloneA, currentO, cloneB);
+        }
+      }
+      path.put(cloneB.getGUID(), cloneB);
+      priorO = currentO;
+      cloneA = cloneB;
     }
-    relinkBindings();
   }
   public Object clone() {
     return new an5Path(this);
