@@ -13,6 +13,7 @@ public class an5Binding {
   an5Object aORef = null,
 		    bORef = null;
   an5Service member = null;
+  an5Binding boundTo = null;
   int id;
   String name;
   int state = bindState.OPEN;
@@ -44,18 +45,25 @@ public class an5Binding {
     aIRef = ai;
     bORef = bo;
     bIRef = bi;
+    boundTo = link;
     state = bindState.BASE_MATCH;
     link.aORef = bo;
     link.aIRef = bi;
     link.bORef = ao;
     link.bIRef = ai;
+    link.boundTo = this;
     link.state = bindState.BASE_MATCH;
     return res;
   }
-  int reBind(an5Object origAO, an5Object cloneAO, an5Object OrigBO, an5Object cloneBO) {
+  int reBind(an5Object cloneAO, an5InterfaceInstance cloneAI, an5Object cloneBO, an5InterfaceInstance cloneBI, an5Binding link) {
 	/* ignore cardinality, reflecting and service exposed for initial test */
     int res = 0;
-
+    bORef = cloneBO;
+    bIRef = cloneBI;
+    boundTo = link;
+    link.bORef = cloneAO;
+    link.bIRef = cloneAI;
+    link.boundTo = this;
     return res;
   }
 }

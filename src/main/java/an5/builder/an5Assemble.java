@@ -1,6 +1,5 @@
 package an5.builder;
 
-import an5.model.an5Binding;
 import an5.model.an5InterfaceInstance;
 import an5.model.an5Object;
 import an5.model.an5Path;
@@ -31,7 +30,7 @@ public class an5Assemble {
       toOptions = compatableInterfaces(from, fromOptions[i], to, where);
       if (toOptions.length > 0) {
         if ((flags & buildFlags.ANY) != 0) {
-        	
+          
         }
       }
     }

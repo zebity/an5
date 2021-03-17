@@ -24,11 +24,10 @@ public class an5Path extends an5Object {
     lastEntry = new String(b.bORef.getGUID());
   }
   public an5Path(an5Path p) {
-	int i = 0;
+	int i = 0, k = 0;
 	an5Object cloneA = null, cloneB = null, priorO = null;
-	an5Binding[] links;
-	
-    firstEntry = new String(p.firstEntry);
+	an5Binding[] cloneLinksA, cloneLinksB;
+	firstEntry = new String(p.firstEntry);
     lastEntry = new String(p.lastEntry);
 
     
@@ -39,17 +38,23 @@ public class an5Path extends an5Object {
         path.put(cloneA.getGUID(), cloneA);
       } else {
         cloneB = (an5Object)currentO.clone();
-      }
       
-      links = cloneA.enumerateBindings(an5Binding.bindState.BOUND);
-      for (an5Binding bd : links) {
-        if (bd.bORef.getGUID().equals(cloneB.getGUID())) {
-          bd.reBind(priorO, cloneA, currentO, cloneB);
+        cloneLinksA = cloneA.enumerateBindings(an5Binding.bindState.BOUND);
+        cloneLinksB = cloneB.enumerateBindings(an5Binding.bindState.BOUND);
+        for (an5Binding bd : cloneLinksA) {
+          if (bd.bORef.getGUID().equals(cloneB.getGUID())) {
+        	for (k = 0; k < bd.bIRef.bindings.size(); k++) {
+        	  if (bd.bIRef.bindings.get(k).equals(bd.boundTo)) {
+                bd.reBind(cloneA, bd.aIRef, cloneB, cloneLinksB[k].aIRef, cloneLinksB[k]);
+        	  }
+        	}
+          }
         }
+        path.put(cloneB.getGUID(), cloneB);
+        priorO = currentO;
+        cloneA = cloneB;
       }
-      path.put(cloneB.getGUID(), cloneB);
-      priorO = currentO;
-      cloneA = cloneB;
+      i++;
     }
   }
   public Object clone() {

@@ -17,14 +17,20 @@ public class an5InterfaceInstance extends an5VariableInstance {
     min = mn;
     max = mx;
   }
-  public int allocateBinding(an5InterfaceInstance ifInst) {
+  public int allocateBinding(an5Object oA, an5InterfaceInstance ifInst) {
+	an5Binding newBinding = null;
 	int i = 0;
     min = ifInst.min;
     max = ifInst.max;
     alloc = ifInst.alloc;
     // bindings = new ArrayList<>();
     for (;i < ifInst.bindings.size(); i++) {
-      bindings.add(interfaceDefinition.getBinding(ifInst.bindings.get(i)));
+      newBinding = interfaceDefinition.getBinding(ifInst.bindings.get(i));
+      if ((newBinding.state & an5Binding.bindState.BOUND) != 0) {
+        newBinding.aORef = oA;
+        newBinding.aIRef = this;
+      }
+      bindings.add(newBinding);
     }
     return i;
   }
