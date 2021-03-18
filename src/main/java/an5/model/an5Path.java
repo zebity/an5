@@ -39,12 +39,12 @@ public class an5Path extends an5Object {
       } else {
         cloneB = (an5Object)currentO.clone();
       
-        cloneLinksA = cloneA.enumerateBindings(an5Binding.bindState.BOUND);
-        cloneLinksB = cloneB.enumerateBindings(an5Binding.bindState.BOUND);
+        cloneLinksA = cloneA.enumerateBindings(an5Binding.bindState.ALL);
+        cloneLinksB = cloneB.enumerateBindings(an5Binding.bindState.ALL);
         for (an5Binding bd : cloneLinksA) {
           if (bd.bORef.getGUID().equals(cloneB.getGUID())) {
         	for (k = 0; k < bd.bIRef.bindings.size(); k++) {
-        	  if (bd.bIRef.bindings.get(k).equals(bd.boundTo)) {
+        	  if ((bd.state & an5Binding.bindState.BOUND) > 0 && bd.bIRef.bindings.get(k).equals(bd.boundTo)) {
                 bd.reBind(cloneA, bd.aIRef, cloneB, cloneLinksB[k].aIRef, cloneLinksB[k]);
         	  }
         	}

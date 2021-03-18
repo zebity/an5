@@ -6,7 +6,7 @@ package an5.model;
 
 public class an5Binding {
   public static class bindState { final static int OPEN = 0x01, BASE_MATCH = 0x02, REFLECTING = 0x04,
-	                                COMMITTED = 0x08, BOUND = 0x0E; }
+	                                COMMITTED = 0x08, BOUND = 0x0E, ALL = 0x0F; }
 
   an5InterfaceInstance aIRef = null,
 			           bIRef = null;
