@@ -10,7 +10,7 @@ public class an5InterfaceInstance extends an5VariableInstance {
   int min,
       max;
   allocationPolicy alloc = allocationPolicy.DYNAMIC;
-  String nameTemplate;
+  String nameTemplate = new String("b:%I");
   public an5InterfaceInstance(String varNm, an5Interface ifDef, int mn, int mx) {
 	super(varNm);
     interfaceDefinition = ifDef;
