@@ -40,7 +40,7 @@ public class an5CreateNetwork extends an5Template {
   public int seedGoal() {
     mustProvide = netPrototype.providesServices().getWhere(1, -1);
     canProvide = netPrototype.providesServices().getWhere(0, -1);
-    for (an5VariableInstance c : netPrototype.AN5AT_vars.values()) {
+    for (an5VariableInstance c : netPrototype.AN5AT_classes.values()) {
       if (c instanceof an5ClassInstance) {
     	an5ClassInstance cl = (an5ClassInstance)c;
     	if (cl.mandatory) {

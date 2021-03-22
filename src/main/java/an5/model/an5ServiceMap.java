@@ -71,6 +71,16 @@ public class an5ServiceMap implements an5Service {
       }
     }
   }
+  public an5ServiceMap(an5InterfaceTable[] from) {
+	map = new LinkedHashMap<>();
+    for (an5InterfaceTable v : from) {
+	  for (an5InterfaceSignature sg : v.instance.interfaceDefinition.signatureSet) {
+	    for (String s : sg.services.values()) {
+		  map.put(s, new mapSrv(s, v.instance.min, v.instance.max));
+	    }
+      }
+    }
+  }
   public an5Service provides() {
 	an5Service res;
 	if (mappedUnique) {

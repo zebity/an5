@@ -107,7 +107,7 @@ public class an5JoinNetwork extends an5Template {
   public int seedGoal() {
 	int i = 0;
     viaService = prototype.providesServices().getWhere(1, -1);
-    for (an5VariableInstance c : prototype.AN5AT_vars.values()) {
+    for (an5VariableInstance c : prototype.AN5AT_classes.values()) {
       if (c instanceof an5ClassInstance) {
     	an5ClassInstance cl = (an5ClassInstance)c;
     	if (cl.mandatory) {

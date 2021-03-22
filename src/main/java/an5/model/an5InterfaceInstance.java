@@ -109,6 +109,7 @@ public class an5InterfaceInstance extends an5VariableInstance {
 	} else {
 	  int k = bindings.size();
 	  res = interfaceDefinition.getBinding(nameTemplate, k);
+	  bindings.add(res);
 	}
 	return res;  
   }

@@ -23,7 +23,8 @@ public class an5Object implements an5ClassTemplate {
   public boolean mandatory = false;
   public String[] uniqueId = new String[2];
   public String[] persistentUniqueId = new String[2];
-  public Map<String, an5VariableInstance> AN5AT_vars = new HashMap<>();
+  public Map<String, an5InterfaceTable> AN5AT_interfaces = new HashMap<>();
+  public Map<String, an5VariableInstance> AN5AT_classes = new HashMap<>();
   public an5Service AN5AT_serviceUnion = new an5ServiceMap();
   public an5InterfaceSignatureKeys AN5SG_sigKeyUnion = new an5InterfaceSignatureKeys();
   public an5VarUtil varUtil = new an5VarUtil();
@@ -57,9 +58,9 @@ public class an5Object implements an5ClassTemplate {
     List<an5Binding> links = new ArrayList<>();
     
     /* Should refactor to use reflection to walk up object and find interface vars directly */
-    for (an5VariableInstance var : AN5AT_vars.values()) {
-      if (var instanceof an5InterfaceInstance)	{
-    	an5InterfaceInstance ifI = (an5InterfaceInstance)var;
+    for (an5InterfaceTable var : AN5AT_interfaces.values()) {
+      if (var.instance instanceof an5InterfaceInstance)	{
+    	an5InterfaceInstance ifI = (an5InterfaceInstance)var.instance;
     	for (an5Binding bind : ifI.bindings) {
           if ((whereState & bind.state) != 0) {
             links.add(bind);
