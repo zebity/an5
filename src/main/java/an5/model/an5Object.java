@@ -91,6 +91,45 @@ public class an5Object implements an5ClassTemplate {
 	/* Change to only use ServiceMap */
 	return new an5ServiceMap((an5ServiceMap)AN5AT_serviceUnion);
   }
+  public int[] locateBinding(an5Binding bd) {
+    int[] res = null;
+    boolean found = false;
+    an5InterfaceTable useIf = null;
+    an5Binding target = null;
+    
+    if (bd.aORef.equals(this)) {
+      useIf = AN5AT_interfaces.get(bd.aIRef.var);
+      target = bd;
+    } else {
+      useIf = AN5AT_interfaces.get(bd.bIRef.var);
+      target = bd.boundTo;
+    }
+    
+    if (useIf != null) {
+      for (int i = 0; (! found) && i < useIf.instance.bindings.size(); i++) {
+        found = useIf.instance.bindings.get(i).equals(target);
+        if (found) {
+          res = new int[]{useIf.id, i};	
+        }
+      }
+    }
+    return res;
+  }
+  public an5InterfaceTable locateInterface(String nm, int[] hint) {
+    an5InterfaceTable res = null, found;
+    
+    found = AN5AT_interfaces.get(nm);
+    if (found != null) {
+      if (hint != null) {
+    	if (found.id == hint[0] && found.instance.bindings.size() > hint[1]) {
+    	  res = found;
+    	}
+      } else {
+        res = found;
+      }
+    }
+    return res;
+  }
   public int canBind(an5InterfaceInstance viaI, an5Object toO, an5Service netSrv, an5Service protoSrv) {
 	/* Note that netSrv & protoSrv are hints to help select across multiple bind options */
     int cnt = 0,

@@ -25,8 +25,10 @@ public class an5Path extends an5Object {
   }
   public an5Path(an5Path p) {
 	int i = 0, k = 0;
+	int[] locateBinding = null;
 	an5Object cloneA = null, cloneB = null, priorO = null;
-	an5Binding[] cloneLinksA, cloneLinksB;
+	an5Binding[] cloneLinksA;
+	an5InterfaceTable cloneBIT;
 	firstEntry = new String(p.firstEntry);
     lastEntry = new String(p.lastEntry);
 
@@ -39,15 +41,13 @@ public class an5Path extends an5Object {
       } else {
         cloneB = (an5Object)currentO.clone();
       
-        cloneLinksA = cloneA.enumerateBindings(an5Binding.bindState.ALL);
-        cloneLinksB = cloneB.enumerateBindings(an5Binding.bindState.ALL);
+        cloneLinksA = cloneA.enumerateBindings(an5Binding.bindState.BOUND);
+        /* cloneLinksB = cloneB.enumerateBindings(an5Binding.bindState.BOUND); */
         for (an5Binding bd : cloneLinksA) {
-          if (bd.bORef.getGUID().equals(cloneB.getGUID())) {
-        	for (k = 0; k < bd.bIRef.bindings.size(); k++) {
-        	  if ((bd.state & an5Binding.bindState.BOUND) > 0 && bd.bIRef.bindings.get(k).equals(bd.boundTo)) {
-                bd.reBind(cloneA, bd.aIRef, cloneB, cloneLinksB[k].aIRef, cloneLinksB[k]);
-        	  }
-        	}
+          locateBinding = bd.bORef.locateBinding(bd);
+          cloneBIT = cloneB.locateInterface(bd.bIRef.var, locateBinding);
+          if (cloneBIT != null && locateBinding != null) {
+            bd.reBind(cloneA, bd.aIRef, cloneB, cloneBIT.instance, cloneBIT.instance.bindings.get(locateBinding[1]));
           }
         }
         path.put(cloneB.getGUID(), cloneB);

@@ -88,7 +88,7 @@ public class an5CreateNetwork extends an5Template {
         List<an5GoalTree> altNets = new LinkedList<>();
         for (i = 0; i < starter.size(); i++) {
           resNet = (an5Network)netPrototype.createInstance();
-          resNet.members.put(starter.get(i).getGUID(), (an5Object)(starter.get(i).clone()));
+          resNet.putMember((an5Object)(starter.get(i).clone()));
         an5JoinNetwork join = new an5JoinNetwork(this, nodePrototype, resNet, starter.get(i), mustUseOrder, available);
         altNets.add(new an5SimpleGoal(join,ctrl));
       }
@@ -106,7 +106,7 @@ public class an5CreateNetwork extends an5Template {
         joinSet = new LinkedList<>();
         smallNets = new LinkedList<>();
         resNet = (an5Network)netPrototype.createInstance();
-        resNet.members.put(starter.get(i).getGUID(), (an5Object)starter.get(i).clone());
+        resNet.putMember((an5Object)starter.get(i).clone());
         for (j = 0; j > mustUseOrder.size(); j++) {   
           an5JoinNetwork join = new an5JoinNetwork(this, nodePrototype, resNet, starter.get(i), mustUseOrder.get(j), available);
           joinSet.add(new an5SimpleGoal(join, ctrl));

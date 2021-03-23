@@ -107,7 +107,7 @@ public class an5ConnectNetworks extends an5Template {
 	return status;
   }
   public int[] gauge() {
-	int sc = resultNet.members.size();
+	int sc = resultNet.getMemberSize();
 	int[] parGauge = new int[]{0,1};
 	if (parent != null) {
 	  parGauge = parent.gauge();	
