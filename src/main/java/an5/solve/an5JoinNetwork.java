@@ -25,14 +25,8 @@ import an5.model.an5Binding;
 import an5.model.an5VariableInstance;
 
 public class an5JoinNetwork extends an5Template {
-  /* class pathsAndPool {
-	public List<an5Object> paths;
-    public Map<String, an5Object> pool;
-    public pathsAndPool() {
-      paths = new ArrayList<>();
-      pool = new HashMap<>();
-    }
-  } */
+  public class PathIdx { public static final int BIND = 0, PROBE = 1, INDEX = 2, USED = 3, SIZE = 4; }
+
   class sortPathCnts implements Comparable<sortPathCnts> {
     public int cnt = 0,
                idx = 0,
@@ -147,7 +141,7 @@ public class an5JoinNetwork extends an5Template {
     an5Path[] foundPaths;
     an5Binding[] bindings;
     int i, j, k, l;
-    int[][] pathCnt = new int[toAdd.size()][3];
+    int[][] pathCnt = new int[toAdd.size()][PathIdx.SIZE];
     List<sortPathCnts> sortCnts = new ArrayList<>();
     an5InterfaceFinder finder = new an5InterfaceFinder();
     int fail = 0, maxBind = 0, alts = 0, maxBnd = 0,
@@ -158,17 +152,17 @@ public class an5JoinNetwork extends an5Template {
     for (i = 0; i < pathCnt.length; i++) {
       j = toAdd.get(i).getLast().canBind(null, connectTo, joinNet.providesServices(), viaService);
       if (j > 0) {
-         pathCnt[i][0] = j;
-         pathCnt[i][1] = 0;
-         pathCnt[i][2] = i;
+         pathCnt[i][PathIdx.BIND] = j;
+         pathCnt[i][PathIdx.PROBE] = 0;
+         pathCnt[i][PathIdx.INDEX] = i;
          fndMin = Integer.min(i, fndMin);
          fndMax = Integer.max(i, fndMax);
       } else { 
       	 k = finder.canMatchInterface(toAdd.get(i).getLast(), joinNet.providesServices(), viaService, available);
          if (k > 0) {
-           pathCnt[i][0] = 0;
-           pathCnt[i][1] = k;
-           pathCnt[i][2] = i;
+           pathCnt[i][PathIdx.BIND] = 0;
+           pathCnt[i][PathIdx.PROBE] = k;
+           pathCnt[i][PathIdx.INDEX] = i;
            sortCnts.add(new sortPathCnts(k, i));
            alts++;
            pathExpand = pathExpand * k;
@@ -177,9 +171,9 @@ public class an5JoinNetwork extends an5Template {
            maxBnd = Integer.max(maxBnd, i);
          }
          else {
-           pathCnt[i][0] = -1;
-           pathCnt[i][1] = -1;
-           pathCnt[i][2] = i;
+           pathCnt[i][PathIdx.BIND] = -1;
+           pathCnt[i][PathIdx.PROBE] = -1;
+           pathCnt[i][PathIdx.INDEX] = i;
            fail = -1;
          }
       }
@@ -203,7 +197,7 @@ public class an5JoinNetwork extends an5Template {
       toO = targetNet.getMember(connectTo.getGUID());
       for (i = fndMin; i <= fndMax; i++) {
         toO = (an5Object)toAdd.get(i).clone();
-        if (pathCnt[i][0] > 0) {
+        if (pathCnt[i][PathIdx.BIND] > 0) {
           toO = targetNet.getMember(connectTo.getGUID());
     	  fromO = (an5Object)toAdd.get(i).clone();
     	  bindings = fromO.bind(toO, targetNet.providesServices(), viaService);
@@ -212,14 +206,16 @@ public class an5JoinNetwork extends an5Template {
         }
       }
       an5Object[][] addPaths = new an5Object[pathExpand][alts];
-      Collections.sort(sortCnts);
-      sortCnts.get(0).chunkSize = sortCnts.get(0).cnt;
-      sortCnts.get(0).increment = 1;  
-      for (i = 1; i < sortCnts.size(); i++) {
-        sortCnts.get(i).chunkSize = sortCnts.get(i).cnt *  sortCnts.get(i-1).chunkSize;
-        sortCnts.get(i).increment = sortCnts.get(i).chunkSize / sortCnts.get(i).cnt; 
+      if (sortCnts.size() > 0) {
+        Collections.sort(sortCnts);
+        sortCnts.get(0).chunkSize = sortCnts.get(0).cnt;
+        sortCnts.get(0).increment = 1;  
+        for (i = 1; i < sortCnts.size(); i++) {
+          sortCnts.get(i).chunkSize = sortCnts.get(i).cnt *  sortCnts.get(i-1).chunkSize;
+          sortCnts.get(i).increment = sortCnts.get(i).chunkSize / sortCnts.get(i).cnt; 
+        }
+        Collections.sort(sortCnts, new sortByIndex());
       }
-      Collections.sort(sortCnts, new sortByIndex());
       an5AvailableResource pool = null;
       /* Have: fixed network with success cases as "candidate"
        *        Now have alternates of:
