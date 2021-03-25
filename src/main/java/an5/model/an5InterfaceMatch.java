@@ -12,7 +12,7 @@ public class an5InterfaceMatch {
   public char[][] sigMatch = null;
   public int[][] servicesEnabled = null;
   public char matchResult = matchState.none; 
-  an5Logging log = new an5Logging(7,6);
+  an5Logging log = new an5Logging(4,4);
   
   void matchSignature(an5Interface from, an5Interface to) {
 	int i, j, k,
@@ -44,7 +44,7 @@ public class an5InterfaceMatch {
     fromSetSz = i = from.signatureSet.size();
     toSetSz = j = to.signatureSet.size();
       
-    log.DBG(6, "MatchSignature - from[" + fromSetSz + "]: " + from.getGUID() + " to[" + toSetSz + "]: " + to.getGUID());
+    log.DBG(6, "<INFO>:AN5:MatchSignature - from[" + fromSetSz + "]: " + from.getGUID() + " to[" + toSetSz + "]: " + to.getGUID());
     
     min = Integer.min(fromSetSz, toSetSz);
     max = Integer.max(fromSetSz, toSetSz);

@@ -35,4 +35,10 @@ public class an5SimpleGoal extends an5GoalTree {
 	return new String[]{"By: " + template.getClass().getName(),
                         ""};
   }
+  public int goalQueueSize() {
+	return 1;
+  }
+  public String templateType() {
+	return new String(template.getClass().toString());
+  }
 }

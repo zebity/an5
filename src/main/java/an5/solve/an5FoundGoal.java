@@ -31,4 +31,10 @@ public class an5FoundGoal extends an5GoalTree {
 	return new String[]{"By: " + this.getClass().getName(),
                         ""};
   }
+  public int goalQueueSize() {
+	return 0;
+  }
+  public String templateType() {
+	return new String("parent -> " + parent.getClass().toString());
+  }
 }

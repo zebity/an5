@@ -29,4 +29,10 @@ public class an5FailedGoal extends an5GoalTree {
 	return new String[]{"By: " + this.getClass().getName(),
                         ""};
   }
+  public int goalQueueSize() {
+    return 1;
+  }
+  public String templateType() {
+	return new String("N/A");
+  }
 }

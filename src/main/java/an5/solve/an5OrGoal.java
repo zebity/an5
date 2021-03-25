@@ -61,4 +61,10 @@ public class an5OrGoal extends an5GoalTree {
   }
   public void release() {
   }
+  public int goalQueueSize() {
+	return queue.size();
+  }
+  public String templateType() {
+	return new String("N/A");
+  }
 }

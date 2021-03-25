@@ -28,11 +28,13 @@ public class an5Logging {
 	}
   }
   public void DBG(int level, String msg) {
-    switch (level) {
-	  case 7:
-      case 6: System.out.println(msg);
-              break;
-      case 5: 
+	if (level <= diags) {
+      switch (level) {
+	    case 7:
+        case 6: System.out.println(msg);
+                break;
+        case 5: 
+	  }
 	}
   }
 }
