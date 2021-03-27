@@ -14,6 +14,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import an5.an5Parser.AnnotationFieldDeclarationContext;
 import an5.an5Parser.ClassOrInterfaceModifierContext;
 import an5.an5Parser.ExpressionContext;
+import an5.an5Parser.InterfaceBindingNameTemplateContext;
 import an5.an5Parser.LiteralContext;
 import an5.an5Parser.PrimaryContext;
 import an5.an5Parser.ServiceSignatureDeclarationContext;
@@ -426,6 +427,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void enterFormalParameters(an5Parser.FormalParametersContext ctx) { log.DBG("enterFormalParameters"); }
   public void enterImportDeclaration(an5Parser.ImportDeclarationContext ctx) { log.DBG("enterImportDeclaration"); }
   public void enterIntegerLiteral(an5Parser.IntegerLiteralContext ctx) { log.DBG("enterIntegerLiteral"); }
+  public void enterInterfaceBindingNameTemplate(an5Parser.InterfaceBindingNameTemplateContext ctx) { log.DBG("enterInterfaceBindingNameTemplate"); }
   public void enterInterfaceBody(an5Parser.InterfaceBodyContext ctx) { log.DBG("enterInterfaceBody"); }
   public void enterInterfaceBodyDeclaration(an5Parser.InterfaceBodyDeclarationContext ctx) { log.DBG("enterInterfaceBodyDeclaration"); }
   public void enterInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) {
@@ -624,6 +626,32 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void exitFormalParameters(an5Parser.FormalParametersContext ctx) { log.DBG("exitFormalParameters"); }
   public void exitImportDeclaration(an5Parser.ImportDeclarationContext ctx) { log.DBG("exitImportDeclaration"); }
   public void exitIntegerLiteral(an5Parser.IntegerLiteralContext ctx) { log.DBG("exitIntegerLiteral"); }
+  public void exitInterfaceBindingNameTemplate(an5Parser.InterfaceBindingNameTemplateContext ctx) {
+	log.DBG("exitInterfaceBindingNameTemplate");
+	/* get parent interface */
+	RuleContext up = ctx.parent;
+	while (up != null) {
+      if (up instanceof an5Parser.InterfaceDeclarationContext) {
+        break;
+      }
+      up = up.parent;
+	}
+	
+	/* get naming template */
+	if (up == null) {
+	  log.ERR(3, "<ERR>:AN5:Interface Binding Naming Template Parent Not Found.");		
+	}
+	else {
+	  an5InterfaceValue ifNd = useInterfaceValue((an5Parser.InterfaceDeclarationContext)up);
+
+	  if (ifNd != null) {
+	    isLocked(ifNd);
+		TerminalNode termNd = ctx.STRING_LITERAL();
+		String tS = new String(termNd.getText());
+		ifNd.nameTemplate = new String(tS.substring(1, tS.length()-1));
+      }
+    }
+  }
   public void exitInterfaceBody(an5Parser.InterfaceBodyContext ctx) { log.DBG("exitInterfaceBody"); }
   public void exitInterfaceBodyDeclaration(an5Parser.InterfaceBodyDeclarationContext ctx) { log.DBG("exitInterfaceBodyDeclaration"); }
   public void exitInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) {

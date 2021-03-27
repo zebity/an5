@@ -111,8 +111,8 @@ public class an5Generate {
   int generateInterfaceSignatureConstructor(PrintStream jvStrm, an5InterfaceValue nd, String nm, int min, int max) {
 	int cnt = 0;
 
-	jvStrm.println("  public " + nm + "() {");
-	jvStrm.println("    super();");
+	jvStrm.println("  public " + nm + "(String nmTemplate) {");
+	jvStrm.println("    super(nmTemplate);");
 	jvStrm.println("    an5InterfaceSignature AN5SG_signature = new an5InterfaceSignature(an5name,");
     generateInterfaceSignatureImplementation(jvStrm, "common", nd.commonPair);
     generateInterfaceSignatureImplementation(jvStrm, "needs", nd.needsPair);
@@ -159,6 +159,7 @@ public class an5Generate {
         jvStrm.println(" {");
         // jvStrm.println("  /*  review and workout */");
         jvStrm.println("  String an5name = \"" + ifNd.value + "\";");
+        // jvStrm.println("  String an5bindingName = \"" + ifNd.nameTemplate + "\";");
         generateInterfaceSignatureConstructor(jvStrm, ifNd, ifNm, ifNd.cardinalityMin, ifNd.cardinalityMax);
         jvStrm.println("}");
         cnt++;
@@ -175,7 +176,7 @@ public class an5Generate {
     	ifVar = nd.interfacesReflected.get(cnt);
         jvStrm.print("  an5InterfaceInstance " + global.attrPrefix + ifVar.value);
         jvStrm.print(" = new an5InterfaceInstance(\"" + ifVar.value + "\", new ");
-        jvStrm.println(global.classPrefix + ifVar.interfaceReflected.value + "(), 0, " + ifVar.size + ");");
+        jvStrm.println(global.classPrefix + ifVar.interfaceReflected.value + "(\"" + ifVar.interfaceReflected.nameTemplate + "\"), 0, " + ifVar.size + ");");
       }
       
       cnt = 0;

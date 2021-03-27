@@ -11,8 +11,10 @@ abstract public class an5Interface extends an5Object {
   public List<an5InterfaceSignature> signatureSet = new ArrayList<>();
   public Map<String, String[]> signatureKeys = new LinkedHashMap<>();
   String lastKey = new String();
-  public an5Interface() {
+  public String bindingNameTemplate;
+  public an5Interface(String nameTemplate) {
     super();
+    bindingNameTemplate = nameTemplate;
   }
   public void addSignatureSet(an5InterfaceSignature sig) {
     signatureSet.add(0, sig);
@@ -33,8 +35,14 @@ abstract public class an5Interface extends an5Object {
   public Collection<String> getServiceSignatureValues(int i) {
     return signatureSet.get(i).services.values();
   }
-  public an5Binding getBinding(String nmPat, int i) {
-	String nm = nmPat.replace("%I", String.valueOf(i));
+  public an5Binding getBinding(int i) {
+	String nm;
+	if (bindingNameTemplate.contains("%I+1")) {
+	  nm = bindingNameTemplate.replace("%I+1", String.valueOf(i+1));	
+	}
+	else {
+	  nm = bindingNameTemplate.replace("%I", String.valueOf(i));
+	}
     an5Binding res = new an5Binding(nm, i);
     return res;
   }

@@ -10,7 +10,6 @@ public class an5InterfaceInstance extends an5VariableInstance {
   int min,
       max;
   allocationPolicy alloc = allocationPolicy.DYNAMIC;
-  String nameTemplate = new String("b:%I");
   public an5InterfaceInstance(String varNm, an5Interface ifDef, int mn, int mx) {
 	super(varNm);
     interfaceDefinition = ifDef;
@@ -34,7 +33,7 @@ public class an5InterfaceInstance extends an5VariableInstance {
     }
     return i;
   }
-  public int allocateBinding(int sz, String Nm) {
+  public int allocateBinding(int sz) {
     int i = 0,
         adj = sz;
     
@@ -43,7 +42,7 @@ public class an5InterfaceInstance extends an5VariableInstance {
     }
     alloc = allocationPolicy.STATIC;
     for (;i < adj; i++) {
-      bindings.add(interfaceDefinition.getBinding(Nm, i));
+      bindings.add(interfaceDefinition.getBinding(i));
     }
     return i;
   }
@@ -83,7 +82,7 @@ public class an5InterfaceInstance extends an5VariableInstance {
 		}
 	  } else {
 		int k = bindings.size();
-		next = interfaceDefinition.getBinding(nameTemplate, k);
+		next = interfaceDefinition.getBinding(k);
 		resTo = toI.getAvailableBinding(next);
 		if (resTo != null) {
 		  next.bind(fromO, this, toO, toI, resTo, match);
@@ -108,12 +107,12 @@ public class an5InterfaceInstance extends an5VariableInstance {
 	  }
 	} else {
 	  int k = bindings.size();
-	  res = interfaceDefinition.getBinding(nameTemplate, k);
+	  res = interfaceDefinition.getBinding(k);
 	  bindings.add(res);
 	}
 	return res;  
   }
   public void setNameTemplate(String nt) {
-    nameTemplate = new String(nt);
+    interfaceDefinition.bindingNameTemplate = new String(nt);
   }
 }

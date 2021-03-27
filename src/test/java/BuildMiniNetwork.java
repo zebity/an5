@@ -19,21 +19,21 @@ public class BuildMiniNetwork {
     
     /* Switch */
     String[][] swdef = {{"name", "simple-switch"},
-    		            {"port", "[24]", "p%I"}};
+    		            {"port", "[24]"}};
     
     /* 3 x Computer */
     String[][] cpdef1 = {{"name", "hal-1"},
-            {"slot", "[4]", "pci%I"}};
+            {"slot", "[4]"}};
     String[][] cpdef2 = {{"name", "hal-2"},
-            {"slot", "[4]", "pci%I"}};
+            {"slot", "[4]"}};
     String[][] cpdef3 = {{"name", "hal-3"},
-            {"slot", "[4]", "pci%I"}};
+            {"slot", "[4]"}};
     
     /* 4 * NIC */
-    String[][] nicdef1 = {{"port", "[2]", "p%I"}};
-    String[][] nicdef2 = {{"port", "[2]", "p%I"}};
-    String[][] nicdef3 = {{"port", "[2]", "p%I"}};
-    String[][] nicdef4 = {{"port", "[2]", "p%I"}};
+    String[][] nicdef1 = {{"port", "[2]"}};
+    String[][] nicdef2 = {{"port", "[2]"}};
+    String[][] nicdef3 = {{"port", "[2]"}};
+    String[][] nicdef4 = {{"port", "[2]"}};
 
     String[][] cabdef1 = {{"type", "physical"},
     		              {"length", "1"}};

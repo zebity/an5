@@ -15,6 +15,7 @@ class an5InterfaceValue extends an5TypeValue {
 		  cardinalityDefined = false;
   int cardinalityMin,
 	  cardinalityMax;
+  String nameTemplate = new String("%I");
   List<String> common,
 	           needs,
 	           provides;

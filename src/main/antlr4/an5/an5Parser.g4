@@ -214,6 +214,7 @@ interfaceBodyDeclaration
 interfaceMemberDeclaration
     : constDeclaration
     | interfaceSignatureDeclaration
+    | interfaceBindingNameTemplate
     | interfaceAttributeDeclaration
 //    | interfaceMethodDeclaration
 //    | genericInterfaceMethodDeclaration
@@ -239,6 +240,10 @@ interfaceAttributeDeclaration
     : typeType IDENTIFIER (',' IDENTIFIER)* ';'
     ;
 
+interfaceBindingNameTemplate
+    : BINDING '=' STRING_LITERAL
+    ;
+    
 // see matching of [] comment in methodDeclaratorRest
 // methodBody from Java8
 // interfaceMethodDeclaration

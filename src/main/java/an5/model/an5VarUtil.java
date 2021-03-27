@@ -11,8 +11,10 @@ public class an5VarUtil {
 	    	String num = varInit[1].substring(1, varInit[1].length()-1);
 	    	int sz = Integer.valueOf(num);
 		    an5InterfaceInstance ifVar = (an5InterfaceInstance)v.instance;
-		    ifVar.setNameTemplate(varInit[2]);
-		    ifVar.allocateBinding(sz, varInit[2]);
+		    if (varInit.length == 3) {
+		      ifVar.setNameTemplate(varInit[2]);
+		    }
+		    ifVar.allocateBinding(sz);
 	      }
 	    }
 	  }

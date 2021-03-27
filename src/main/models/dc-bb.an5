@@ -23,6 +23,7 @@ interface pcie_interface {
 interface pcie_slot extends pcie_interface {
   needs = {"form=(card)?"};
   provides = {"form=slot"};
+  binding = "slot:%I+1";
   string name;
 }
 
@@ -43,18 +44,21 @@ interface base_t_sink extends rj45_plug {
  
 interface ethernet_port_base_t extends base_t_sink {
   common = { "service=ethernet"};
+  binding = "p:%I+1";
   string name,
          MAC;
 }
 
 interface ethernet_lag {
   common = { "service=(ethernet)+" }
+  binding = "lag-%I";
   string name;
 }
 
 interface ethernet_vlan {
   common = { "service=(ethernet_vlan){0,4096}" }
   needs = { "service=ethernet" };
+  binding = "vlan-%I";
   string name;
 }
 
