@@ -7,7 +7,7 @@ public class an5VarUtil {
 	  if (varInit.length > 1) {
 	    an5InterfaceTable v = obj.AN5AT_interfaces.get(varInit[0]);
 	    if (v != null && v.instance instanceof an5InterfaceInstance) {
-	      if (varInit.length > 2) {
+	      if (varInit.length >= 2) {
 	    	String num = varInit[1].substring(1, varInit[1].length()-1);
 	    	int sz = Integer.valueOf(num);
 		    an5InterfaceInstance ifVar = (an5InterfaceInstance)v.instance;
