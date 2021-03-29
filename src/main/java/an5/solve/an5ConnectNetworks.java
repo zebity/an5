@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.math3.fraction.Fraction;
+
 import an5.model.an5Element;
 import an5.model.an5Network;
 import an5.model.an5Object;
@@ -107,11 +109,11 @@ public class an5ConnectNetworks extends an5Template {
 	return status;
   }
   public int[] gauge() {
-	int sc = resultNet.getMemberSize();
-	int[] parGauge = new int[]{0,1};
+    Fraction res = new Fraction(resultNet.getMemberSize(), 1);
 	if (parent != null) {
-	  parGauge = parent.gauge();	
+	  int []parGauge = parent.gauge();
+	  res.add(new Fraction(parGauge[0], parGauge[1]));
 	}
-	return new int[]{(sc * parGauge[1]) + parGauge[0], parGauge[1]};
+	return new int[]{res.getNumerator(), res.getDenominator()};
   }
 }
