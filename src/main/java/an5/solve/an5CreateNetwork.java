@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.math3.fraction.Fraction;
+
 import an5.model.an5Object;
 import an5.model.an5ClassInstance;
 import an5.model.an5Element;
@@ -29,6 +31,7 @@ public class an5CreateNetwork extends an5Template {
   List<an5Object> bestStarter = new ArrayList<>();
   List<an5Object> altStarter = new ArrayList<>();
   int status = an5SearchControl.SearchResult.UNDEFINED;
+  int pathsExpanded = 0;
 
   public an5CreateNetwork(an5Template p, an5Object[] proto, List<an5Object> from, an5Network net) {
     super(p);
@@ -93,6 +96,7 @@ public class an5CreateNetwork extends an5Template {
         altNets.add(new an5SimpleGoal(join,ctrl));
       }
       res = new an5OrGoal(altNets, ctrl);
+      pathsExpanded = res.goalQueueSize();
     } else if (ctrl.networkBuildStrategy == an5SearchControl.BuildStrategy.MULTI_NET_JOIN) {
       /* This strategy can only work if you can share "parts buckets" across nets */
       List<an5GoalTree> altStarts = new LinkedList<>();
@@ -115,9 +119,11 @@ public class an5CreateNetwork extends an5Template {
         smallNets.add(resNet);
         connectGoal = new an5SimpleGoal(new an5ConnectNetworks(this, null, smallNets, resultNetwork), ctrl);
         andJoins.add(connectGoal);
+        pathsExpanded += andJoins.size();
         altStarts.add(new an5OrGoal(andJoins, ctrl));
       }
       res = new an5OrGoal(altStarts, ctrl);
+      pathsExpanded += res.goalQueueSize();
     }
     return res;
   }
@@ -138,12 +144,12 @@ public class an5CreateNetwork extends an5Template {
   public int status() {
 	return status;
   }
-  public int[] gauge() {
-	int sc = bestStarter.size() + altStarter.size();
-	int[] parGauge = new int[]{0,1};
+  public int[] gauge(int type) {
+	Fraction res = new Fraction(bestStarter.size() + altStarter.size(), 1);
 	if (parent != null) {
-	  parGauge = parent.gauge();	
+	  int []parGauge = parent.gauge(type);
+	  res.add(new Fraction(parGauge[0], parGauge[1]));
 	}
-	return new int[]{(sc * parGauge[1]) + parGauge[0], parGauge[1]};
+	return new int[]{res.getNumerator(), res.getDenominator()};
   }
 }

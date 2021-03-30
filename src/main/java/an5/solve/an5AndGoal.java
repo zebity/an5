@@ -19,8 +19,8 @@ public class an5AndGoal extends an5GoalTree {
 	int res = 0;
 	if (queue.size() > 0) {
 	  res = queue.get(0).seed();
+	  status = queue.get(0).status();
 	}
-	status = an5SearchControl.SearchResult.START;
     return res;
   }
   public int status() {
@@ -36,7 +36,7 @@ public class an5AndGoal extends an5GoalTree {
 	}
     return res;
   }
-  public int[] gauge() {
+  public int[] gauge(int type) {
 	return new int[]{0,1};
   }
   public an5GoalTree getNextGoal() {

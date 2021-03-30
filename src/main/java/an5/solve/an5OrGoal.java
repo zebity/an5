@@ -18,16 +18,16 @@ public class an5OrGoal extends an5GoalTree {
   public int seed() {
 	int res = 0;
 	res = queue.get(0).seed();
-	status = an5SearchControl.SearchResult.START;
+	status = queue.get(0).status();
     return res;
   }
   public int status() {
 	return status;
   }
-  public int[] gauge() {
+  public int[] gauge(int type) {
 	int[] max = new int[]{0,1};
     if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.SCORE) != 0) {
-      max = queue.get(0).gauge();
+      max = queue.get(0).gauge(type);
     } else {
       /* traverse through list to get maximum */	
     }

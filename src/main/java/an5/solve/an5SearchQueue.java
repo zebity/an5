@@ -3,6 +3,8 @@ package an5.solve;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.math3.fraction.Fraction;
+
 public class an5SearchQueue<TQ extends an5SearchGauge> {
   public class queueNode {
     TQ goal;
@@ -74,21 +76,23 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
         add(0, t);   	
       } else if ((ctrl.strategy & an5SearchControl.SearchOptions.SCORE) != 0 ||
                  (ctrl.strategy & an5SearchControl.SearchOptions.COST) != 0) {
-        int[] score = t.gauge();
+        int[] gs = t.gauge(ctrl.strategy);
+        Fraction score = new Fraction(gs[0], gs[1]);
         if (isEmpty()) {
           add(t);
-          max = min = score;
-        } else if ((score[0] *  score[1] * min[1]) - (min[0] *  score[1] * min[1]) <= 0) {
+          max = min = gs;
+        } else if (score.compareTo(new Fraction(min[0], min[1])) <= 0) {
           add(t);
-          min = score;
-        } else if ((score[0] *  score[1] * max[1]) - (max[0] *  score[1] * max[1]) >= 0) {
+          min = new int[]{score.getNumerator(), score.getDenominator()};
+        } else if (score.compareTo(new Fraction(max[0], max[1])) >= 0) {
       	  add(0, t);
-      	  max = score;
+      	  max = new int[]{score.getNumerator(), score.getDenominator()};
         } else {
     	  /* note: should do insert by splitting in middle to allow for long queues */
     	  for (int i = 1; i < size(); i++) {
-    	    int[] ndScore = get(i).gauge();
-    	    if ((ndScore[0] *  score[1] * ndScore[1]) - (score[0] *  score[1] * ndScore[1]) >= 0) {
+    	    int[] ngs = get(i).gauge(ctrl.strategy);
+    	    Fraction ndScore = new Fraction(ngs[0], ngs[1]);
+    	    if (ndScore.compareTo(score) >= 0) {
     	      add(i, t);
     	      i = size();
     	    }

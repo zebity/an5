@@ -108,10 +108,10 @@ public class an5ConnectNetworks extends an5Template {
   public int status() {
 	return status;
   }
-  public int[] gauge() {
+  public int[] gauge(int type) {
     Fraction res = new Fraction(resultNet.getMemberSize(), 1);
 	if (parent != null) {
-	  int []parGauge = parent.gauge();
+	  int []parGauge = parent.gauge(type);
 	  res.add(new Fraction(parGauge[0], parGauge[1]));
 	}
 	return new int[]{res.getNumerator(), res.getDenominator()};

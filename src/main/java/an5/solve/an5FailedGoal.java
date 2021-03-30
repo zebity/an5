@@ -9,7 +9,7 @@ public class an5FailedGoal extends an5GoalTree {
   public int status() {
     return an5SearchControl.SearchResult.FAILED;
   }
-  public int[] gauge() {
+  public int[] gauge(int type) {
     return new int[]{0,1};
   }
   public an5GoalTree getNextGoal() {

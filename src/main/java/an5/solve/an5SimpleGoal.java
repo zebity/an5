@@ -13,8 +13,8 @@ public class an5SimpleGoal extends an5GoalTree {
   public int status() {
     return template.status();
   }
-  public int[] gauge() {
-    return template.gauge();
+  public int[] gauge(int type) {
+    return template.gauge(type);
   }
   public an5GoalTree getNextGoal() {
     return template.getNextGoal(ctrl);

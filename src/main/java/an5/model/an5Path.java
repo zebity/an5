@@ -23,6 +23,27 @@ public class an5Path extends an5Object {
     path.put(b.bORef.getGUID(), b.bORef);
     lastEntry = new String(b.bORef.getGUID());
   }
+  public an5Path(an5Object ao, an5Object bo, an5Binding[] bindings) {
+    if (ao instanceof an5Path) {
+	  for (an5Object po : ((an5Path) ao).path.values()) {
+	    path.put(po.getGUID(), po);
+	    if (firstEntry == null) {
+		  firstEntry = new String(po.getGUID());
+	    }
+	  }
+	} else {
+	  path.put(ao.getGUID(), ao);
+	  firstEntry = new String(ao.getGUID());
+	}
+    if (bo != null && bindings != null) {
+      if (bindings.length > 0 && bindings[0].bORef == bo) {
+	    path.put(bo.getGUID(), bo);
+	    lastEntry = new String(bo.getGUID());
+      } else {
+    	lastEntry = new String(firstEntry); 
+      }
+    }
+  }
   public an5Path(an5Path p) {
 	int i = 0, k = 0;
 	int[] locateBinding = null;

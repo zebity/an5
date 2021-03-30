@@ -26,7 +26,7 @@ public class an5Goal extends an5GoalTree {
       next = queueDispatch();	
       res = next.status();
   	  log.DBG(6, "<log.INFO>:AN5:an5Goal.solve: next - '" + next.getClass().toString()
-  			      + "' queue size: " + next.goalQueueSize() + " status: " + res
+  			      + "' queue size: " + next.goalQueueSize() + " status: " + ctrlAndStats.resultString(res)
   			      + " template: " + next.templateType());
 
       switch (res) {
@@ -48,6 +48,7 @@ public class an5Goal extends an5GoalTree {
         case an5SearchControl.SearchResult.UNDEFINED:
                ctrlAndStats.stats.noUnseeded++;
                next.seed();
+               res = next.status();
                break;
         case an5SearchControl.SearchResult.SUSPENDED:
         default: break;
@@ -59,12 +60,12 @@ public class an5Goal extends an5GoalTree {
       
       if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.OPTIMAL) != 0) {
     	stopSearch = queue.isEmpty();
-    	log.DBG(6, "<log.INFO>:AN5:an5Goal.solve: OPTIMAL - stop - '" + stopSearch + "'");
+    	log.DBG(6, "<log.INFO>:AN5:an5Goal.solve: Option = OPTIMAL - stop - '" + stopSearch + "'");
       } else {
     	stopSearch = res == an5SearchControl.SearchResult.FOUND ||
     			       queue.isEmpty();
-    	log.DBG(6, "<log.INFO>:AN5:an5Goal.solve: FOUND - stop - '" + stopSearch + "' res = "
-    			   + res);
+    	log.DBG(6, "<log.INFO>:AN5:an5Goal.solve: Option = FOUND - stop - '" + stopSearch + "' res = "
+    			   + ctrlAndStats.resultString(res));
 
       }
     }
@@ -97,8 +98,8 @@ public class an5Goal extends an5GoalTree {
   public String[] how() {
     return null;
   }
-  public int[] gauge() {
-	return goal.gauge();
+  public int[] gauge(int type) {
+	return goal.gauge(type);
   }
   public void release() {
   }

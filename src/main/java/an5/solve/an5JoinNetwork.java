@@ -63,7 +63,8 @@ public class an5JoinNetwork extends an5Template {
   String srcClass,
          destClass;
   int joinCount = 0,
-	  status = an5SearchControl.SearchResult.UNDEFINED;
+	  status = an5SearchControl.SearchResult.UNDEFINED,
+	  pathExpansion = 0;
   
   public an5JoinNetwork(an5Template par, an5Object proto, an5Network net, an5Object to, List<an5Object> ele, an5AvailableResource avail) {
     super(par);	  
@@ -92,10 +93,13 @@ public class an5JoinNetwork extends an5Template {
 	use = avail;
     connectTo = to;
   }
-  public int[] gauge() {
-    Fraction res = new Fraction(joinCount, 1);
+  public int[] gauge(int type) {
+	int denom = 1;
+	if (pathExpansion > 0 && (type & an5SearchControl.SearchOptions.COST) > 0)
+	  denom = pathExpansion;
+    Fraction res = new Fraction(joinCount, denom);
 	if (parent != null) {
-	  int []parGauge = parent.gauge();
+	  int []parGauge = parent.gauge(type);
 	  res.add(new Fraction(parGauge[0], parGauge[1]));
 	}
 	return new int[]{res.getNumerator(), res.getDenominator()};
@@ -198,13 +202,16 @@ public class an5JoinNetwork extends an5Template {
       targetNet = (an5Network)joinNet.clone(); /* only need "little" part of target network */
       toO = targetNet.getMember(connectTo.getGUID());
       for (i = fndMin; i <= fndMax; i++) {
-        toO = (an5Object)toAdd.get(i).clone();
+        // fromO = (an5Object)toAdd.get(i).clone();
         if (pathCnt[i][PathIdx.BIND] > 0) {
-          toO = targetNet.getMember(connectTo.getGUID());
-    	  fromO = (an5Object)toAdd.get(i).clone();
+          // toO = targetNet.getMember(connectTo.getGUID());
+    	  fromO = (an5Object)toAdd.get(i).getLast().clone();
     	  bindings = fromO.bind(toO, targetNet.providesServices(), viaService);
     	  /* connectTo object already in network, so just add toAdd[i] object */
-    	  targetNet.putCandidate(fromO);
+    	  if (bindings != null) {
+            an5Path newP = new an5Path(toAdd.get(i), toO, bindings);
+    	    targetNet.putCandidate(newP);
+    	  }
         }
       }
       an5Object[][] addPaths = new an5Object[pathExpand][alts];
