@@ -133,7 +133,7 @@ public class an5CreateNetwork extends an5Template {
 	if (bestStarter.size() > 0) {
       res = getGoalFromStarter(bestStarter, ctrl);
 	} else if (altStarter.size() > 0) {
-	   res = getGoalFromStarter(bestStarter, ctrl);
+	   res = getGoalFromStarter(altStarter, ctrl);
 	}
 	else {
 	  res = getGoalFromStarter(mustUseOrder, ctrl);

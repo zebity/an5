@@ -103,6 +103,9 @@ public class an5Path extends an5Object {
   public an5Object getFirst() {
     return path.get(firstEntry);
   }
+  public int getPathLength() {
+    return path.size();
+  }
   int commit() {
     int res = 0;
     return res;

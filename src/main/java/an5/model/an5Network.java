@@ -1,5 +1,6 @@
 package an5.model;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,24 +29,24 @@ public class an5Network extends an5Object {
     int res = 0;
     
     if ((trigger & Cloned.MEMBERS) > 0) {
-  	  for (an5Object co : clonedFrom.members.values()) {
+  	  for (an5Object co : clonedFrom.getMembersValues()) {
   	    members.put(co.getGUID(), (an5Object)co.clone());
-  	    clonedMaps = clonedMaps | Cloned.MEMBERS;
-  	  }      
+  	  }
+	  clonedMaps = clonedMaps | Cloned.MEMBERS;
     }
     
     if ((trigger & Cloned.CANDIDATES) > 0) {
-      for (an5Object co : clonedFrom.candidates.values()) {
+      for (an5Object co : clonedFrom.getCandidatesValues()) {
     	candidates.put(co.getGUID(), (an5Object)co.clone());
-    	clonedMaps = clonedMaps | Cloned.CANDIDATES;
-       }      
+       }
+  	  clonedMaps = clonedMaps | Cloned.CANDIDATES;
     }
     
     if ((trigger & Cloned.NETWORKS) > 0) {
-      for (an5Network co : clonedFrom.memberNetworks.values()) {
+      for (an5Network co : clonedFrom.getMemberNetworksValues()) {
       	candidates.put(co.getGUID(), (an5Object)co.clone());
-      	clonedMaps = clonedMaps | Cloned.NETWORKS;
-       }      
+       }
+       clonedMaps = clonedMaps | Cloned.NETWORKS;
     }
     
     if ((clonedMaps & Cloned.ALL) == Cloned.ALL) {
@@ -57,6 +58,13 @@ public class an5Network extends an5Object {
   /* Decouple cloned network from master */
     clonedBy.remove(me.getGUID());
   }
+  public Collection<an5Network> getMemberNetworksValues() {
+    if (cloned && ((clonedMaps & Cloned.NETWORKS) == 0)) {
+	  return clonedFrom.getMemberNetworksValues();
+	} else {
+	  return memberNetworks.values();
+	}
+  }
   public an5Object getMember(String id) {
     an5Object obj = null;
     
@@ -67,21 +75,28 @@ public class an5Network extends an5Object {
 	}
 	return obj;
   }
-  public int getMemberSize() {
+  public int getMembersSize() {
 	int res;;
 	    
 	if (cloned && ((clonedMaps & Cloned.MEMBERS) == 0)) {
-	  res = clonedFrom.getMemberSize();
+	  res = clonedFrom.getMembersSize();
 	} else {
 	  res = members.size();
 	}
 	return res;
   }
+  public Collection<an5Object> getMembersValues() {
+    if (cloned && ((clonedMaps & Cloned.MEMBERS) == 0)) {
+	  return clonedFrom.getMembersValues();
+	} else {
+	  return members.values();
+	}
+  }
   public an5Object putMember(an5Object o) {
 	an5Object obj = null;
 		    
 	if (cloned && ((clonedMaps & Cloned.MEMBERS) == 0)) {
-	  for (an5Object mo : clonedFrom.members.values()) {
+	  for (an5Object mo : clonedFrom.getMembersValues()) {
 		members.put(mo.getGUID(), (an5Object)mo.clone());
 		clonedMaps = clonedMaps | Cloned.MEMBERS;
       }
@@ -97,14 +112,21 @@ public class an5Network extends an5Object {
 		
 	return obj;
   }
+  public Collection<an5Object> getCandidatesValues() {
+    if (cloned && ((clonedMaps & Cloned.CANDIDATES) == 0)) {
+      return clonedFrom.getCandidatesValues();
+    } else {
+      return candidates.values();
+    }
+  }
   public an5Object putCandidate(an5Object o) {
     an5Object obj = null;
 	    
 	if (cloned && ((clonedMaps & Cloned.CANDIDATES) == 0)) {
-	  for (an5Object co : clonedFrom.candidates.values()) {
+	  for (an5Object co : clonedFrom.getCandidatesValues()) {
 	    candidates.put(co.getGUID(), (an5Object)co.clone());
-	    clonedMaps = clonedMaps | Cloned.CANDIDATES;
 	  }
+	  clonedMaps = clonedMaps | Cloned.CANDIDATES;
 	}
 	
 	if (clonedBy.size() > 0) {
@@ -116,5 +138,15 @@ public class an5Network extends an5Object {
 	obj = candidates.put(o.getGUID(), o);
 	
 	return obj;
+  }
+  public int getCandidatesSize() {
+	int res;;
+	    
+	if (cloned && ((clonedMaps & Cloned.CANDIDATES) == 0)) {
+	  res = clonedFrom.getCandidatesSize();
+	} else {
+	  res = candidates.size();
+	}
+	return res;
   }
 }

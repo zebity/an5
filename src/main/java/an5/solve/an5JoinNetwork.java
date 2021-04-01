@@ -23,6 +23,7 @@ import an5.model.an5Network;
 import an5.model.an5Object;
 import an5.model.an5Path;
 import an5.model.an5Service;
+import an5.an5Logging;
 import an5.model.an5Binding;
 import an5.model.an5VariableInstance;
 
@@ -49,6 +50,7 @@ public class an5JoinNetwork extends an5Template {
       return a.idx - b.idx;		
     }
   }
+  an5Logging log = new an5Logging(7,7);
   an5Object prototype;
   an5Network joinNet;
   an5Object connectTo;
@@ -250,7 +252,7 @@ public class an5JoinNetwork extends an5Template {
      		j = (j + 1) % sortCnts.get(m).cnt;
           }
         } else {
-          System.out.println("AN5:ERR:Inconsistent Probe Path Counts: " + foundPaths.length + " vs : " + sortCnts.get(m).cnt);
+          log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Inconsistent Probe Path Counts: " + foundPaths.length + " vs : " + sortCnts.get(m).cnt);
         }
       }
       an5Object removed = null;
@@ -262,16 +264,37 @@ public class an5JoinNetwork extends an5Template {
  		Map<String, an5Object> avail = available.copyMap();
  		for (l = 0; l < alts; l++) {
  		  if (addPaths[k][l] != null) {
- 		    toJoin.add(addPaths[k][l]);
- 		    removed = avail.remove(addPaths[k][l].getLast().getGUID());
- 		    if (removed == null) {
+ 			an5Object adding = addPaths[k][l];
+ 		    removed = avail.remove(adding.getGUID());
+ 		    if (removed != null) {
+ 	 		  toJoin.add(adding);
+ 		    } else {
  		      skip = true; /* skip due to resource depletion */
+ 		      if (adding instanceof an5Path) {
+ 		    	an5Path addingPath = (an5Path)adding;
+ 	            log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Resource Depletion, attempted to consume path[" +
+ 		                addingPath.getPathLength() + "]: " + adding.getFirst().getGUID() + " >> " + adding.getLast().getGUID());
+ 		      } else {
+ 	 	        log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Resource Depletion, attempted to consume: " +
+ 	 		                 adding.getGUID());
+ 		      }
  		    }
  		  }
  		}
  		if (! skip) {
-          orJoins.add(new an5SimpleGoal(new an5JoinNetwork(this, prototype, targetNet, connectTo, toJoin, avail), ctrl));
- 		}
+		  int openBalance = toAdd.size() + joinNet.getMembersSize() + joinNet.getCandidatesSize();
+		  int targetBalance = toJoin.size() + targetNet.getMembersSize() + targetNet.getCandidatesSize();
+ 		  if (openBalance == targetBalance) {
+            orJoins.add(new an5SimpleGoal(new an5JoinNetwork(this, prototype, targetNet, connectTo, toJoin, avail), ctrl));
+ 	      }
+ 		  else {
+ 		    skip = true;
+	 	    log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Open Balance[ " + openBalance + "] != Target ballance[" +
+ 		            targetBalance + "] - toAdd/toJoin[" + toAdd.size() + ", " + toJoin.size() +
+ 		            "] net members[" + joinNet.getMembersSize() + ", " + targetNet.getMembersSize() +
+ 		            "] net candidates[" + joinNet.getCandidatesSize() + ", " + targetNet.getCandidatesSize());
+ 		  }
+ 	    }
       }
       res = new an5OrGoal(orJoins, ctrl);
       status = an5SearchControl.SearchResult.SOLVING;

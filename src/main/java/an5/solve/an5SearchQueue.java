@@ -16,6 +16,7 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
     }
   }
   List<queueNode> queue = new LinkedList<>();
+  List<queueNode> removed = new LinkedList<>();
   int[] min,
         max;
   public an5SearchQueue() {
@@ -32,13 +33,18 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
     queue.add(i, n);
   }
   public TQ get(int i) {
-    return queue.get(i).goal;
+	TQ res = null;
+	if (i >= 0 && i < queue.size()) {
+      res = queue.get(i).goal;
+    }
+	return res;
   }
   public TQ remove(int i) {
 	TQ r = null;
     queueNode n = queue.remove(i);
     if (n != null) {
       r = n.goal;
+      removed.add(n);
     }
 	return r;
   }

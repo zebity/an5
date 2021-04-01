@@ -17,8 +17,10 @@ public class an5OrGoal extends an5GoalTree {
   }
   public int seed() {
 	int res = 0;
-	res = queue.get(0).seed();
-	status = queue.get(0).status();
+	if (queue.size() > 0) {
+	  res = queue.get(0).seed();
+	  status = queue.get(0).status();
+	}
     return res;
   }
   public int status() {
