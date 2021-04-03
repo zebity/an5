@@ -247,6 +247,17 @@ public class an5JoinNetwork extends an5Template {
      	        addPaths[k+l][m] = foundPaths[j];
      		  } else {
      			addPaths[k+l][m] = null;
+   			    int x = k+l;
+     			if (fromO instanceof an5Path) {
+     			  an5Path fromPath = (an5Path)fromO;
+ 	              log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
+ 	            		     "]: " + sortCnts.get(m).cnt + " Got Paths: " + foundPaths.length + " from path[" + 
+ 	            		     fromPath.getPathLength() + "]: " + fromO.getFirst().getGUID() + " >> " + fromO.getLast().getGUID());
+     			} else {
+   	              log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
+   	            		     "]: " + sortCnts.get(m).cnt +
+   	            		     " Got Paths: " + foundPaths.length + " from: " + fromO.getGUID());
+     			}
      		  }
      		}
      		j = (j + 1) % sortCnts.get(m).cnt;
@@ -265,18 +276,19 @@ public class an5JoinNetwork extends an5Template {
  		for (l = 0; l < alts; l++) {
  		  if (addPaths[k][l] != null) {
  			an5Object adding = addPaths[k][l];
- 		    removed = avail.remove(adding.getGUID());
+ 		    removed = avail.remove(adding.getLast().getGUID());
  		    if (removed != null) {
  	 		  toJoin.add(adding);
  		    } else {
  		      skip = true; /* skip due to resource depletion */
  		      if (adding instanceof an5Path) {
  		    	an5Path addingPath = (an5Path)adding;
- 	            log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Resource Depletion, attempted to consume path[" +
- 		                addingPath.getPathLength() + "]: " + adding.getFirst().getGUID() + " >> " + adding.getLast().getGUID());
+ 	            log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Resource Depletion [k=" + k + ", l=" + l +
+ 		                "], attempted to consume path[" +
+ 		               addingPath.getPathLength() + "]: " + adding.getFirst().getGUID() + " >> " + adding.getLast().getGUID());
  		      } else {
- 	 	        log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Resource Depletion, attempted to consume: " +
- 	 		                 adding.getGUID());
+ 	 	        log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Resource Depletion k=" + ", l=" + l +
+ 	 	        		"], attempted to consume: " + adding.getGUID());
  		      }
  		    }
  		  }
@@ -289,10 +301,11 @@ public class an5JoinNetwork extends an5Template {
  	      }
  		  else {
  		    skip = true;
-	 	    log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Open Balance[ " + openBalance + "] != Target ballance[" +
- 		            targetBalance + "] - toAdd/toJoin[" + toAdd.size() + ", " + toJoin.size() +
- 		            "] net members[" + joinNet.getMembersSize() + ", " + targetNet.getMembersSize() +
- 		            "] net candidates[" + joinNet.getCandidatesSize() + ", " + targetNet.getCandidatesSize());
+	 	    log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Wrong Balance[k=" + k + ",l=" + l +
+	 	    		   "]: Open[" + openBalance + "] != Target[" + targetBalance +
+	 	    		   "] - toAdd/toJoin[" + toAdd.size() + ", " + toJoin.size() +
+ 		               "] net members[" + joinNet.getMembersSize() + ", " + targetNet.getMembersSize() +
+ 		               "] net candidates[" + joinNet.getCandidatesSize() + ", " + targetNet.getCandidatesSize() + "]");
  		  }
  	    }
       }
