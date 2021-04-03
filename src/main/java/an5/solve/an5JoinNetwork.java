@@ -213,6 +213,24 @@ public class an5JoinNetwork extends an5Template {
     	  if (bindings != null) {
             an5Path newP = new an5Path(toAdd.get(i), toO, bindings);
     	    targetNet.putCandidate(newP);
+   			if (fromO instanceof an5Path) {
+     			  an5Path fromPath = (an5Path)fromO;
+  	          log.DBG(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate path[" +
+  	                     fromPath.getPathLength() + "]: " + fromO.getFirst().getGUID() + " >> " + fromO.getLast().getGUID());
+     			} else {
+   	          log.ERR(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate: " +
+   	            		     fromO.getGUID());
+     			}
+    	  } else {
+   			if (fromO instanceof an5Path) {
+   			  an5Path fromPath = (an5Path)fromO;
+	          log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: bind failed - from path[" +
+	                     fromPath.getPathLength() + "]: " + fromO.getFirst().getGUID() + " >> " + fromO.getLast().getGUID() +
+	                     " to: " + toO.getGUID());
+   			} else {
+ 	          log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: bind failed - from: " +
+ 	            		     fromO.getGUID() + " to: " + toO.getGUID());
+   			}  
     	  }
         }
       }

@@ -54,6 +54,14 @@ public class an5Goal extends an5GoalTree {
         default: break;
       }
       
+      if (next instanceof an5OrGoal) {
+    	an5OrGoal orT = (an5OrGoal)next;
+    	an5GoalTree head = orT.popQueue();
+        while (head != null) {
+          addToQueue(head);
+          head = orT.popQueue();
+        }
+      }
       next = next.getNextGoal();
       addToQueue(next);
 
@@ -83,7 +91,7 @@ public class an5Goal extends an5GoalTree {
     return goal.getNextGoal();
   }
   public an5GoalTree queueDispatch() {
-    return queue.remove(0);
+    return queue.removeHead();
   }
   public void addToQueue(an5GoalTree t) {
     queue.addToQueue(t, ctrlAndStats);

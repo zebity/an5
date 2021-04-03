@@ -5,6 +5,7 @@ import java.util.List;
 
 public class an5OrGoal extends an5GoalTree {
   an5SearchControl ctrlAndStats;
+  an5GoalTree active = null;
   public an5SearchQueue<an5GoalTree> queue = new an5SearchQueue<>();
   public List<an5GoalTree> success = new LinkedList<>();
   int status = an5SearchControl.SearchResult.UNDEFINED;
@@ -15,11 +16,15 @@ public class an5OrGoal extends an5GoalTree {
       queue.addToQueue(t, ctrlAndStats);	
     }
   }
+  public an5GoalTree popQueue() {
+    an5GoalTree res = queue.removeHead();
+    return res;
+  }
   public int seed() {
 	int res = 0;
-	if (queue.size() > 0) {
-	  res = queue.get(0).seed();
-	  status = queue.get(0).status();
+	if (active != null) {
+	  res = active.seed();
+	  status = active.status();
 	}
     return res;
   }
@@ -29,7 +34,7 @@ public class an5OrGoal extends an5GoalTree {
   public int[] gauge(int type) {
 	int[] max = new int[]{0,1};
     if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.SCORE) != 0) {
-      max = queue.get(0).gauge(type);
+      max = active.gauge(type);
     } else {
       /* traverse through list to get maximum */	
     }
@@ -37,17 +42,22 @@ public class an5OrGoal extends an5GoalTree {
   }
   public an5GoalTree getNextGoal() {
     an5GoalTree res = null;
-    if (queue.size() > 0) {
-      an5GoalTree hq = queue.remove(0);
-      if (hq.status() == an5SearchControl.SearchResult.FOUND) {
-        success.add(hq);
+    if (active != null) {
+      if (active.status() == an5SearchControl.SearchResult.FOUND) {
+        success.add(active);
         if (queue.size() > 0) {
-          hq = queue.remove(0);
-          res = hq.getNextGoal();
+          active = queue.removeHead();
+          // res = hq.getNextGoal();
+          res = active;
         }
       } else {
-        res = hq.getNextGoal();
+        // res = hq.getNextGoal();
+    	res = active.getNextGoal();
       }
+    }
+    else {
+      active = queue.removeHead();
+      res = active;
     }
     return res;
   }

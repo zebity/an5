@@ -39,13 +39,23 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
     }
 	return res;
   }
-  public TQ remove(int i) {
+  /* public TQ remove(int i) {
 	TQ r = null;
     queueNode n = queue.remove(i);
     if (n != null) {
       r = n.goal;
-      removed.add(n);
     }
+	return r;
+  } */
+  public TQ removeHead() {
+	TQ r = null;
+	if (queue != null && queue.size() > 0) {
+      queueNode n = queue.remove(0);
+      if (n != null) {
+        r = n.goal;
+        removed.add(n);
+      }
+	}
 	return r;
   }
   public void purge() {
