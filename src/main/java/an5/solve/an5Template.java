@@ -5,9 +5,18 @@ import java.util.List;
 import an5.model.*;
 
 abstract public class an5Template extends an5SearchGauge {
-  public an5Template parent;
+  public an5Template parent = null;
   public an5Template(an5Template p) {
     parent = p;
+  }
+  public int getDepth() {
+    int i = 1;
+    an5Template next = parent;
+    while (next != null) {
+      next = next.parent;
+      i++;
+    }
+    return i;
   }
   abstract public int seedGoal();
   abstract public an5GoalTree getNextGoal(an5SearchControl ctrl);

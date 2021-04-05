@@ -35,6 +35,7 @@ public class BuildMiniNetwork {
     String[][] nicdef3 = {{"port", "[2]"}};
     String[][] nicdef4 = {{"port", "[2]"}};
 
+    /* 4 * Cat6 */
     String[][] cabdef1 = {{"type", "physical"},
     		              {"length", "1"}};
     String[][] cabdef2 = {{"type", "physical"},
@@ -72,6 +73,9 @@ public class BuildMiniNetwork {
     
     an5Goal makeNet = new an5Goal(netTemplate, ctrl);
     int res = makeNet.solve();
+    
+    System.out.println("Result was: " + ctrl.resultString(res));
+    
     
     System.out.println("switch reports as" + sw1.toString());
   }

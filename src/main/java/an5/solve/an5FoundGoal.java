@@ -1,9 +1,9 @@
 package an5.solve;
 
 public class an5FoundGoal extends an5GoalTree {
-  public an5Template parent;
-  an5FoundGoal(an5Template p) {
-    parent = p;
+  public an5Template goal;
+  an5FoundGoal(an5Template g) {
+    goal = g;
   }
   public int seed() {
     return 0;
@@ -34,7 +34,10 @@ public class an5FoundGoal extends an5GoalTree {
   public int goalQueueSize() {
 	return 0;
   }
+  public int getDepth() {
+	return goal.getDepth();
+  }
   public String templateType() {
-	return new String("parent -> " + parent.getClass().toString());
+	return new String("parent -> " + goal.getClass().toString());
   }
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -161,19 +162,23 @@ public class an5JoinNetwork extends an5Template {
     int fail = 0;
     
     fail = getPathStats(pathStats, pathCnt, probeCnts, finder, (ctrl.strategy & an5SearchControl.SearchOptions.BIND_UNIQUE) > 0);
+    ctrl.stats.checkMaxBreadth(pathStats.expansionMultiplier);
     if (fail == -1) {
-      orJoins.add(new an5FailedGoal());
       status = an5SearchControl.SearchResult.FAILED;
-      res = new an5OrGoal(orJoins, ctrl);
+      res = new an5OrGoal(new an5FailedGoal(this), ctrl);
     } else if (toAdd.size() == 0) {
-      if (mustUse.size() == 1 && mustUse.get(0).getGUID().equals(connectTo.getGUID())) {
-    	orJoins.add(new an5FoundGoal(this));
-    	status = an5SearchControl.SearchResult.FOUND;
-    	res = new an5OrGoal(orJoins, ctrl);
+      if (mustUse.size() == 1) {
+    	Iterator<an5Object> lastElement = mustUse.values().iterator(); 
+    	if (lastElement.next().getGUID().equals(connectTo.getGUID())) {
+    	  status = an5SearchControl.SearchResult.FOUND;
+    	  res = new an5OrGoal(new an5FoundGoal(this), ctrl);
+    	} else {
+          status = an5SearchControl.SearchResult.FAILED;
+          res = new an5OrGoal(new an5FailedGoal(this), ctrl);      	
+    	}
       } else {
-        orJoins.add(new an5FailedGoal());
         status = an5SearchControl.SearchResult.FAILED;
-        res = new an5OrGoal(orJoins, ctrl);      
+        res = new an5OrGoal(new an5FailedGoal(this), ctrl);      
       }
     } else {
       targetNet = (an5Network)joinNet.clone(); /* only need "little" part of target network */
@@ -193,7 +198,7 @@ public class an5JoinNetwork extends an5Template {
   	          log.DBG(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate path[" +
   	                     newP.getPathLength() + "]: " + newP.getFirst().getGUID() + " >> " + newP.getLast().getGUID());
      		} else {
-   	          log.ERR(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate: " +
+   	          log.DBG(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate: " +
    	            		 fromO.getGUID());
      		}
     	  } else {
@@ -243,11 +248,11 @@ public class an5JoinNetwork extends an5Template {
    			    int x = k+l;
      			if (fromO instanceof an5Path) {
      			  an5Path fromPath = (an5Path)fromO;
- 	              log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
+ 	              log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
  	            		     "]: " + probeCnts.get(m).cnt + " Got Paths: " + foundPaths.length + " from path[" + 
  	            		     fromPath.getPathLength() + "]: " + fromO.getFirst().getGUID() + " >> " + fromO.getLast().getGUID());
      			} else {
-   	              log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
+   	              log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
    	            		     "]: " + probeCnts.get(m).cnt +
    	            		     " Got Paths: " + foundPaths.length + " from: " + fromO.getGUID());
      			}
@@ -294,7 +299,7 @@ public class an5JoinNetwork extends an5Template {
  	      }
  		  else {
  		    skip = true;
-	 	    log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Wrong Balance[k=" + k + ",l=" + l +
+	 	    log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Wrong Balance[k=" + k + ",l=" + l +
 	 	    		   "]: Open[" + openBalance + "] != Target[" + targetBalance +
 	 	    		   "] - toAdd/toJoin[" + toAdd.size() + ", " + toJoin.size() +
  		               "] net members[" + joinNet.getMembersSize() + ", " + targetNet.getMembersSize() +

@@ -1,7 +1,9 @@
 package an5.solve;
 
 public class an5FailedGoal extends an5GoalTree {
-  an5FailedGoal() {
+  an5Template fail = null;
+  an5FailedGoal(an5Template f) {
+    fail = f;
   }
   public int seed() {
     return 0;
@@ -31,6 +33,9 @@ public class an5FailedGoal extends an5GoalTree {
   }
   public int goalQueueSize() {
     return 1;
+  }
+  public int getDepth() {
+	return fail.getDepth();
   }
   public String templateType() {
 	return new String("N/A");

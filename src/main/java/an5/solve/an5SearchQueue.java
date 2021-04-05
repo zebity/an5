@@ -39,14 +39,9 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
     }
 	return res;
   }
-  /* public TQ remove(int i) {
-	TQ r = null;
-    queueNode n = queue.remove(i);
-    if (n != null) {
-      r = n.goal;
-    }
-	return r;
-  } */
+  public void addHead(TQ t) {
+    add(0, t);
+  }
   public TQ removeHead() {
 	TQ r = null;
 	if (queue != null && queue.size() > 0) {
@@ -71,27 +66,14 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
 	int res = an5SearchControl.SearchResult.UNDEFINED;
 	return res;
   }
-  /* public TQ getNextGoal(an5SearchControl ctrl) {
-	TQ res = null;
-    return res;
-  } */
-  /* public void queueDispatch() {
-	int bound = -1;
-    an5GoalTree next = ctrlAndStats.queue.remove(0);
-    
-    if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.BOUND) != 0) {
-      bound = ctrlAndStats.bound;
-    }
-    
-  } */
   public void addToQueue(TQ t,an5SearchControl ctrl) {
 	if (t != null) {
       if ((ctrl.strategy & an5SearchControl.SearchOptions.BREADTH) != 0) {
         add(t);
       } else if ((ctrl.strategy & an5SearchControl.SearchOptions.DEPTH) != 0) {
         add(0, t);   	
-      } else if ((ctrl.strategy & an5SearchControl.SearchOptions.SCORE) != 0 ||
-                 (ctrl.strategy & an5SearchControl.SearchOptions.COST) != 0) {
+      } else if (((ctrl.strategy & an5SearchControl.SearchOptions.SCORE) |
+                  (ctrl.strategy & an5SearchControl.SearchOptions.COST)) != 0) {
         int[] gs = t.gauge(ctrl.strategy);
         Fraction score = new Fraction(gs[0], gs[1]);
         if (isEmpty()) {

@@ -67,6 +67,11 @@ public class an5AndGoal extends an5GoalTree {
   public int goalQueueSize() {
 	return queue.size();
   }
+  public int getDepth() {
+  /* refactor - need to return deepest child */
+	int d = 0;
+	return d;
+  }
   public String templateType() {
 	return new String("N/A");
   }

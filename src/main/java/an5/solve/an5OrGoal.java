@@ -16,6 +16,11 @@ public class an5OrGoal extends an5GoalTree {
       queue.addToQueue(t, ctrlAndStats);	
     }
   }
+  public an5OrGoal(an5GoalTree simpleT, an5SearchControl s) {
+    ctrlAndStats = s;
+    active = simpleT;
+    status = active.status();
+  }
   public an5GoalTree popQueue() {
     an5GoalTree res = queue.removeHead();
     return res;
@@ -33,8 +38,11 @@ public class an5OrGoal extends an5GoalTree {
   }
   public int[] gauge(int type) {
 	int[] max = new int[]{0,1};
-    if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.SCORE) != 0) {
-      max = active.gauge(type);
+    if (((ctrlAndStats.strategy & an5SearchControl.SearchOptions.SCORE) |
+    	 (ctrlAndStats.strategy & an5SearchControl.SearchOptions.COST)) != 0) {
+      if (active != null) {
+        max = active.gauge(type);
+      }
     } else {
       /* traverse through list to get maximum */	
     }
@@ -75,6 +83,13 @@ public class an5OrGoal extends an5GoalTree {
   }
   public int goalQueueSize() {
 	return queue.size();
+  }
+  public int getDepth() {
+	int dp = 0;
+	if (active != null) {
+	  dp = active.getDepth();
+	}
+	return dp;
   }
   public String templateType() {
 	return new String("N/A");

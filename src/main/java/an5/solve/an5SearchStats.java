@@ -9,7 +9,16 @@ public class an5SearchStats {
              noBounded = 0,
              noFound = 0,
              maxDepth = 0,
-             maxBreadth = 0;
+             maxBreadth = 0,
+             loops = 0;
+  public void updateStats(int res, int lp, int dp) {
+    loops = lp;
+	maxDepth = Integer.max(maxDepth, dp);
+	updateStats(res);
+  }
+  public void checkMaxBreadth(int bd) {
+	maxBreadth = Integer.max(maxBreadth, bd);  
+  }
   public void updateStats(int res) {
 	switch (res) {
 	  case an5SearchControl.SearchResult.SOLVING:
