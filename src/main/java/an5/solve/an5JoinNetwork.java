@@ -29,7 +29,12 @@ import an5.model.an5VariableInstance;
 
 public class an5JoinNetwork extends an5Template {
   public class PathIdx { public static final int BIND = 0, PROBE = 1, INDEX = 2, USED = 3, SIZE = 4; }
-
+  public class PathStats {
+    int minDirect = 0,
+        maxDirect = 0,
+        expansionMultiplier = 1,
+        alternates = 0;
+  }
   class sortPathCnts implements Comparable<sortPathCnts> {
     public int cnt = 0,
                idx = 0,
@@ -42,7 +47,7 @@ public class an5JoinNetwork extends an5Template {
     public int compareTo(sortPathCnts b) {
     // Biggest to smallest
       return b.cnt - cnt;
-    }
+    }  
   }
   class sortByIndex implements Comparator<sortPathCnts> {
     public int compare(sortPathCnts a, sortPathCnts b) {
@@ -144,56 +149,26 @@ public class an5JoinNetwork extends an5Template {
   public an5GoalTree getNextGoal(an5SearchControl ctrl) {
     an5GoalTree res = null;
     List<an5GoalTree> orJoins = new LinkedList<>();
-    an5Object fromO, toO;
+    an5Object startFromO, fromO, toO;
     an5Network targetNet;
     an5Path[] foundPaths;
     an5Binding[] bindings;
+    PathStats pathStats = new PathStats();
     int i, j, k, l;
     int[][] pathCnt = new int[toAdd.size()][PathIdx.SIZE];
-    List<sortPathCnts> sortCnts = new ArrayList<>();
+    List<sortPathCnts> probeCnts = new ArrayList<>();
     an5InterfaceFinder finder = new an5InterfaceFinder();
-    int fail = 0, maxBind = 0, alts = 0, maxBnd = 0,
-    	fndMin = pathCnt.length,
-    	fndMax = 0, minBnd = pathCnt.length,
-    	pathExpand = 1;
-    /* Before going to trouble of expanding paths make sure it is worth it.. */
-    for (i = 0; i < pathCnt.length; i++) {
-      j = toAdd.get(i).getLast().canBind(null, connectTo, joinNet.providesServices(), viaService);
-      if (j > 0) {
-         pathCnt[i][PathIdx.BIND] = j;
-         pathCnt[i][PathIdx.PROBE] = 0;
-         pathCnt[i][PathIdx.INDEX] = i;
-         fndMin = Integer.min(i, fndMin);
-         fndMax = Integer.max(i, fndMax);
-      } else { 
-      	 k = finder.canMatchInterface(toAdd.get(i).getLast(), joinNet.providesServices(), viaService, available);
-         if (k > 0) {
-           pathCnt[i][PathIdx.BIND] = 0;
-           pathCnt[i][PathIdx.PROBE] = k;
-           pathCnt[i][PathIdx.INDEX] = i;
-           sortCnts.add(new sortPathCnts(k, i));
-           alts++;
-           pathExpand = pathExpand * k;
-           maxBind = Integer.max(maxBind, k);
-           minBnd = Integer.min(minBnd, i);
-           maxBnd = Integer.max(maxBnd, i);
-         }
-         else {
-           pathCnt[i][PathIdx.BIND] = -1;
-           pathCnt[i][PathIdx.PROBE] = -1;
-           pathCnt[i][PathIdx.INDEX] = i;
-           fail = -1;
-         }
-      }
-    }
+    int fail = 0;
+    
+    fail = getPathStats(pathStats, pathCnt, probeCnts, finder, (ctrl.strategy & an5SearchControl.SearchOptions.BIND_UNIQUE) > 0);
     if (fail == -1) {
       orJoins.add(new an5FailedGoal());
       status = an5SearchControl.SearchResult.FAILED;
       res = new an5OrGoal(orJoins, ctrl);
     } else if (toAdd.size() == 0) {
-      if (mustUse.size() == 0)	{
+      if (mustUse.size() == 1 && mustUse.get(0).getGUID().equals(connectTo.getGUID())) {
     	orJoins.add(new an5FoundGoal(this));
-    	status = an5SearchControl.SearchResult.FOUND; 
+    	status = an5SearchControl.SearchResult.FOUND;
     	res = new an5OrGoal(orJoins, ctrl);
       } else {
         orJoins.add(new an5FailedGoal());
@@ -203,29 +178,29 @@ public class an5JoinNetwork extends an5Template {
     } else {
       targetNet = (an5Network)joinNet.clone(); /* only need "little" part of target network */
       toO = targetNet.getMember(connectTo.getGUID());
-      for (i = fndMin; i <= fndMax; i++) {
+      for (i = pathStats.minDirect; i <= pathStats.maxDirect; i++) {
         // fromO = (an5Object)toAdd.get(i).clone();
         if (pathCnt[i][PathIdx.BIND] > 0) {
           // toO = targetNet.getMember(connectTo.getGUID());
-    	  fromO = (an5Object)toAdd.get(i).getLast().clone();
-    	  bindings = fromO.bind(toO, targetNet.providesServices(), viaService);
+          startFromO = (an5Object)toAdd.get(i).clone();
+    	  fromO = startFromO.getLast();
+    	  bindings = fromO.bind(toO, targetNet.providesServices(), viaService, (ctrl.strategy & an5SearchControl.SearchOptions.BIND_UNIQUE) > 0);
     	  /* connectTo object already in network, so just add toAdd[i] object */
     	  if (bindings != null) {
-            an5Path newP = new an5Path(toAdd.get(i), toO, bindings);
+            an5Path newP = new an5Path(startFromO, toO, bindings);
     	    targetNet.putCandidate(newP);
-   			if (fromO instanceof an5Path) {
-     			  an5Path fromPath = (an5Path)fromO;
+   			if (startFromO instanceof an5Path) {
   	          log.DBG(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate path[" +
-  	                     fromPath.getPathLength() + "]: " + fromO.getFirst().getGUID() + " >> " + fromO.getLast().getGUID());
-     			} else {
+  	                     newP.getPathLength() + "]: " + newP.getFirst().getGUID() + " >> " + newP.getLast().getGUID());
+     		} else {
    	          log.ERR(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate: " +
-   	            		     fromO.getGUID());
-     			}
+   	            		 fromO.getGUID());
+     		}
     	  } else {
-   			if (fromO instanceof an5Path) {
-   			  an5Path fromPath = (an5Path)fromO;
+   			if (startFromO instanceof an5Path) {
+   			  an5Path fromPath = (an5Path)startFromO;
 	          log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: bind failed - from path[" +
-	                     fromPath.getPathLength() + "]: " + fromO.getFirst().getGUID() + " >> " + fromO.getLast().getGUID() +
+	                     fromPath.getPathLength() + "]: " + startFromO.getFirst().getGUID() + " >> " + startFromO.getLast().getGUID() +
 	                     " to: " + toO.getGUID());
    			} else {
  	          log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: bind failed - from: " +
@@ -234,16 +209,16 @@ public class an5JoinNetwork extends an5Template {
     	  }
         }
       }
-      an5Object[][] addPaths = new an5Object[pathExpand][alts];
-      if (sortCnts.size() > 0) {
-        Collections.sort(sortCnts);
-        sortCnts.get(0).chunkSize = sortCnts.get(0).cnt;
-        sortCnts.get(0).increment = 1;  
-        for (i = 1; i < sortCnts.size(); i++) {
-          sortCnts.get(i).chunkSize = sortCnts.get(i).cnt *  sortCnts.get(i-1).chunkSize;
-          sortCnts.get(i).increment = sortCnts.get(i).chunkSize / sortCnts.get(i).cnt; 
+      an5Object[][] addPaths = new an5Object[pathStats.expansionMultiplier][probeCnts.size()];
+      if (probeCnts.size() > 0) {
+        Collections.sort(probeCnts);
+        probeCnts.get(0).chunkSize = probeCnts.get(0).cnt;
+        probeCnts.get(0).increment = 1;  
+        for (i = 1; i < probeCnts.size(); i++) {
+          probeCnts.get(i).chunkSize = probeCnts.get(i).cnt *  probeCnts.get(i-1).chunkSize;
+          probeCnts.get(i).increment = probeCnts.get(i).chunkSize / probeCnts.get(i).cnt; 
         }
-        Collections.sort(sortCnts, new sortByIndex());
+        Collections.sort(probeCnts, new sortByIndex());
       }
       an5AvailableResource pool = null;
       /* Have: fixed network with success cases as "candidate"
@@ -251,16 +226,16 @@ public class an5JoinNetwork extends an5Template {
        *           connecting "element" list
        *           available resources pool
        */
-      for (int m = 0; m < sortCnts.size(); m++) {
-    	i = sortCnts.get(m).idx;
+      for (int m = 0; m < probeCnts.size(); m++) {
+    	i = probeCnts.get(m).idx;
         j = 0;
         pool = (an5AvailableResource)available.clone();
         pool.load();
-     	fromO = (an5Object)toAdd.get(i).clone();
-     	foundPaths = finder.probePaths(fromO, joinNet.providesServices(), viaService, pool);
-     	if (foundPaths.length <= sortCnts.get(m).cnt) {
-     	  for (k = 0; k < pathExpand; k += sortCnts.get(m).increment) {
-     		for (l = 0; l < sortCnts.get(m).increment; l++) {
+     	fromO = (an5Object)toAdd.get(i);
+     	foundPaths = finder.probePaths(fromO, joinNet.providesServices(), viaService, (ctrl.strategy & an5SearchControl.SearchOptions.BIND_UNIQUE) > 0, pool);
+     	if (foundPaths.length <= probeCnts.get(m).cnt) {
+     	  for (k = 0; k < pathStats.expansionMultiplier; k += probeCnts.get(m).increment) {
+     		for (l = 0; l < probeCnts.get(m).increment; l++) {
      		  if (j < foundPaths.length) {
      	        addPaths[k+l][m] = foundPaths[j];
      		  } else {
@@ -269,29 +244,29 @@ public class an5JoinNetwork extends an5Template {
      			if (fromO instanceof an5Path) {
      			  an5Path fromPath = (an5Path)fromO;
  	              log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
- 	            		     "]: " + sortCnts.get(m).cnt + " Got Paths: " + foundPaths.length + " from path[" + 
+ 	            		     "]: " + probeCnts.get(m).cnt + " Got Paths: " + foundPaths.length + " from path[" + 
  	            		     fromPath.getPathLength() + "]: " + fromO.getFirst().getGUID() + " >> " + fromO.getLast().getGUID());
      			} else {
    	              log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
-   	            		     "]: " + sortCnts.get(m).cnt +
+   	            		     "]: " + probeCnts.get(m).cnt +
    	            		     " Got Paths: " + foundPaths.length + " from: " + fromO.getGUID());
      			}
      		  }
      		}
-     		j = (j + 1) % sortCnts.get(m).cnt;
+     		j = (j + 1) % probeCnts.get(m).cnt;
           }
         } else {
-          log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Inconsistent Probe Path Counts: " + foundPaths.length + " vs : " + sortCnts.get(m).cnt);
+          log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Inconsistent Probe Path Counts: " + foundPaths.length + " vs : " + probeCnts.get(m).cnt);
         }
       }
       an5Object removed = null;
       List<an5Object> toJoin = null;
       boolean skip;
- 	  for (k = 0; k < pathExpand; k++) {
+ 	  for (k = 0; k < pathStats.expansionMultiplier; k++) {
  		skip = false;
  		toJoin = new ArrayList<>();
  		Map<String, an5Object> avail = available.copyMap();
- 		for (l = 0; l < alts; l++) {
+ 		for (l = 0; l < probeCnts.size(); l++) {
  		  if (addPaths[k][l] != null) {
  			an5Object adding = addPaths[k][l];
  		    removed = avail.remove(adding.getLast().getGUID());
@@ -331,6 +306,40 @@ public class an5JoinNetwork extends an5Template {
       status = an5SearchControl.SearchResult.SOLVING;
     }
     return res;
+  }
+  public int getPathStats(PathStats pStat, int[][] pathCnt, List<sortPathCnts> probeCnts,
+		                  an5InterfaceFinder finder, boolean bindUnique) {
+	int fail = 0;
+	int i, j, k;
+	pStat.minDirect = pathCnt.length;
+    /* Before going to trouble of expanding paths make sure it is worth it.. */
+	for (i = 0; i < pathCnt.length; i++) {
+	  /* can we do direct bind to joint object */
+	  j = toAdd.get(i).getLast().canBind(null, connectTo, joinNet.providesServices(), viaService, bindUnique);
+	  if (j > 0) {
+	    pathCnt[i][PathIdx.BIND] = j;
+	    pathCnt[i][PathIdx.PROBE] = 0;
+	    pathCnt[i][PathIdx.INDEX] = i;
+	    pStat.minDirect = Integer.min(i, pStat.minDirect);
+	    pStat.maxDirect = Integer.max(i, pStat.maxDirect);
+	  } else { 
+	    k = finder.canMatchInterface(toAdd.get(i).getLast(), joinNet.providesServices(), viaService, bindUnique, available);
+	    if (k > 0) {
+	      pathCnt[i][PathIdx.BIND] = 0;
+	      pathCnt[i][PathIdx.PROBE] = k;
+	      pathCnt[i][PathIdx.INDEX] = i;
+	      probeCnts.add(new sortPathCnts(k, i));
+	      pStat.alternates++;
+	      pStat.expansionMultiplier = pStat.expansionMultiplier * k;
+	    } else {
+	      pathCnt[i][PathIdx.BIND] = -1;
+	      pathCnt[i][PathIdx.PROBE] = -1;
+	      pathCnt[i][PathIdx.INDEX] = i;
+	      fail = -1;
+	    }
+	  }
+	}
+	return fail;
   }
   public int status() {
 	return status;

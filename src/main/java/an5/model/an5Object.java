@@ -130,21 +130,21 @@ public class an5Object implements an5ClassTemplate {
     }
     return res;
   }
-  public int canBind(an5InterfaceInstance viaI, an5Object toO, an5Service netSrv, an5Service protoSrv) {
+  public int canBind(an5InterfaceInstance viaI, an5Object toO, an5Service netSrv, an5Service protoSrv, boolean bindUnique) {
 	/* Note that netSrv & protoSrv are hints to help select across multiple bind options */
     int cnt = 0,
               match;
     an5MapIf fromI = null;
-    Set<Object> ifFnd = new HashSet<>();
+    Set<Object> ifFound = new HashSet<>();
         
     if (viaI == null) {
       for (an5MapIf toI: toO.AN5SG_sigKeyUnion.ifSet.values()) {
         fromI = AN5SG_sigKeyUnion.ifSet.get(toI.sigKey);
         if (fromI != null) { 
-          if (! ifFnd.contains(fromI.forInterface)) {
+          if (! ifFound.contains(fromI.forInterface)) {
             match = fromI.forInterface.canBind(this, toI.forInterface, netSrv, protoSrv);
             if (match > 0) {
-        	  ifFnd.add(fromI.forInterface);
+        	  ifFound.add(fromI.forInterface);
         	  cnt += match;
         	}
           }
@@ -159,10 +159,10 @@ public class an5Object implements an5ClassTemplate {
     	for (String[] fromKey : viaI.interfaceDefinition.signatureKeys.values()) {          
     	  toI = toO.AN5SG_sigKeyUnion.ifSet.get(fromKey[1]);
     	  if (toI != null) {
-            if (! ifFnd.contains(toI.forInterface)) {
+            if (! ifFound.contains(toI.forInterface)) {
               match = fromI.forInterface.canBind(this, toI.forInterface, netSrv, protoSrv);
               if (match > 0) {
-              	ifFnd.add(toI.forInterface);
+              	ifFound.add(toI.forInterface);
               	cnt += match;
               }
     	    }
@@ -190,22 +190,28 @@ public class an5Object implements an5ClassTemplate {
     }
     return res;
   } */
-  public an5Binding[] bind(an5Object toO, an5Service netSrv, an5Service protoSrv) {
+  public an5Binding[] bind(an5Object toO, an5Service netSrv, an5Service protoSrv, boolean bindUnique) {
 	an5Binding[] res = null;
     an5MapIf fromI = null;
-    Set<Object> ifFnd = new HashSet<>();
+    Set<Object> ifFound = new HashSet<>();
     List<an5Binding> bindings = new LinkedList<>();   
     an5Binding bind = null;
 	
     for (an5MapIf ifInfo: toO.AN5SG_sigKeyUnion.ifSet.values()) {
       fromI = AN5SG_sigKeyUnion.ifSet.get(ifInfo.sigKey);
       if (fromI != null) { 
-        if (! ifFnd.contains(ifInfo.forInterface)) {
+        if (bindUnique && (! ifFound.contains(ifInfo.forInterface))) {
+          /* Only bind to interface if we have not done so before */
           bind = fromI.forInterface.bind(this, toO, ifInfo.forInterface, netSrv, protoSrv);
           if (bind != null) {
-      	    ifFnd.add(ifInfo.forInterface);
+      	    ifFound.add(ifInfo.forInterface);
       	    bindings.add(bind);
       	  }
+        } else {
+          bind = fromI.forInterface.bind(this, toO, ifInfo.forInterface, netSrv, protoSrv);
+          if (bind != null) {
+        	bindings.add(bind);
+          }
         }
       }
     }

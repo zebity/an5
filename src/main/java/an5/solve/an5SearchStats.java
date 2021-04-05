@@ -10,4 +10,29 @@ public class an5SearchStats {
              noFound = 0,
              maxDepth = 0,
              maxBreadth = 0;
+  public void updateStats(int res) {
+	switch (res) {
+	  case an5SearchControl.SearchResult.SOLVING:
+	  case an5SearchControl.SearchResult.START:
+		         noIntermediate++;
+	             break;
+	  case an5SearchControl.SearchResult.VISITED:
+		         noRevisits++;
+	             break;
+	  case an5SearchControl.SearchResult.FAILED:
+		         noFailed++;
+	             break;
+	  case an5SearchControl.SearchResult.BOUND:
+	             noBounded++;
+	             break;
+	  case an5SearchControl.SearchResult.FOUND:
+		         noFound++;
+	             break;
+	  case an5SearchControl.SearchResult.UNDEFINED:
+	             noUnseeded++;
+	             break;
+	  case an5SearchControl.SearchResult.SUSPENDED:
+	      default: break;
+	}
+  }
 }
