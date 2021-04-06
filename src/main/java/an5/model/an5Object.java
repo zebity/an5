@@ -131,21 +131,22 @@ public class an5Object implements an5ClassTemplate {
     }
     return res;
   }
-  public int canBind(an5InterfaceInstance viaI, an5Object toO, an5Service netSrv, an5Service protoSrv, boolean bindUnique) {
+  public int canBind(an5InterfaceInstance viaI, an5Object toO, an5Service netSrv, an5Service protoSrv,
+		             boolean removeLocalEquivalents, boolean bindUnique) {
 	/* Note that netSrv & protoSrv are hints to help select across multiple bind options */
     int cnt = 0,
               match;
     an5MapIf fromI = null;
-    Set<Object> ifFound = new HashSet<>();
+    Set<Object> foundIf = new HashSet<>();
         
     if (viaI == null) {
       for (an5MapIf toI: toO.AN5SG_sigKeyUnion.ifSet.values()) {
         fromI = AN5SG_sigKeyUnion.ifSet.get(toI.sigKey);
         if (fromI != null) { 
-          if (! ifFound.contains(fromI.forInterface)) {
+          if (! foundIf.contains(fromI.forInterface)) {
             match = fromI.forInterface.canBind(this, toI.forInterface, netSrv, protoSrv);
             if (match > 0) {
-        	  ifFound.add(fromI.forInterface);
+        	  foundIf.add(fromI.forInterface);
         	  cnt += match;
         	}
           }
@@ -160,10 +161,10 @@ public class an5Object implements an5ClassTemplate {
     	for (String[] fromKey : viaI.interfaceDefinition.signatureKeys.values()) {          
     	  toI = toO.AN5SG_sigKeyUnion.ifSet.get(fromKey[1]);
     	  if (toI != null) {
-            if (! ifFound.contains(toI.forInterface)) {
+            if (! foundIf.contains(toI.forInterface)) {
               match = fromI.forInterface.canBind(this, toI.forInterface, netSrv, protoSrv);
               if (match > 0) {
-              	ifFound.add(toI.forInterface);
+              	foundIf.add(toI.forInterface);
               	cnt += match;
               }
     	    }
@@ -191,7 +192,8 @@ public class an5Object implements an5ClassTemplate {
     }
     return res;
   } */
-  public an5Binding[] bind(an5Object toO, an5Service netSrv, an5Service protoSrv, boolean bindUnique) {
+  public an5Binding[] bind(an5Object toO, an5Service netSrv, an5Service protoSrv,
+		                   boolean removeLocalEquivalents, boolean bindUnique) {
 	an5Binding[] res = null;
     an5MapIf fromI = null;
     Set<Object> ifFound = new HashSet<>();

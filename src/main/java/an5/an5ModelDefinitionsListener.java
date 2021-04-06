@@ -16,7 +16,6 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import an5.an5Parser.AnnotationFieldDeclarationContext;
 import an5.an5Parser.ClassOrInterfaceModifierContext;
 import an5.an5Parser.ExpressionContext;
-import an5.an5Parser.InterfaceBindingNameTemplateContext;
 import an5.an5Parser.LiteralContext;
 import an5.an5Parser.PrimaryContext;
 import an5.an5Parser.ServiceSignatureDeclarationContext;
