@@ -1,3 +1,12 @@
+/**
+ @what an5 network class contains the objects within network.
+         members can can:
+           regular an5Objects
+           an5 Networks
+           candidate members - which have uncommitted bindings
+           
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd 
+*/
 package an5.model;
 
 import java.util.Collection;

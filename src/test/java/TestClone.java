@@ -1,21 +1,19 @@
-// package an5.test;
+/**
+ @what To run Solver you have to clone each solution variation
+         So need to have a robust clone logic ...
+         
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 
 import java.util.ArrayList;
 import java.util.List;
 
 import an5.model.*;
-import an5.solve.*;
 import an5.generic.dctypes.*;
 
 
 public class TestClone {
   public static void main(String[] args){
-	// System.out.println(args[0]);  
-    // Scanner s = new Scanner(System.in);
-    // System.out.println("Enter file to load: ");
-    // String str = s.next();
-    // s.close();
-	
     
     /* Switch */
     String[][] swdef = {{"name", "simple-switch"},

@@ -1,3 +1,11 @@
+/**
+ @what Search solution queue.
+ 
+ @note Need to refactor so that insert does not do start to tail walk ...
+         should either do binary partition or insert + resort
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 import java.util.LinkedList;

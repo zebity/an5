@@ -1,3 +1,10 @@
+/**
+ @what Manage details for interface signature, including hierarchy and overriding
+
+ @note Needs to be refactored to allow overriding
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.model;
 
 import java.util.LinkedHashMap;

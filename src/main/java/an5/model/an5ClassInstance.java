@@ -1,3 +1,8 @@
+/**
+ @what Hold an5 object class variables
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.model;
 
 import java.util.ArrayList;

@@ -1,3 +1,8 @@
+/**
+ @what Provide wrapper between generic AND/OR solver an the network domain template classes
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 public class an5SimpleGoal extends an5GoalTree {

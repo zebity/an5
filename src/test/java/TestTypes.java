@@ -1,3 +1,8 @@
+/**
+ @what Learn java ...
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 import java.util.HashMap;
 import java.util.Map;
 

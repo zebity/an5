@@ -1,3 +1,9 @@
+/**
+ @what Manage the set of available interfaces. This class is used to find
+         compatible interface and so build candidate paths
+         
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+ */
 package an5.solve;
 
 import java.util.Collection;
@@ -6,14 +12,8 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
-import an5.model.an5Binding;
-import an5.model.an5InterfaceMatch;
 import an5.model.an5MapIf;
 import an5.model.an5Object;
-import an5.model.an5Path;
-import an5.model.an5Service;
 
 public class an5AvailableInterfaces {
   public Map<String, List<an5MapIf>> ifCollection;

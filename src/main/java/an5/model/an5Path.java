@@ -1,3 +1,8 @@
+/**
+ @what A path consists of a set of an5Objects that are linked in chain via bound interfaces
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.model;
 
 import java.util.LinkedHashMap;

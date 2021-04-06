@@ -1,3 +1,8 @@
+/**
+ @what The generic AND/OR solver interface
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 abstract public class an5GoalTree extends an5SearchGauge {  

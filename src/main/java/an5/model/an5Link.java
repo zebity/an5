@@ -1,3 +1,9 @@
+/**
+ @what an5Link class provides logical or physcial link, so looks like a graph edge
+         In OSI model link should only go up to datalink layer
+         
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.model;
 
 

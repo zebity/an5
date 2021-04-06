@@ -1,3 +1,16 @@
+/**
+ @what Match interfaces which has 3 parts:
+         common - this has the signature
+         needs - what the interface needs
+         provides - what the interface provides
+         The result of binding can be reflected "service"
+
+ @note Need to:
+         Allow partial binding and reflection of this
+         Add regex pattern matching support
+         
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.model;
 
 import an5.an5Logging;

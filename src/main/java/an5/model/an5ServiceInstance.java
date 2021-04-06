@@ -1,6 +1,10 @@
 /**
- This needs to be revisited to manage "layers" of inherited services
- */
+ @what Service Instance is only used with Template and Network Objects
+ 
+ @note This needs to be revisited to manage "layers" of inherited services
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.model;
 
 import java.util.List;

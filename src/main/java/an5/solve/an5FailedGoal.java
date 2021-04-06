@@ -1,3 +1,8 @@
+/**
+ @what Solver failure flagging class
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 public class an5FailedGoal extends an5GoalTree {

@@ -1,3 +1,11 @@
+/**
+ @what Solver search control options and statistics collection
+         Search Option include: Depth First, Breadth First, Bound ...
+         
+ @reference See Patrick Winston - "Artifical Intelligence [3rd Ed]" for initial overview of AI search
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 import java.util.HashMap;

@@ -1,6 +1,8 @@
 /**
- Generate Java code from an5 definitions
- NOTE: this should be refactored to use "freemaker" templates...
+ @what Generate Java code from an5 definitions
+ 
+ @note this should be refactored to use "freemaker" templates...
+ 
  @author John Hartley - Graphica Software/Dokmai Pty Ltd
  */
 package an5;
@@ -54,6 +56,7 @@ public class an5Generate {
         jvStrm = new PrintStream(dirPath + packagePath + global.pathSeperator + ifNm + global.fileSuffix);
         
         jvStrm.println("/* -- AN5 Generated Interface Definition File -- */");
+        jvStrm.println("/* -- AN5 Concept by John Hartley - Graphica Software/Dokmai Pty Ltd -- */");
         jvStrm.println("package " + symtab.current.forPackage + ";");
         /* jvStrm.println("import an5.model.*;"); */
         jvStrm.print("public interface " + ifNm);
@@ -134,8 +137,8 @@ public class an5Generate {
     	an5InterfaceValue ifNd = (an5InterfaceValue)nd;
     	ifNm = new String(global.classPrefix + ifNd.value);
         jvStrm = new PrintStream(dirPath + packagePath + global.pathSeperator + ifNm + global.fileSuffix);
-        
         jvStrm.println("/* -- AN5 Generated Interface Class File -- */");
+        jvStrm.println("/* -- AN5 Concept by John Hartley - Graphica Software/Dokmai Pty Ltd -- */");
         jvStrm.println("package " + symtab.current.forPackage + ";");
         /* jvStrm.println("import java.util.List;");
         jvStrm.println("import java.util.ArrayList;"); */
@@ -269,6 +272,7 @@ public class an5Generate {
     jvStrm = new PrintStream(dirPath + packagePath + global.pathSeperator + clNm + global.fileSuffix);
   
     jvStrm.println("/* -- AN5 Generated Class Template File -- */");
+    jvStrm.println("/* -- AN5 Concept by John Hartley - Graphica Software/Dokmai Pty Ltd -- */");
     jvStrm.println("package " + symtab.current.forPackage + ";");
     jvStrm.println("import an5.model.*;");
     jvStrm.print("public class " + clNm);
@@ -329,6 +333,7 @@ public class an5Generate {
         jvStrm = new PrintStream(dirPath + packagePath + global.pathSeperator + clNm + global.fileSuffix);
         
         jvStrm.println("/* -- AN5 Generated Class File -- */");
+        jvStrm.println("/* -- AN5 Concept by John Hartley - Graphica Software/Dokmai Pty Ltd -- */");
         jvStrm.println("package " + symtab.current.forPackage + ";");
         jvStrm.println("import an5.model.*;");
         jvStrm.print("public class " + clNm);

@@ -1,3 +1,8 @@
+/**
+ @what Collect search statistics to allow behavior diagnostics
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 public class an5SearchStats {

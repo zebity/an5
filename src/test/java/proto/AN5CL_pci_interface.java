@@ -1,7 +1,9 @@
+/**
+ @what Test what generated code might look like...
+  
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package proto;
-/*
- Prototype generate code
- */
 
 import an5.model.*;
 

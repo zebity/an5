@@ -1,10 +1,12 @@
 /**
- ConnectNetwork == bring two networks together to create new network.
+ @what ConnectNetwork == bring two networks together to create new network.
    There are multiple scenarios that need to be supported
    a. There are common elements within two networks that can act as joinPoints
    b. There are no common elements and should join at provided connection points
    c. Joined networks will expose union of services of individual networks
- */
+
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 import java.util.Collection;

@@ -1,7 +1,7 @@
-/*
-  What: Create a new model by running parser on file
+/**
+  @what Create a new model by running parser on file
 
-  By: John Hartley
+  @author John Hartley - Graphica Software/Dokmai Pty Ltd
 */
 
 package an5;

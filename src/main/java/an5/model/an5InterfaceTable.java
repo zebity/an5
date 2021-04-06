@@ -1,3 +1,8 @@
+/**
+ @what Interface Map table row helper class
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.model;
 
 public class an5InterfaceTable {

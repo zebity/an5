@@ -1,5 +1,7 @@
-/*
- What: Build an5 definitions symbol table via "Listener" class
+/**
+ @what Build an5 definitions symbol table via "Listener" class
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
 */
 
 package an5;

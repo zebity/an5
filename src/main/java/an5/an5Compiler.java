@@ -1,6 +1,7 @@
 /**
- an5 Compiler
- Generates java code
+ @what an5 Compiler - Generates java code
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
  */
 
 package an5;

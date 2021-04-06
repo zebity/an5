@@ -1,5 +1,11 @@
 /**
- This needs to be revisited to manage "layers" of inherited services
+ @what Interface to manage service exposure and its cardinality
+         Initially this has two variations for List and Map, which are now
+         collapsed into LinkedHashMap
+         
+ @note This needs to be revisited to manage "layers" of inherited services
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
  */
 package an5.model;
 

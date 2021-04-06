@@ -1,3 +1,9 @@
+/**
+ @what Helper class to hold Map of objects and their interfaces
+         Map is keyed by SignatureKey
+         
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+ */
 package an5.model;
 
 public class an5MapIf {

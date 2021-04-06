@@ -1,3 +1,8 @@
+/**
+ @what LinkedHashMap implementation of Services class
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.model;
 
 import java.util.ArrayList;

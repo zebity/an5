@@ -1,3 +1,8 @@
+/**
+ @what Generic solver OR node goal tree
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 import java.util.LinkedList;

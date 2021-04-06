@@ -1,5 +1,12 @@
 /**
- Manage binding between interfaces
+ @what Manage binding between interfaces
+         Bindings have a state which can be:
+           Open - available to bind
+           Matched - in uncommitted binding, so resource allocation is delayed
+           Reflecting - is reflecting partial binding and/or service outcome
+           Committed - has committed binding, which means all resources are allocated
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
 */
 
 package an5.model;

@@ -1,3 +1,8 @@
+/**
+ @what Holds collection of objects that are available to support network solving
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 import java.util.ArrayList;

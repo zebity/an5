@@ -1,9 +1,10 @@
 /**
- Unresolved Class.
- Needs to be resolved before parse is finished.
+ @what Unresolved Class.
  
- @author John Hartley
- */
+ @note Needs to be resolved before parse is finished.
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5;
 
 public class an5UnresolvedClassValue extends an5ClassValue {

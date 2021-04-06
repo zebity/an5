@@ -1,3 +1,8 @@
+/**
+ @what Build a network from a bucket of bits...
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 import java.util.ArrayList;

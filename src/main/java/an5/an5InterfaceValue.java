@@ -1,5 +1,7 @@
-/*
- * What: an5 declared type { class, interface, link }
+/**
+ @what: an5 declared type { class, interface, link }
+ 
+ @author John Hartley = Graphica Sofrware/Dokmai Pty Ltd
 */
 
 package an5;

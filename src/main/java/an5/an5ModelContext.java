@@ -1,13 +1,12 @@
-/*
-  What: Manage scope/visibility of symbols for
-          an5 model
+/**
+ @what Manage scope/visibility of symbols for an5 model
           
-  By: John Hartley - Graphica Software/Dokmai Pty Ltd
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
   
-  Acknowledgement: I peeked at this: https://github.com/aperkaz/mini-java-symbol-table
-                     to get initial structure, but did not base my code
-                     on this as it does not include "package" support.
-  */
+ @note Acknowledgement -  I peeked at this: https://github.com/aperkaz/mini-java-symbol-table
+                          to get initial structure, but did not base my code
+                          on this as it does not include "package" support.
+*/
   
 package an5;
 

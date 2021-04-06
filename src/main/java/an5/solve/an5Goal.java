@@ -1,3 +1,11 @@
+/**
+ @what The generic Solver starter class.
+         Solver has two layers:
+           Generic - the general purpose AND/OR Tree constraint solver, providing control
+           Network - the network domain template classes, providing network domain logic
+
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 import java.util.LinkedList;

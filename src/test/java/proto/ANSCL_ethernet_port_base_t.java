@@ -1,9 +1,11 @@
-package proto;
 /**
- an5 prototype class implementation.
- This class should be generated from compiler
- @author John Hartley
+ @what Test what generated code might look like...
+  an5 prototype class implementation.
+  This class should be generated from compiler
+  
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
 */
+package proto;
 
 import java.util.List;
 

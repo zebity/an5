@@ -1,5 +1,5 @@
 /**
- Global definitiosn and utils
+ @what Global definitiosn and utils
  
  @author John Hartley - Graphica Software/Dokmai Pty Ltd
  */

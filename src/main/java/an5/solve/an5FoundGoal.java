@@ -1,3 +1,8 @@
+/**
+ @what Solver found solution flagging class
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 public class an5FoundGoal extends an5GoalTree {

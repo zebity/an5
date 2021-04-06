@@ -1,3 +1,8 @@
+/**
+ @what Hold the set of interface signature keys to allow fast lookup
+
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.model;
 
 import java.util.HashMap;

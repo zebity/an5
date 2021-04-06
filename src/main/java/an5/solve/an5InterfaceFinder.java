@@ -1,3 +1,11 @@
+/**
+ @what Network interface finder help class. Pattern is to do all walking as:
+         From to Target so:
+           From - expands as set of Paths
+           To - stays fixed
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 import java.util.Collection;

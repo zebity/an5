@@ -1,6 +1,10 @@
 /**
- This needs to be revisited to manage "layers" of inherited services
- */
+ @what The linked list variation of Service managment class
+ 
+ @note This is deprecated as Map now used LinkedHashMap to provide same behavior
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd 
+*/
 package an5.model;
 
 import java.util.ArrayList;

@@ -1,4 +1,8 @@
-// package an5.test;
+/**
+ @what An example network create test file
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,13 +14,7 @@ import an5.generic.dctypes.*;
 
 public class BuildMiniNetwork {
   public static void main(String[] args){
-	// System.out.println(args[0]);  
-    // Scanner s = new Scanner(System.in);
-    // System.out.println("Enter file to load: ");
-    // String str = s.next();
-    // s.close();
-	
-    
+	    
     /* Switch */
     String[][] swdef = {{"name", "simple-switch"},
     		            {"port", "[24]"}};

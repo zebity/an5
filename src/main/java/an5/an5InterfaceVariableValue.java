@@ -1,5 +1,7 @@
 /**
- Reflected interface variable
+ @what Reflected interface variable
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
 */
 
 package an5;

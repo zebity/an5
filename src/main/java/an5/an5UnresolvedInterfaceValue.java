@@ -1,9 +1,10 @@
 /**
- Unresolved Interface.
- Needs to be resolved before parse is finished.
+ @what Unresolved Interface.
  
- @author John Hartley
- */
+ @note Needs to be resolved before parse is finished.
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5;
 
 public class an5UnresolvedInterfaceValue extends an5InterfaceValue {

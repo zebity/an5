@@ -1,3 +1,11 @@
+/**
+ @what Holds the instantiated interface of interface and its bindings
+         Bindings can be:
+           STATIC - pre-allocated or
+           DYNAMIC - managed dynamically
+
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.model;
 
 import java.util.ArrayList;

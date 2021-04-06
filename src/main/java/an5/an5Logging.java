@@ -1,5 +1,7 @@
 /**
- Mikey Mouse logginng and debugging stuff
+ @what Mikey Mouse logginng and debugging stuff
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
  */
 package an5;
 

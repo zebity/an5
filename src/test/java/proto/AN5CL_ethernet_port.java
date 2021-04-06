@@ -1,9 +1,11 @@
-package proto;
 /**
- * 
- * @author jbh
- *
- */
+ @what Test what generated code might look like...
+ 
+  
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
+
+package proto;
 
 import java.util.List;
 import an5.model.an5Interface;

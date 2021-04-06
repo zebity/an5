@@ -1,3 +1,10 @@
+/**
+ @what This is hack to allow passing constructor arguments
+ 
+ @note Should be replaced by json based load/dump methods
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+ */
 package an5.model;
 
 import java.util.ArrayList;

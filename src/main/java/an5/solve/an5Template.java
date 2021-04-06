@@ -1,3 +1,18 @@
+/**
+ @what The default an5 Solver template class
+         All domain solvers should inherit this
+         This is also used to provide "documentation" of the solver methods:
+         ConnectElements - connect elements within network
+         CreateNetwork - create a new network from bucket of bits
+         JoinNetwork - add new elements into an existing network
+         NetworkPath - find path within an network
+         ConnectNetworks - join two network together
+         These are the basic operations used by "problem reduction" solver to build networks
+
+ @note currently implemented: Create / Join
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd.
+*/
 package an5.solve;
 
 import java.util.List;

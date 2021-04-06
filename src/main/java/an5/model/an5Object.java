@@ -1,12 +1,13 @@
 /**
- an5 model base class.
+ @what an5 model base class.
    Needs to support:
      discovery
      interface binding
      Has Java class id, unique id [local to VM] and persistent unique id which persists and
      would be same over multiple VM instances
-  @author John Hartley - Graphica Software/Dokmai Pty Ltd.
- */
+     
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd.
+*/
 
 package an5.model;
 

@@ -1,3 +1,10 @@
+/**
+ @what Goal Tree for AND nodes
+ 
+ @note Currently only using OR nodes... need to allow for AND/OR
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
 package an5.solve;
 
 import java.util.LinkedList;

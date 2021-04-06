@@ -1,3 +1,11 @@
+/**
+ @what Classes to support building an5 networks by "hand"
+
+ @note Should be the model interface for MVC UI
+ 
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
+*/
+
 package an5.builder;
 
 import an5.model.an5InterfaceInstance;

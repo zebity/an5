@@ -1,11 +1,10 @@
-/*
-  What: Symbol Table for "an5" compiler and
-          runtime.
-          This supports an5:
-             classs, interface and
-             package based namespace
+/**
+@what Symbol Table for "an5" compiler and runtime.
+         This supports an5:
+           class, interface and
+           package based namespace
 
-  By: John Hartley - Graphica Software/Dokmai Pty Ltd
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
 */
 
 
