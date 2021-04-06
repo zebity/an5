@@ -105,7 +105,7 @@ public class an5AvailableResource {
     an5AvailableResource to = new an5AvailableResource(this);
 	if (o instanceof an5Path) {
 	  an5Path p = (an5Path)o;
-	  to.available.remove(p.path.get(p.path.size() - 1).getGUID());
+	  to.available.remove(p.getLast().getGUID());
 	} else {
 	  to.available.remove(o.getGUID());
 	}
