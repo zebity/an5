@@ -32,7 +32,8 @@ public class an5Goal extends an5GoalTree {
     	depth = 0;
     an5GoalTree next = this;
     boolean stopSearch = false;
-    
+
+    ctrlAndStats.stats.startTimer();
     endScore = seed();
     
     addToQueue(next);
@@ -78,6 +79,7 @@ public class an5Goal extends an5GoalTree {
       }
       loops++;
     }
+    ctrlAndStats.stats.stopTimer();
     return res;
   }
   public int seed() {

@@ -8,6 +8,7 @@
 */
 package an5.solve;
 
+import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,5 +41,8 @@ public class an5SearchControl {
 	if (i >= 0 && i < ResultString.length)
 	  resStr = ResultString[i];
     return resStr;
+  }
+  public void dumpStats(PrintStream ps) {
+    stats.dumpStats(ps);
   }
 }

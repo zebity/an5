@@ -97,7 +97,7 @@ public class BuildMiniNetwork {
     int res = makeNet.solve();
     
     System.out.println("Result was: " + ctrl.resultString(res));
-    
+    ctrl.dumpStats(System.out);
     
     System.out.println("switch reports as" + sw1.toString());
   }
