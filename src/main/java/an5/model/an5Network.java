@@ -9,6 +9,7 @@
 */
 package an5.model;
 
+import java.io.PrintStream;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -20,6 +21,7 @@ public class an5Network extends an5Object {
   Map<String, an5Network> memberNetworks = new HashMap<>();
   Map<String, an5Object> candidates = new HashMap<>();
   boolean cloned = false;
+  int lazyClone = 0;
   int clonedMaps = 0;
   int updatingCount = 0;
   an5Network clonedFrom = null;
@@ -30,36 +32,53 @@ public class an5Network extends an5Object {
   }
   public an5Network(an5Network n) {
     super(n);
-    cloned = true;
-    clonedFrom = n;
-    n.clonedBy.put(this.getGUID(), this);
+    
+    int testSize = members.size() + 100 * memberNetworks.size() + 5 * candidates.size();
+    if (testSize < lazyClone) {
+      for (an5Object o: members.values()) {
+    	members.put(o.getGUID(), (an5Object)o.clone());
+      }
+      for (an5Network no: memberNetworks.values()) {
+      	members.put(no.getGUID(), (an5Network)no.clone());
+      }
+      for (an5Object o: candidates.values()) {
+    	members.put(o.getGUID(), (an5Object)o.clone());
+      }
+    } else {
+      cloned = true;
+      clonedFrom = n;
+      n.clonedBy.put(this.getGUID(), this);
+    }
   }
   int decoupleClone(an5Network from, int trigger) {
     int res = 0;
     
-    if ((trigger & Cloned.MEMBERS) > 0) {
-  	  for (an5Object co : clonedFrom.getMembersValues()) {
-  	    members.put(co.getGUID(), (an5Object)co.clone());
-  	  }
-	  clonedMaps = clonedMaps | Cloned.MEMBERS;
-    }
+    if (cloned) {
+      if ((clonedMaps & Cloned.MEMBERS) == 0 && (trigger & Cloned.MEMBERS) > 0) {
+  	    for (an5Object co : clonedFrom.getMembersValues()) {
+  	      members.put(co.getGUID(), (an5Object)co.clone());
+  	    }
+	    clonedMaps = clonedMaps | Cloned.MEMBERS;
+      }
     
-    if ((trigger & Cloned.CANDIDATES) > 0) {
-      for (an5Object co : clonedFrom.getCandidatesValues()) {
-    	candidates.put(co.getGUID(), (an5Object)co.clone());
-       }
-  	  clonedMaps = clonedMaps | Cloned.CANDIDATES;
-    }
+      if ((clonedMaps & Cloned.CANDIDATES) == 0 && (trigger & Cloned.CANDIDATES) > 0) {
+        for (an5Object co : clonedFrom.getCandidatesValues()) {
+    	  candidates.put(co.getGUID(), (an5Object)co.clone());
+         }
+  	     clonedMaps = clonedMaps | Cloned.CANDIDATES;
+      }
     
-    if ((trigger & Cloned.NETWORKS) > 0) {
-      for (an5Network co : clonedFrom.getMemberNetworksValues()) {
-      	candidates.put(co.getGUID(), (an5Object)co.clone());
-       }
-       clonedMaps = clonedMaps | Cloned.NETWORKS;
-    }
+      if ((clonedMaps & Cloned.NETWORKS) == 0 && (trigger & Cloned.NETWORKS) > 0) {
+        for (an5Network co : clonedFrom.getMemberNetworksValues()) {
+      	  memberNetworks.put(co.getGUID(), (an5Network)co.clone());
+         }
+         clonedMaps = clonedMaps | Cloned.NETWORKS;
+      }
     
-    if ((clonedMaps & Cloned.ALL) == Cloned.ALL) {
-      from.mapsDecoupled(this);
+      if ((clonedMaps & Cloned.ALL) == Cloned.ALL) {
+        from.mapsDecoupled(this);
+        cloned = false;
+      }
     }
     return res;
   }
@@ -157,5 +176,54 @@ public class an5Network extends an5Object {
 	  res = candidates.size();
 	}
 	return res;
+  }
+  public void dumpNetwork(PrintStream ps) {
+	int i;
+	boolean comma = false;
+	
+	if (cloned) {
+	  decoupleClone(clonedFrom, Cloned.ALL);
+	}
+	ps.println("{");
+	ps.println("  \"an5Network\": {");
+	ps.println("    \"class\": \"" + getClass().getSimpleName() + "\",");
+	ps.println("    \"GUID\": \"" + getGUID() + "\",");
+	ps.println("    \"services\": {");
+	for (i = 0; i < AN5AT_serviceUnion.size(); i++) {
+	  ps.println("      \"" + AN5AT_serviceUnion.getService(i) +  "\": {");
+	  int[] cd = AN5AT_serviceUnion.getCardinality(i);
+	  ps.println("        \"min\": " + cd[0] + ",");
+	  ps.println("        \"max\": " + cd[0]);
+	  ps.println("      }"); 
+	}
+	ps.println("    }");
+	ps.println("    \"members\": {");
+	for (an5Object o: members.values()) {
+	  if (comma) {
+	    ps.println(",");		  
+	  }
+	  ps.print("        \"" + o.getClass().getSimpleName() + "\": \"" + o.getGUID() + "\"");
+	  comma = true;
+	}
+	if (comma) {
+	  ps.println();	
+	}
+	ps.println("      }");
+	comma = false;
+	ps.println("    \"candidates\": {");
+	for (an5Object o: candidates.values()) {
+	  if (comma) {
+	    ps.println(",");		  
+	  }
+	  ps.print("        \"" + o.getClass().getSimpleName() + "\": \"" + o.getGUID() + "\"");
+	  comma = true;
+	}
+	if (comma) {
+	  ps.println();	
+	}
+	ps.println("      }");
+	ps.println("    }");
+	ps.println("  }");
+	ps.println("}");
   }
 }

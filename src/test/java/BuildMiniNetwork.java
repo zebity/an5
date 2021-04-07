@@ -99,6 +99,14 @@ public class BuildMiniNetwork {
     System.out.println("Result was: " + ctrl.resultString(res));
     ctrl.dumpStats(System.out);
     
+    for (an5GoalTree t: makeNet.found) {
+      an5FoundGoal resGoal = t.getFoundGoal();
+      if (resGoal.goal instanceof an5JoinNetwork) {
+    	an5JoinNetwork jn =  (an5JoinNetwork)(resGoal.goal);
+    	an5Network no = jn.joinNet;
+    	no.dumpNetwork(System.out);
+      }
+    }
     System.out.println("switch reports as" + sw1.toString());
   }
 

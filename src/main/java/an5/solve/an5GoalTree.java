@@ -17,4 +17,5 @@ abstract public class an5GoalTree extends an5SearchGauge {
   abstract public int goalQueueSize();
   abstract public int getDepth();
   abstract public String templateType();
+  abstract public an5FoundGoal getFoundGoal();
 }

@@ -45,4 +45,7 @@ public class an5FailedGoal extends an5GoalTree {
   public String templateType() {
 	return new String("N/A");
   }
+  public an5FoundGoal getFoundGoal() {
+    return null;
+  }
 }

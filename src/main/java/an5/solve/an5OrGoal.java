@@ -99,4 +99,14 @@ public class an5OrGoal extends an5GoalTree {
   public String templateType() {
 	return new String("N/A");
   }
+  public an5FoundGoal getFoundGoal() {
+    an5FoundGoal res = null;
+    
+    if (status == an5SearchControl.SearchResult.FOUND) {
+      if (active instanceof an5FoundGoal) {
+    	res = (an5FoundGoal)active;
+      }
+    }
+    return res;
+  }
 }

@@ -16,7 +16,7 @@ import an5.an5Logging;
 public class an5Goal extends an5GoalTree {
   an5SimpleGoal goal;
   an5SearchQueue<an5GoalTree> queue = new an5SearchQueue<>();
-  List<an5GoalTree> found = new LinkedList<>();
+  public List<an5GoalTree> found = new LinkedList<>();
   an5SearchControl ctrlAndStats;
   int endScore,
       status = an5SearchControl.SearchResult.UNDEFINED;
@@ -126,5 +126,8 @@ public class an5Goal extends an5GoalTree {
   }
   public String templateType() {
 	return new String("N/A");
+  }
+  public an5FoundGoal getFoundGoal() {
+    return null;
   }
 }

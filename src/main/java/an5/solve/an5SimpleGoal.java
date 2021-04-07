@@ -49,4 +49,7 @@ public class an5SimpleGoal extends an5GoalTree {
   public String templateType() {
 	return new String(template.getClass().toString());
   }
+  public an5FoundGoal getFoundGoal() {
+    return null;
+  }
 }

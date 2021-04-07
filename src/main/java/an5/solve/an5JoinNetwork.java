@@ -60,7 +60,7 @@ public class an5JoinNetwork extends an5Template {
   }
   an5Logging log = new an5Logging(7,7);
   an5Object prototype;
-  an5Network joinNet;
+  public an5Network joinNet;
   an5Object connectTo;
   List<an5Object> srcObjects;
   an5AvailableResource use;
