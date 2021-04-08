@@ -72,9 +72,7 @@ public class an5JoinNetwork extends an5Template {
   an5Service viaService; /* Should be also be using network services */
   String srcClass,
          destClass;
-  int joinCount = 0,
-	  status = an5SearchControl.SearchResult.UNDEFINED,
-	  pathExpansion = 0;
+  int status = an5SearchControl.SearchResult.UNDEFINED;
   
   public an5JoinNetwork(an5Template par, an5Object proto, an5Network net, an5Object to, List<an5Object> ele, an5AvailableResource avail) {
     super(par);	  
@@ -104,10 +102,16 @@ public class an5JoinNetwork extends an5Template {
     connectTo = to;
   }
   public int[] gauge(int type) {
-	int denom = 1;
-	if (pathExpansion > 0 && (type & an5SearchControl.SearchOptions.COST) > 0)
-	  denom = pathExpansion;
-    Fraction res = new Fraction(joinCount, denom);
+	int cost = 1;
+	int score;
+	if (status == an5SearchControl.SearchResult.UNDEFINED) {
+	  score = joinNet.getCandidatesSize() - use.size();
+	} else {
+	  score = joinNet.getCandidatesSize() - mustUse.size();
+	}
+	if ((type & an5SearchControl.SearchOptions.COST) > 0)
+	  cost = available.size() + 1;
+    Fraction res = new Fraction(score, cost);
 	if (parent != null) {
 	  int []parGauge = parent.gauge(type);
 	  res.add(new Fraction(parGauge[0], parGauge[1]));
@@ -164,71 +168,73 @@ public class an5JoinNetwork extends an5Template {
     boolean localRemove = ((ctrl.strategy & an5SearchControl.SearchOptions.REMOVE_LOCAL_EQUIVALENTS) > 0),
             bindUnique = ((ctrl.strategy & an5SearchControl.SearchOptions.BIND_UNIQUE) > 0);
     
-    fail = getPathStats(pathStats, pathCnt, probeCnts, finder, localRemove, bindUnique);
-    ctrl.stats.checkMaxBreadth(pathStats.expansionMultiplier);
-    if (fail == -1) {
-      status = an5SearchControl.SearchResult.FAILED;
-      res = new an5OrGoal(new an5FailedGoal(this), ctrl);
-    } else if (toAdd.size() == 0) {
+    if (toAdd.size() == 0) {
       if (mustUse.size() == 1) {
-    	Iterator<an5Object> lastElement = mustUse.values().iterator(); 
-    	if (lastElement.next().getGUID().equals(connectTo.getGUID())) {
+        Iterator<an5Object> lastElement = mustUse.values().iterator(); 
+        if (lastElement.next().getGUID().equals(connectTo.getGUID())) {
     	  status = an5SearchControl.SearchResult.FOUND;
-    	  res = new an5OrGoal(new an5FoundGoal(this), ctrl);
-    	} else {
+    	  res = new an5FoundGoal(this);
+        } else {
           status = an5SearchControl.SearchResult.FAILED;
-          res = new an5OrGoal(new an5FailedGoal(this), ctrl);      	
-    	}
+          res = new an5FailedGoal(this);      	
+        }
       } else {
         status = an5SearchControl.SearchResult.FAILED;
-        res = new an5OrGoal(new an5FailedGoal(this), ctrl);      
+        res = new an5FailedGoal(this);
       }
     } else {
-      targetNet = (an5Network)joinNet.clone(); /* only need "little" part of target network */
-      toO = targetNet.getMember(connectTo.getGUID());
-      for (i = pathStats.minDirect; i <= pathStats.maxDirect; i++) {
+      fail = getPathStats(pathStats, pathCnt, probeCnts, finder, localRemove, bindUnique);
+      ctrl.stats.checkMaxBreadth(pathStats.expansionMultiplier);
+      if (fail == -1) {
+        status = an5SearchControl.SearchResult.FAILED;
+        res = new an5FailedGoal(this);
+      } else {
+        targetNet = (an5Network)joinNet.clone(); /* only need "little" part of target network */
+        toO = targetNet.getMember(connectTo.getGUID());
+        for (i = pathStats.minDirect; i <= pathStats.maxDirect; i++) {
 
-        if ((! directBindFailed) && pathCnt[i][PathIdx.BIND] > 0) {
+          if ((! directBindFailed) && pathCnt[i][PathIdx.BIND] > 0) {
 
-          startFromO = (an5Object)toAdd.get(i).clone();
-    	  fromO = startFromO.getLast();
-    	  bindings = fromO.bind(toO, targetNet.providesServices(), viaService, localRemove, bindUnique);
-    	  /* connectTo object already in network, so just add toAdd[i] object */
-    	  if (bindings != null) {
-            an5Path newP = new an5Path(startFromO, toO, bindings);
-    	    targetNet.putCandidate(newP);
-   			if (startFromO instanceof an5Path) {
-  	          log.DBG(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate path[" +
+            startFromO = (an5Object)toAdd.get(i).clone();
+    	    fromO = startFromO.getLast();
+    	    bindings = fromO.bind(toO, targetNet.providesServices(), viaService, localRemove, bindUnique);
+    	    /* connectTo object already in network, so just add toAdd[i] object */
+    	    if (bindings != null) {
+              an5Path newP = new an5Path(startFromO, toO, bindings);
+    	      targetNet.putCandidate(newP);
+   			  if (startFromO instanceof an5Path) {
+  	            log.DBG(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate path[" +
   	                     newP.getPathLength() + "]: " + newP.getFirst().getGUID() + " >> " + newP.getLast().getGUID());
-     		} else {
-   	          log.DBG(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate: " +
+     		  } else {
+   	            log.DBG(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate: " +
    	            		 fromO.getGUID());
-     		}
-    	  } else {
-    		directBindFailed = true;
-            status = an5SearchControl.SearchResult.FAILED;
-            res = new an5OrGoal(new an5FailedGoal(this), ctrl); 
-   			if (startFromO instanceof an5Path) {
-   			  an5Path fromPath = (an5Path)startFromO;
-	          log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: bind failed - from path[" +
+     		  }
+    	    } else {
+    		  directBindFailed = true;
+              status = an5SearchControl.SearchResult.FAILED;
+              res = new an5FailedGoal(this); 
+   			  if (startFromO instanceof an5Path) {
+   			    an5Path fromPath = (an5Path)startFromO;
+	            log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: bind failed - from path[" +
 	                     fromPath.getPathLength() + "]: " + startFromO.getFirst().getGUID() + " >> " + startFromO.getLast().getGUID() +
 	                     " to: " + toO.getGUID());
-   			} else {
- 	          log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: bind failed - from: " +
+   			  } else {
+ 	            log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: bind failed - from: " +
  	            		     fromO.getGUID() + " to: " + toO.getGUID());
-   			}  
+   			  }
+    	    }
     	  }
         }
-      }
-      if (! directBindFailed) {
-    	if (localRemove & bindUnique) {
-          res = generateGoalwithLocalRemoved(ctrl, pathStats, pathCnt, probeCnts,
-	               localRemove, bindUnique, targetNet, finder);
-    	}
-    	else {
-          res = generateGoal(ctrl, pathStats, pathCnt, probeCnts,
-	               localRemove, bindUnique, targetNet, finder);
-    	}
+        if (! directBindFailed) {
+    	  if (localRemove & bindUnique) {
+            res = generateGoalwithLocalRemoved(ctrl, pathStats, pathCnt, probeCnts,
+	                 localRemove, bindUnique, targetNet, finder);
+    	  }
+    	  else {
+            res = generateGoal(ctrl, pathStats, pathCnt, probeCnts,
+	                 localRemove, bindUnique, targetNet, finder);
+    	  }
+        }
       }
     }
     return res;

@@ -25,9 +25,15 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
   }
   List<queueNode> queue = new LinkedList<>();
   List<queueNode> removed = new LinkedList<>();
+  int strategy = an5SearchControl.SearchOptions.SCORE;
   int[] min,
         max;
+  boolean keepRemoved = false;
   public an5SearchQueue() {
+  }
+  public void setStategy(int strat) {
+    strategy = strat;
+    
   }
   public boolean isEmpty() {
     return queue.isEmpty();
@@ -56,7 +62,15 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
       queueNode n = queue.remove(0);
       if (n != null) {
         r = n.goal;
-        removed.add(n);
+        if (keepRemoved) {
+          removed.add(n);
+        }
+        if (((strategy & an5SearchControl.SearchOptions.SCORE) |
+             (strategy & an5SearchControl.SearchOptions.COST)) != 0) {
+          if (queue.size() > 0) {
+            max = queue.get(0).goal.gauge(strategy);
+          }
+        }
       }
 	}
 	return r;
@@ -74,15 +88,15 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
 	int res = an5SearchControl.SearchResult.UNDEFINED;
 	return res;
   }
-  public void addToQueue(TQ t,an5SearchControl ctrl) {
+  public void addToQueue(TQ t) {
 	if (t != null) {
-      if ((ctrl.strategy & an5SearchControl.SearchOptions.BREADTH) != 0) {
+      if ((strategy & an5SearchControl.SearchOptions.BREADTH) != 0) {
         add(t);
-      } else if ((ctrl.strategy & an5SearchControl.SearchOptions.DEPTH) != 0) {
+      } else if ((strategy & an5SearchControl.SearchOptions.DEPTH) != 0) {
         add(0, t);   	
-      } else if (((ctrl.strategy & an5SearchControl.SearchOptions.SCORE) |
-                  (ctrl.strategy & an5SearchControl.SearchOptions.COST)) != 0) {
-        int[] gs = t.gauge(ctrl.strategy);
+      } else if (((strategy & an5SearchControl.SearchOptions.SCORE) |
+                  (strategy & an5SearchControl.SearchOptions.COST)) != 0) {
+        int[] gs = t.gauge(strategy);
         Fraction score = new Fraction(gs[0], gs[1]);
         if (isEmpty()) {
           add(t);
@@ -96,7 +110,7 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
         } else {
     	  /* note: should do insert by splitting in middle to allow for long queues */
     	  for (int i = 1; i < size(); i++) {
-    	    int[] ngs = get(i).gauge(ctrl.strategy);
+    	    int[] ngs = get(i).gauge(strategy);
     	    Fraction ndScore = new Fraction(ngs[0], ngs[1]);
     	    if (ndScore.compareTo(score) >= 0) {
     	      add(i, t);

@@ -12,17 +12,27 @@ public class an5SimpleGoal extends an5GoalTree {
 	 template = t;
 	 ctrl = c;
   }
-  public int seed() {
-    return template.seedGoal();
+  public an5GoalTree executeNext() {
+    int res = template.status();
+	ctrl.stats.updateStats(res);
+	if (res == an5SearchControl.SearchResult.UNDEFINED) {
+	  template.seedGoal();
+	  res = template.status();
+	  ctrl.stats.updateStats(res);
+	}
+	return template.getNextGoal(ctrl);
   }
   public int status() {
     return template.status();
   }
   public int[] gauge(int type) {
+	/* if doing score / cost . then we need to seed before gauge */
+	int res = template.status();
+	if (res == an5SearchControl.SearchResult.UNDEFINED) {
+	  ctrl.stats.updateStats(res);
+	  template.seedGoal();
+	}
     return template.gauge(type);
-  }
-  public an5GoalTree getNextGoal() {
-    return template.getNextGoal(ctrl);
   }
   public void suspend() {
   }
@@ -48,8 +58,5 @@ public class an5SimpleGoal extends an5GoalTree {
   }
   public String templateType() {
 	return new String(template.getClass().toString());
-  }
-  public an5FoundGoal getFoundGoal() {
-    return null;
   }
 }

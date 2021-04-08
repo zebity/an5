@@ -25,47 +25,40 @@ public class an5Goal extends an5GoalTree {
   public an5Goal(an5Template targ, an5SearchControl st) {
     goal = new an5SimpleGoal(targ, st);
     ctrlAndStats = st;
+    queue.setStategy(ctrlAndStats.strategy);
   }
   public int solve() {
     int res = 0,
-    	loops = 0,
+    	loops = 1,
     	depth = 0;
     an5GoalTree next = this;
     boolean stopSearch = false;
 
     ctrlAndStats.stats.startTimer();
-    endScore = seed();
     
-    addToQueue(next);
-    while (! stopSearch) {
-      next = queueDispatch();	
+    queue.addToQueue(next);
+    while (! stopSearch) {;
       res = next.status();
   	  log.DBG(6, "<log.INFO>:AN5:an5Goal.solve: next - '" + next.getClass().toString()
   			      + "' queue size: " + next.goalQueueSize() + " status: " + ctrlAndStats.resultString(res)
   			      + " template: " + next.templateType());
   	  
-      if (res == an5SearchControl.SearchResult.FOUND) {
+      if (next instanceof an5FoundGoal) {
     	found.add(next);
-      }
-      depth = next.getDepth();
-      
-  	  ctrlAndStats.stats.updateStats(res, loops, depth);
-  	  if (res == an5SearchControl.SearchResult.UNDEFINED) {
-        next.seed();
-        res = next.status();
-    	ctrlAndStats.stats.updateStats(res);
-      }
-
-      if (next instanceof an5OrGoal) {
-    	an5OrGoal orT = (an5OrGoal)next;
-    	an5GoalTree head = orT.popQueue();
+      }  else if (next instanceof an5OrGoal) {
+      	an5OrGoal orT = (an5OrGoal)next;
+      	an5GoalTree head = orT.popQueue();
         while (head != null) {
-          addToQueue(head);
+          queue.addToQueue(head);
           head = orT.popQueue();
         }
+      } else if (next instanceof an5SimpleGoal ||
+    		     next instanceof an5Goal) {
+        next = next.executeNext();
+        queue.addHead(next);
       }
-      next = next.getNextGoal();
-      addToQueue(next);
+      depth = next.getDepth();
+  	  ctrlAndStats.stats.updateStats(res, loops, depth);
 
       if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.OPTIMAL) != 0) {
     	stopSearch = queue.isEmpty();
@@ -77,31 +70,24 @@ public class an5Goal extends an5GoalTree {
     			   + ctrlAndStats.resultString(res));
 
       }
+      next = queueDispatch();
       loops++;
     }
     ctrlAndStats.stats.stopTimer();
     return res;
   }
-  public int seed() {
-	int res = goal.seed();
-    status = an5SearchControl.SearchResult.START;
-    return res;
-  }
   public int status() {
 	return goal.status();
   }
-  public an5GoalTree getNextGoal() {
-    return goal.getNextGoal();
+  public an5GoalTree executeNext() {
+    return goal.executeNext();
   }
   public an5GoalTree queueDispatch() {
-    return queue.removeHead();
-  }
-  public void addToQueue(an5GoalTree t) {
-	if (t != null && t.status() == an5SearchControl.SearchResult.FOUND) {
-	  queue.addHead(t);
-	} else {
-	  queue.addToQueue(t, ctrlAndStats);
+	an5GoalTree hq = null;
+	if (queue.size() > 0 ) {
+      hq = queue.removeHead();
 	}
+	return hq;
   }
   public void suspend() {
   }
@@ -126,8 +112,5 @@ public class an5Goal extends an5GoalTree {
   }
   public String templateType() {
 	return new String("N/A");
-  }
-  public an5FoundGoal getFoundGoal() {
-    return null;
   }
 }

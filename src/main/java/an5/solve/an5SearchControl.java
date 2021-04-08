@@ -17,7 +17,7 @@ import an5.model.*;
 public class an5SearchControl {
   public static class SearchOptions { public static final int DEPTH = 0x001, BREADTH = 0x002, BOUND = 0x004, SCORE = 0x008,
 		                                               COST = 0x010, REMOVE_LOCAL_EQUIVALENTS = 0x020, BIND_ALL = 0x040, BIND_UNIQUE = 0x080,
-		                                               THREAD = 0x100, TIMEBOX = 0x200, OPTIMAL = 0x400;}
+		                                               THREAD = 0x100, TIMEBOX = 0x200, OPTIMAL = 0x400, KEEP_REMOVED = 0x800; }
   public static class SearchResult { public static final int UNDEFINED = -1, START = 0, SOLVING = 1, SUSPENDED = 2, FAILED = 3,
 		                                             BOUND = 4, VISITED = 5, FOUND = 6, FOUND_ALL = 7;}
   public static class BuildStrategy { public static final int SINGLE_NET_ADD = 1, MULTI_NET_JOIN = 2; }

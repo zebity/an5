@@ -18,18 +18,19 @@ public class an5AndGoal extends an5GoalTree {
   
   public an5AndGoal(List<an5GoalTree> tl, an5SearchControl c) {
 	ctrlAndStats = c;
+	queue.setStategy(ctrlAndStats.strategy);
 	for (an5GoalTree t: tl) {
-	  queue.addToQueue(t, ctrlAndStats);	
+	  queue.addToQueue(t);	
 	}
   }
-  public int seed() {
+  /* public int seed() {
 	int res = 0;
 	if (queue.size() > 0) {
 	  res = queue.get(0).seed();
 	  status = queue.get(0).status();
 	}
     return res;
-  }
+  } */
   public int status() {
 	int i,
 	    res = status;
@@ -46,9 +47,9 @@ public class an5AndGoal extends an5GoalTree {
   public int[] gauge(int type) {
 	return new int[]{0,1};
   }
-  public an5GoalTree getNextGoal() {
+  public an5GoalTree executeNext() {
 	an5GoalTree res = null;
-	if (status == an5SearchControl.SearchResult.FAILED) {
+	/* if (status == an5SearchControl.SearchResult.FAILED) {
 	  if (queue.size() > 0) {
 	    queue.purge();
 	  }
@@ -56,7 +57,7 @@ public class an5AndGoal extends an5GoalTree {
 	  if (queue.size() > 0) {
 		res = queue.get(0).getNextGoal();
 	  }
-	}
+	} */
     return res;
   }
   public void suspend() {
@@ -81,8 +82,5 @@ public class an5AndGoal extends an5GoalTree {
   }
   public String templateType() {
 	return new String("N/A");
-  }
-  public an5FoundGoal getFoundGoal() {
-    return null;
   }
 }

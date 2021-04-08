@@ -10,16 +10,13 @@ public class an5FailedGoal extends an5GoalTree {
   an5FailedGoal(an5Template f) {
     fail = f;
   }
-  public int seed() {
-    return 0;
-  }
   public int status() {
     return an5SearchControl.SearchResult.FAILED;
   }
   public int[] gauge(int type) {
     return new int[]{0,1};
   }
-  public an5GoalTree getNextGoal() {
+  public an5GoalTree executeNext() {
     return null;
   }
   public void suspend() {
@@ -44,8 +41,5 @@ public class an5FailedGoal extends an5GoalTree {
   }
   public String templateType() {
 	return new String("N/A");
-  }
-  public an5FoundGoal getFoundGoal() {
-    return null;
   }
 }

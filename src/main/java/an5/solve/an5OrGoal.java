@@ -10,32 +10,23 @@ import java.util.List;
 
 public class an5OrGoal extends an5GoalTree {
   an5SearchControl ctrlAndStats;
-  an5GoalTree active = null;
   public an5SearchQueue<an5GoalTree> queue = new an5SearchQueue<>();
   public List<an5GoalTree> success = new LinkedList<>();
   int status = an5SearchControl.SearchResult.UNDEFINED;
   
   public an5OrGoal(List<an5GoalTree> tl, an5SearchControl s) {
     ctrlAndStats = s;
+    queue.setStategy(an5SearchControl.SearchOptions.BREADTH);
     for (an5GoalTree t: tl) {
-      queue.addToQueue(t, ctrlAndStats);	
+      queue.addToQueue(t);	
     }
   }
   public an5OrGoal(an5GoalTree simpleT, an5SearchControl s) {
     ctrlAndStats = s;
-    active = simpleT;
-    status = active.status();
+    queue.setStategy(an5SearchControl.SearchOptions.BREADTH);
   }
   public an5GoalTree popQueue() {
     an5GoalTree res = queue.removeHead();
-    return res;
-  }
-  public int seed() {
-	int res = 0;
-	if (active != null) {
-	  res = active.seed();
-	  status = active.status();
-	}
     return res;
   }
   public int status() {
@@ -45,33 +36,12 @@ public class an5OrGoal extends an5GoalTree {
 	int[] max = new int[]{0,1};
     if (((ctrlAndStats.strategy & an5SearchControl.SearchOptions.SCORE) |
     	 (ctrlAndStats.strategy & an5SearchControl.SearchOptions.COST)) != 0) {
-      if (active != null) {
-        max = active.gauge(type);
-      }
-    } else {
-      /* traverse through list to get maximum */	
+      max = new int[]{queue.max[0], queue.max[1]};
     }
 	return max;
   }
-  public an5GoalTree getNextGoal() {
+  public an5GoalTree executeNext() {
     an5GoalTree res = null;
-    if (active != null) {
-      if (active.status() == an5SearchControl.SearchResult.FOUND) {
-        success.add(active);
-        if (queue.size() > 0) {
-          active = queue.removeHead();
-          // res = hq.getNextGoal();
-          res = active;
-        }
-      } else {
-        // res = hq.getNextGoal();
-    	res = active.getNextGoal();
-      }
-    }
-    else {
-      active = queue.removeHead();
-      res = active;
-    }
     return res;
   }
   public void suspend() {
@@ -90,23 +60,10 @@ public class an5OrGoal extends an5GoalTree {
 	return queue.size();
   }
   public int getDepth() {
-	int dp = 0;
-	if (active != null) {
-	  dp = active.getDepth();
-	}
+	int dp = 1;
 	return dp;
   }
   public String templateType() {
 	return new String("N/A");
-  }
-  public an5FoundGoal getFoundGoal() {
-    an5FoundGoal res = null;
-    
-    if (status == an5SearchControl.SearchResult.FOUND) {
-      if (active instanceof an5FoundGoal) {
-    	res = (an5FoundGoal)active;
-      }
-    }
-    return res;
   }
 }
