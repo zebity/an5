@@ -90,8 +90,11 @@ public class BuildMiniNetwork {
     an5Network netResult = (an5Network)netPrototype.createInstance();
     an5Template netTemplate = new an5CreateNetwork(null, new an5Object[]{netPrototype, nodePrototype}, parts, netResult);
     an5SearchControl ctrl = new an5SearchControl();
-    int flags = an5SearchControl.SearchOptions.REMOVE_LOCAL_EQUIVALENTS;
-    ctrl.turnOff(flags);
+    int offFlags = an5SearchControl.SearchOptions.REMOVE_LOCAL_EQUIVALENTS |
+    		       an5SearchControl.SearchOptions.COST;
+    int onFlags = an5SearchControl.SearchOptions.DEPTH;
+    ctrl.turnOff(offFlags);
+    ctrl.turnOn(onFlags);
     
     an5Goal makeNet = new an5Goal(netTemplate, ctrl);
     int res = makeNet.solve();
