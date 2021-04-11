@@ -34,10 +34,10 @@ public class an5OrGoal extends an5GoalTree {
   }
   public int[] gauge(int type) {
 	int[] max = new int[]{0,1};
-    if (((ctrlAndStats.strategy & an5SearchControl.SearchOptions.SCORE) |
+    /* if (((ctrlAndStats.strategy & an5SearchControl.SearchOptions.SCORE) |
     	 (ctrlAndStats.strategy & an5SearchControl.SearchOptions.COST)) != 0) {
       max = new int[]{queue.max[0], queue.max[1]};
-    }
+    } */
 	return max;
   }
   public an5GoalTree executeNext() {

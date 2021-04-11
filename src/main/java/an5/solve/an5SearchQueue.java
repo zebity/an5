@@ -8,6 +8,8 @@
 */
 package an5.solve;
 
+import java.io.PrintStream;
+import java.time.Duration;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -126,5 +128,42 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
     return mx;
   }
   public void release() {
+  }
+  void dump(PrintStream ps, boolean summary) {
+	ps.println("{");
+	ps.println("  \"an5SearchQueue\": {");
+	ps.println("    \"this\": " + this + ",");
+	ps.println("    \"strategy\": \"" + an5SearchControl.strategyString(strategy) + "\",");
+	ps.println("    \"size\": " + queue.size());
+	if (((an5SearchControl.SearchOptions.SCORE |
+		  an5SearchControl.SearchOptions.COST) & strategy) > 0) {
+	  ps.println("    \"max\": " + max[0] + "/" + max[1]);
+	  ps.println("    \"min\": " + min[0] + "/" + min[1]);
+	  ps.println("    \"queue[max..min]\": {");
+	  if (! summary) {
+	    for (int i = 0; i < queue.size(); i++) {
+		  int[] gauge = queue.get(i).goal.gauge(strategy);
+	      ps.print("      \"queue[" + gauge[0] + "/" + gauge[1] + "]\": \"" + queue.get(i).goal.getClass().getSimpleName() + "\"");
+	      if (i < queue.size() - 1) {
+		    ps.println();
+		  }
+	    }
+	  }
+	} else {
+	  ps.println("    \"queue[head..tail]\": {");
+	  if (! summary) {
+	    for (int i = 0; i < queue.size(); i++) {
+	      ps.print("      \"queue[" + i + "]\": \"" + queue.get(i).goal.getClass().getSimpleName() + "\"");
+	      if (i < queue.size() - 1) {
+	        ps.println();
+	      }
+	    }
+	  }
+	}
+	if (! summary && queue.size() > 0)
+	  ps.println();
+	ps.println("    }");	
+	ps.println("  }");
+	ps.println("}");
   }
 }

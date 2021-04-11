@@ -203,10 +203,10 @@ public class an5JoinNetwork extends an5Template {
               an5Path newP = new an5Path(startFromO, toO, bindings);
     	      targetNet.putCandidate(newP);
    			  if (startFromO instanceof an5Path) {
-  	            log.DBG(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate path[" +
+  	            log.DBG(6, "AN5:an5JoinNetwork.getNextGoal: add candidate path[" +
   	                     newP.getPathLength() + "]: " + newP.getFirst().getGUID() + " >> " + newP.getLast().getGUID());
      		  } else {
-   	            log.DBG(6, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: add candidate: " +
+   	            log.DBG(6, "AN5:an5JoinNetwork.getNextGoal: add candidate: " +
    	            		 fromO.getGUID());
      		  }
     	    } else {
@@ -215,11 +215,11 @@ public class an5JoinNetwork extends an5Template {
               res = new an5FailedGoal(this); 
    			  if (startFromO instanceof an5Path) {
    			    an5Path fromPath = (an5Path)startFromO;
-	            log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: bind failed - from path[" +
+	            log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: bind failed - from path[" +
 	                     fromPath.getPathLength() + "]: " + startFromO.getFirst().getGUID() + " >> " + startFromO.getLast().getGUID() +
 	                     " to: " + toO.getGUID());
    			  } else {
- 	            log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: bind failed - from: " +
+ 	            log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: bind failed - from: " +
  	            		     fromO.getGUID() + " to: " + toO.getGUID());
    			  }
     	    }
@@ -321,11 +321,11 @@ public class an5JoinNetwork extends an5Template {
      		  int x = k+l;
        		  if (fromO instanceof an5Path) {
                 an5Path fromPath = (an5Path)fromO;
-   	            log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
+   	            log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
    	            		     "]: " + probeCnts.get(m).cnt + " Got Paths: " + foundPaths.length + " from path[" + 
    	            		     fromPath.getPathLength() + "]: " + fromO.getFirst().getGUID() + " >> " + fromO.getLast().getGUID());
        		  } else {
-     	        log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
+     	        log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
      	            		     "]: " + probeCnts.get(m).cnt +
      	            		     " Got Paths: " + foundPaths.length + " from: " + fromO.getGUID());
        		  }
@@ -334,7 +334,7 @@ public class an5JoinNetwork extends an5Template {
        	  j = (j + 1) % probeCnts.get(m).cnt;
         }
       } else {
-        log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Inconsistent Probe Path Counts: " + foundPaths.length + " vs : " + probeCnts.get(m).cnt);
+        log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: Inconsistent Probe Path Counts: " + foundPaths.length + " vs : " + probeCnts.get(m).cnt);
       } 
     }
     an5Object removed = null;
@@ -354,11 +354,11 @@ public class an5JoinNetwork extends an5Template {
    		    skip = true; /* skip due to resource depletion */
    		    if (adding instanceof an5Path) {
    		      an5Path addingPath = (an5Path)adding;
-   	          log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Resource Depletion [k=" + k + ", l=" + l +
+   	          log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: Resource Depletion [k=" + k + ", l=" + l +
    		                  "], attempted to consume path[" +
    		                 addingPath.getPathLength() + "]: " + adding.getFirst().getGUID() + " >> " + adding.getLast().getGUID());
    		    } else {
-   	 	      log.ERR(3, "<log.INFO>:AN5:an5JoinNetwork.getNextGoal: Resource Depletion k=" + ", l=" + l +
+   	 	      log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: Resource Depletion k=" + ", l=" + l +
    	 	        	  	"], attempted to consume: " + adding.getGUID());
    		    }  
    		  }
@@ -372,7 +372,7 @@ public class an5JoinNetwork extends an5Template {
  	 	}
  	    else {
  	      skip = true;
- 		  log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Wrong Balance[k=" + k + ",l=" + l +
+ 		  log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: Wrong Balance[k=" + k + ",l=" + l +
  		 	    		   "]: Open[" + openBalance + "] != Target[" + targetBalance +
  		 	    		   "] - toAdd/toJoin[" + toAdd.size() + ", " + toJoin.size() +
  	 		               "] net members[" + joinNet.getMembersSize() + ", " + targetNet.getMembersSize() +
@@ -429,11 +429,11 @@ public class an5JoinNetwork extends an5Template {
 	     	  int x = k+l;
 	          if (fromO instanceof an5Path) {
 	            an5Path fromPath = (an5Path)fromO;
-	   	        log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
+	   	        log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
 	   	            		     "]: " + probeCnts.get(m).cnt + " Got Paths: " + foundPaths.length + " from path[" + 
 	   	            		     fromPath.getPathLength() + "]: " + fromO.getFirst().getGUID() + " >> " + fromO.getLast().getGUID());
 	          } else {
-	     	    log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
+	     	    log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: Expected Paths[k+l=" + x + ", m=" + m +
 	     	            		     "]: " + probeCnts.get(m).cnt +
 	     	            		     " Got Paths: " + foundPaths.length + " from: " + fromO.getGUID());
 	       	  }
@@ -442,7 +442,7 @@ public class an5JoinNetwork extends an5Template {
 	      j = (j + 1) % probeCnts.get(m).cnt;
 	    }
 	  } else {
-	    log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Inconsistent Probe Path Counts: " + foundPaths.length + " vs : " + probeCnts.get(m).cnt);
+	    log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: Inconsistent Probe Path Counts: " + foundPaths.length + " vs : " + probeCnts.get(m).cnt);
 	  } 
 	}
 	List<an5Object> toJoin = null;
@@ -456,7 +456,7 @@ public class an5JoinNetwork extends an5Template {
 	   	  toJoin.add(adding);
 	   	  removed = avail.remove(adding.getLast().getGUID());
 	   	  if (removed == null) {
-	  	    log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: generate with localRemoval & unique bind, removal failure: " + adding.getLast().getGUID());	   		  
+	  	    log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: generate with localRemoval & unique bind, removal failure: " + adding.getLast().getGUID());	   		  
 	   	  }
 	   	}
 	  }
@@ -466,7 +466,7 @@ public class an5JoinNetwork extends an5Template {
 	    orJoins.add(new an5SimpleGoal(new an5JoinNetwork(this, prototype, targetNet, connectTo, toJoin, avail), ctrl));
 	  }
 	  else {
-	   log.ERR(3, "<log.ERR>:AN5:an5JoinNetwork.getNextGoal: Wrong Balance[k=" + k + ",l=" + l +
+	   log.ERR(4, "AN5:an5JoinNetwork.getNextGoal: Wrong Balance[k=" + k + ",l=" + l +
 	 		 	    		   "]: Open[" + openBalance + "] != Target[" + targetBalance +
 	 		 	    		   "] - toAdd/toJoin[" + toAdd.size() + ", " + toJoin.size() +
 	 	 		               "] net members[" + joinNet.getMembersSize() + ", " + targetNet.getMembersSize() +

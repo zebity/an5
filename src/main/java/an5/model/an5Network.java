@@ -177,7 +177,7 @@ public class an5Network extends an5Object {
 	}
 	return res;
   }
-  public void dumpNetwork(PrintStream ps) {
+  public void dumpJSON(PrintStream ps) {
 	int i;
 	boolean comma = false,
 			ncomma = false;

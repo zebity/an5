@@ -90,11 +90,12 @@ public class BuildMiniNetwork {
     an5Network netResult = (an5Network)netPrototype.createInstance();
     an5Template netTemplate = new an5CreateNetwork(null, new an5Object[]{netPrototype, nodePrototype}, parts, netResult);
     an5SearchControl ctrl = new an5SearchControl();
-    int offFlags = an5SearchControl.SearchOptions.REMOVE_LOCAL_EQUIVALENTS |
+    int offFlags1 = an5SearchControl.SearchOptions.REMOVE_LOCAL_EQUIVALENTS |
     		       an5SearchControl.SearchOptions.COST;
+    int offFlags2 = an5SearchControl.SearchOptions.REMOVE_LOCAL_EQUIVALENTS;
     int onFlags = an5SearchControl.SearchOptions.DEPTH;
-    ctrl.turnOff(offFlags);
-    ctrl.turnOn(onFlags);
+    ctrl.turnOff(offFlags2);
+    // ctrl.turnOn(onFlags);
     
     an5Goal makeNet = new an5Goal(netTemplate, ctrl);
     int res = makeNet.solve();
@@ -107,7 +108,7 @@ public class BuildMiniNetwork {
       if (resGoal.goal instanceof an5JoinNetwork) {
     	an5JoinNetwork jn =  (an5JoinNetwork)(resGoal.goal);
     	an5Network no = jn.joinNet;
-    	no.dumpNetwork(System.out);
+    	no.dumpJSON(System.out);
       }
     }
     System.out.println("switch reports as" + sw1.toString());

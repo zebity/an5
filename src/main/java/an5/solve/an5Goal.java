@@ -39,7 +39,7 @@ public class an5Goal extends an5GoalTree {
     queue.addToQueue(next);
     while (! stopSearch) {;
       res = next.status();
-  	  log.DBG(6, "<log.INFO>:AN5:an5Goal.solve: next - '" + next.getClass().toString()
+  	  log.DBG(6, "AN5:an5Goal.solve: next - '" + next.getClass().toString()
   			      + "' queue size: " + next.goalQueueSize() + " status: " + ctrlAndStats.resultString(res)
   			      + " template: " + next.templateType());
   	  
@@ -58,15 +58,16 @@ public class an5Goal extends an5GoalTree {
         queue.addHead(next);
       }
       depth = next.getDepth();
+      queue.dump(System.out, true);
   	  ctrlAndStats.stats.updateStats(res, loops, depth);
 
       if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.OPTIMAL) != 0) {
     	stopSearch = queue.isEmpty();
-    	log.DBG(6, "<log.INFO>:AN5:an5Goal.solve: Option = OPTIMAL - stop - '" + stopSearch + "'");
+    	log.DBG(6, "AN5:an5Goal.solve: Option = OPTIMAL - stop - '" + stopSearch + "'");
       } else {
     	stopSearch = res == an5SearchControl.SearchResult.FOUND ||
     			       queue.isEmpty();
-    	log.DBG(6, "<log.INFO>:AN5:an5Goal.solve: Option = FOUND - stop - '" + stopSearch + "' res = "
+    	log.DBG(6, "AN5:an5Goal.solve: Option = FOUND - stop - '" + stopSearch + "' res = "
     			   + ctrlAndStats.resultString(res));
 
       }

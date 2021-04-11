@@ -61,7 +61,7 @@ public class an5SearchStats {
 	      default: break;
 	}
   }
-  public void dumpStats(PrintStream ps) {  
+  public void dumpJSON(PrintStream ps) {  
     ps.println("{");
     ps.println("  \"an5SearchStats\": {");
     ps.println("    \"noUnseeded\": " + noUnseeded + ",");

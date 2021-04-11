@@ -23,6 +23,10 @@ public class an5SearchControl {
   public static class BuildStrategy { public static final int SINGLE_NET_ADD = 1, MULTI_NET_JOIN = 2; }
   public static String[] ResultString = { "UNDEFINED", "START", "SOLVING", "SUSPENDED", "FAILED", "BOUND",
 		                                  "VISITED", "FOUND", "FOUND_ALL"};
+  public static String[] OptionsString = { "DEPTH", "BREADTH", "BOUND", "SCORE",
+          "COST", "REMOVE_LOCAL_EQUIVALENTS", "BIND_ALL", "BIND_UNIQUE",
+          "THREAD", "TIMEBOX", "OPTIMAL", "KEEP_REMOVED" };
+
   an5SearchStats stats = new an5SearchStats();
   Map<String, an5Object> visited = new HashMap<>();
   int strategy = (an5SearchControl.SearchOptions.COST | an5SearchControl.SearchOptions.REMOVE_LOCAL_EQUIVALENTS |
@@ -42,7 +46,42 @@ public class an5SearchControl {
 	  resStr = ResultString[i];
     return resStr;
   }
+  public static String strategyString(int flags) {
+	String res = new String();
+    StringBuilder str = new StringBuilder();
+    
+    if ((flags & SearchOptions.DEPTH) > 0)
+      str.append("DEPTH" + "|");
+    if ((flags & SearchOptions.BREADTH) > 0)    
+      str.append("BREADTH" + "|");
+    if ((flags & SearchOptions.BOUND) > 0)     
+      str.append("BOUND" + "|");
+    if ((flags & SearchOptions.SCORE) > 0)
+      str.append("SCORE" + "|");
+    if ((flags & SearchOptions.COST) > 0)     
+      str.append("COST" + "|");
+    if ((flags & SearchOptions.REMOVE_LOCAL_EQUIVALENTS) > 0)
+      str.append("REMOVE_LOCAL_EQUIVALENTS" + "|");
+    if ((flags & SearchOptions.BIND_ALL) > 0)
+      str.append("BIND_ALL" + "|");
+    if ((flags & SearchOptions.BIND_UNIQUE) > 0)
+      str.append("BIND_UNIQUE" + "|");
+    if ((flags & SearchOptions.THREAD) > 0)
+      str.append("THREAD" + "|");
+    if ((flags & SearchOptions.TIMEBOX) > 0)
+      str.append("TIMEBOX" + "|");
+    if ((flags & SearchOptions.OPTIMAL) > 0)
+      str.append("OPTIMAL" + "|");
+    if ((flags & SearchOptions.KEEP_REMOVED) > 0)
+      str.append("KEEP_REMOVED" + "|");
+    
+    int len = str.length();
+    if (len > 0) {
+      res = str.toString().substring(0, len - 1);
+    }
+    return res;
+  }
   public void dumpStats(PrintStream ps) {
-    stats.dumpStats(ps);
+    stats.dumpJSON(ps);
   }
 }
