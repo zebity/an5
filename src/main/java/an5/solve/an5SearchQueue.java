@@ -56,7 +56,12 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
 	return res;
   }
   public void addHead(TQ t) {
+	 addHead(t, null);
+  }
+  public void addHead(TQ t, an5SearchStats st) {
     add(0, t);
+    if (st != null)
+      st.addHead++;
   }
   public TQ removeHead() {
 	TQ r = null;
@@ -91,11 +96,20 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
 	return res;
   }
   public void addToQueue(TQ t) {
+    addToQueue(t, null); 
+  }
+  public void addToQueue(TQ t, an5SearchStats st) {
 	if (t != null) {
       if ((strategy & an5SearchControl.SearchOptions.BREADTH) != 0) {
         add(t);
+        if (st != null) {
+          st.addTail++;
+        }
       } else if ((strategy & an5SearchControl.SearchOptions.DEPTH) != 0) {
-        add(0, t);   	
+        add(0, t);
+        if (st != null) {
+          st.addHead++;
+        }
       } else if (((strategy & an5SearchControl.SearchOptions.SCORE) |
                   (strategy & an5SearchControl.SearchOptions.COST)) != 0) {
         int[] gs = t.gauge(strategy);
@@ -103,12 +117,21 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
         if (isEmpty()) {
           add(t);
           max = min = gs;
+          if (st != null) {
+            st.addEmpty++;
+          }
         } else if (score.compareTo(new Fraction(min[0], min[1])) <= 0) {
           add(t);
           min = new int[]{score.getNumerator(), score.getDenominator()};
+          if (st != null) {
+            st.addMin++;
+          }
         } else if (score.compareTo(new Fraction(max[0], max[1])) > 0) {
       	  add(0, t);
       	  max = new int[]{score.getNumerator(), score.getDenominator()};
+          if (st != null) {
+            st.addMax++;
+          }
         } else {
     	  /* note: should do insert by splitting in middle to allow for long queues */
           int lb = 0,
@@ -128,6 +151,9 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
             }
           }
           add(ub, t);
+          if (st != null) {
+            st.addInsert++;
+          }
         }
       }
     }

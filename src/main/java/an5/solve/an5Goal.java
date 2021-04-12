@@ -36,7 +36,7 @@ public class an5Goal extends an5GoalTree {
 
     ctrlAndStats.stats.startTimer();
     
-    queue.addToQueue(next);
+    queue.addToQueue(next, ctrlAndStats.stats);
     while (! stopSearch) {;
       res = next.status();
   	  log.DBG(6, "AN5:an5Goal.solve: next - '" + next.getClass().toString()
@@ -45,17 +45,19 @@ public class an5Goal extends an5GoalTree {
   	  
       if (next instanceof an5FoundGoal) {
     	found.add(next);
+        an5FoundGoal fg = (an5FoundGoal)next;
+        fg.dumpJSON(System.out, ctrlAndStats.strategy);
       }  else if (next instanceof an5OrGoal) {
       	an5OrGoal orT = (an5OrGoal)next;
       	an5GoalTree head = orT.popQueue();
         while (head != null) {
-          queue.addToQueue(head);
+          queue.addToQueue(head, ctrlAndStats.stats);
           head = orT.popQueue();
         }
       } else if (next instanceof an5SimpleGoal ||
     		     next instanceof an5Goal) {
         next = next.executeNext();
-        queue.addHead(next);
+        queue.addHead(next, ctrlAndStats.stats);
       }
       depth = next.getDepth();
       queue.dump(System.out, true);

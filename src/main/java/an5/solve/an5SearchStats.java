@@ -19,7 +19,13 @@ public class an5SearchStats {
              noFound = 0,
              maxDepth = 0,
              maxBreadth = 0,
-             loops = 0;
+             loops = 0,
+             addHead = 0,
+             addTail = 0,
+             addEmpty = 0,
+             addMin = 0,
+             addMax = 0,
+             addInsert = 0;
   public Instant start,
                  stop;
   public void updateStats(int res, int lp, int dp) {
@@ -74,6 +80,11 @@ public class an5SearchStats {
     ps.println("    \"maxDepth\": " + maxDepth + ",");
     ps.println("    \"maxBreadth\": " + maxBreadth + ",");
     ps.println("    \"loops\": " + loops + ",");
+    ps.println("    \"addHead\": " + addHead + ",");
+    ps.println("    \"addTail\": " + addTail + ",");
+    ps.println("    \"addMin\": " + addMin + ",");
+    ps.println("    \"addMax\": " + addMax + ",");
+    ps.println("    \"addInsert\": " + addInsert + ",");
     ps.println("    \"duration\": " + Duration.between(start, stop).getSeconds());
     ps.println("  }");
     ps.println("}");
