@@ -80,8 +80,8 @@ public class BuildMiniNetwork {
 
 
     an5Object[] use = {sw1,
-    		           cp1, cp2, cp3, cp4, cp5, /* cp6, */
-    		           nic1, nic2, nic3, nic4, nic5, nic6,
+    		           cp1, cp2, cp3, cp4, /* cp5, cp6, */
+    		           nic1, nic2, nic3, nic4, nic5, /* nic6, */
     		           cab1, cab2, cab3, cab4 , cab5, cab6 };
     List<an5Object> parts = new ArrayList<>();
     for (an5Object ob : use) parts.add(ob);

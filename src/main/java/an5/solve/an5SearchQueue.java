@@ -106,19 +106,28 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
         } else if (score.compareTo(new Fraction(min[0], min[1])) <= 0) {
           add(t);
           min = new int[]{score.getNumerator(), score.getDenominator()};
-        } else if (score.compareTo(new Fraction(max[0], max[1])) >= 0) {
+        } else if (score.compareTo(new Fraction(max[0], max[1])) > 0) {
       	  add(0, t);
       	  max = new int[]{score.getNumerator(), score.getDenominator()};
         } else {
     	  /* note: should do insert by splitting in middle to allow for long queues */
-    	  for (int i = 1; i < size(); i++) {
-    	    int[] ngs = get(i).gauge(strategy);
+          int lb = 0,
+        	  ub = size(),
+        	  mid, diff;
+          while (lb < ub) {
+            mid = (ub - lb) / 2;
+            int[] ngs = get(mid).gauge(strategy);
     	    Fraction ndScore = new Fraction(ngs[0], ngs[1]);
-    	    if (ndScore.compareTo(score) >= 0) {
-    	      add(i, t);
-    	      i = size();
-    	    }
-    	  }
+    	    diff = ndScore.compareTo(score);
+            if (diff > 0) {
+              ub = mid;
+              mid = (ub - lb) / 2;
+            } else if (diff <= 0) {
+              lb = mid;
+              mid = (ub - lb) / 2;
+            }
+          }
+          add(ub, t);
         }
       }
     }
