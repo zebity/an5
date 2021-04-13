@@ -24,6 +24,10 @@ public class an5Logging {
 	LOGGER.warning(msg);
     // System.err.println(msg);
   }
+  public void CRITICAL(String msg) {
+	LOGGER.severe(msg);
+    // System.err.println(msg);
+  }
   public void DBG(String msg) {
 	LOGGER.info(msg);
     /* switch (verbosity) {

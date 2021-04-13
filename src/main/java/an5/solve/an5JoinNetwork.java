@@ -105,16 +105,19 @@ public class an5JoinNetwork extends an5Template {
 	int cost = 1;
 	int score;
 	if (status == an5SearchControl.SearchResult.UNDEFINED) {
-	  score = joinNet.getCandidatesSize() - use.size();
+	  score = use.size() - joinNet.getCandidatesSize();
 	} else {
-	  score = joinNet.getCandidatesSize() - mustUse.size();
+	  score =  mustUse.size() - joinNet.getCandidatesSize();
 	}
 	if ((type & an5SearchControl.SearchOptions.COST) > 0)
 	  cost = available.size() + 1;
     Fraction res = new Fraction(score, cost);
 	if (parent != null) {
+	  /* if (parent instanceof an5JoinNetwork) {
+		int j = score;
+	  } */
 	  int []parGauge = parent.gauge(type);
-	  res.add(new Fraction(parGauge[0], parGauge[1]));
+	  res = res.add(new Fraction(parGauge[0], parGauge[1]));
 	}
 	return new int[]{res.getNumerator(), res.getDenominator()};
   }

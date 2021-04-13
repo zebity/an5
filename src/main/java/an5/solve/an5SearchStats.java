@@ -82,6 +82,7 @@ public class an5SearchStats {
     ps.println("    \"loops\": " + loops + ",");
     ps.println("    \"addHead\": " + addHead + ",");
     ps.println("    \"addTail\": " + addTail + ",");
+    ps.println("    \"addEmpty\": " + addEmpty + ",");
     ps.println("    \"addMin\": " + addMin + ",");
     ps.println("    \"addMax\": " + addMax + ",");
     ps.println("    \"addInsert\": " + addInsert + ",");

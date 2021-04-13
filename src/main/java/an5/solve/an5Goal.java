@@ -21,6 +21,7 @@ public class an5Goal extends an5GoalTree {
   int endScore,
       status = an5SearchControl.SearchResult.UNDEFINED;
   an5Logging log = new an5Logging(4, 4);
+  boolean DEBUG = false;
   
   public an5Goal(an5Template targ, an5SearchControl st) {
     goal = new an5SimpleGoal(targ, st);
@@ -60,7 +61,8 @@ public class an5Goal extends an5GoalTree {
         queue.addHead(next, ctrlAndStats.stats);
       }
       depth = next.getDepth();
-      queue.dump(System.out, true);
+      if (DEBUG)
+        queue.dump(System.out, true);
   	  ctrlAndStats.stats.updateStats(res, loops, depth);
 
       if ((ctrlAndStats.strategy & an5SearchControl.SearchOptions.OPTIMAL) != 0) {

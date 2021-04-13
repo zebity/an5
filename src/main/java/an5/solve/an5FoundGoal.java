@@ -59,7 +59,7 @@ public class an5FoundGoal extends an5GoalTree {
 	ps.println("    \"parent\": {");
 	par = goal.parent;
 	while (par != null) {
-	  ps.print("      \"" + par.getClass().getSimpleName() + "\": \"" + par + "\",");
+	  ps.print("      \"" + par.getClass().getSimpleName() + "\": \"" + par);
 	  if (((an5SearchControl.SearchOptions.SCORE |
 		    an5SearchControl.SearchOptions.COST) & strategy) > 0) {
 		score = par.gauge(strategy);
@@ -70,6 +70,7 @@ public class an5FoundGoal extends an5GoalTree {
 	  if (par != null)
 	    ps.println(",");
 	}
+	ps.println();
 	ps.println("    }");	
 	ps.println("  }");
 	ps.println("}");    

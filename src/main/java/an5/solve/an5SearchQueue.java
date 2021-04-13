@@ -10,10 +10,13 @@ package an5.solve;
 
 import java.io.PrintStream;
 import java.time.Duration;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.math3.fraction.Fraction;
+
+import an5.an5Logging;
 
 public class an5SearchQueue<TQ extends an5SearchGauge> {
   public class queueNode {
@@ -30,7 +33,8 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
   int strategy = an5SearchControl.SearchOptions.SCORE;
   int[] min,
         max;
-  boolean keepRemoved = false;
+  boolean keepRemoved = false,
+		  verifyOrder = false;
   public an5SearchQueue() {
   }
   public void setStategy(int strat) {
@@ -138,21 +142,40 @@ public class an5SearchQueue<TQ extends an5SearchGauge> {
         	  ub = size(),
         	  mid, diff;
           while (lb < ub) {
-            mid = (ub - lb) / 2;
+            mid = (lb + ub) / 2;
             int[] ngs = get(mid).gauge(strategy);
     	    Fraction ndScore = new Fraction(ngs[0], ngs[1]);
     	    diff = ndScore.compareTo(score);
-            if (diff > 0) {
+            if (diff >= 0) {
+              lb = mid + 1;
+            } else {
               ub = mid;
-              mid = (ub - lb) / 2;
-            } else if (diff <= 0) {
-              lb = mid;
-              mid = (ub - lb) / 2;
             }
           }
-          add(ub, t);
+          add(lb, t); 
           if (st != null) {
             st.addInsert++;
+          }
+        }
+        if (verifyOrder) {
+          int i = 0,
+        	  diff;
+          an5Logging logger = new an5Logging();
+      	  queueNode pn = null;
+          for (queueNode cn: queue) {
+        	if (i ==  0) {
+        	  pn = cn;
+        	} else {
+        	  int[] pg = pn.goal.gauge(strategy),
+        	        cg = cn.goal.gauge(strategy);
+        	  Fraction hr = new Fraction(pg[0], pg[1]);
+        	  diff = hr.compareTo(new Fraction(cg[0], cg[1]));
+        	  if (diff < 0) {
+        	    logger.CRITICAL("AN5:an5SearchQueue.addToQueue - verifyOrder failure.");
+        	  }
+        	  pn = cn;
+        	}
+        	i++;
           }
         }
       }
