@@ -29,7 +29,8 @@ public class an5SearchStats {
              addMax = 0,
              addInsert = 0;
    public int usedMaxBreadth = 0;
-   public long foundMaxBreadth = 0;
+   public long foundMaxBreadth = 0,
+               lastBreadthCounter = 0;
   public Instant start,
                  stop;
   public void updateStats(int res, int lp, int dp) {
@@ -38,6 +39,7 @@ public class an5SearchStats {
 	updateStats(res);
   }
   public void checkMaxBreadth(long expansionMultiplier) {
+	lastBreadthCounter = expansionMultiplier;
 	foundMaxBreadth = Long.max(foundMaxBreadth, expansionMultiplier);
 	if (expansionMultiplier <= Integer.MAX_VALUE) {
 	  usedMaxBreadth = Integer.max(usedMaxBreadth, (int)expansionMultiplier); 
@@ -88,6 +90,7 @@ public class an5SearchStats {
     ps.println("    \"noBounded\": " + noBounded + ",");
     ps.println("    \"noFound\": " + noFound + ",");
     ps.println("    \"maxDepth\": " + maxDepth + ",");
+    ps.println("    \"lastBreadthCounter\": " + lastBreadthCounter + ",");
     ps.println("    \"foundMaxBreadth\": " + foundMaxBreadth + ",");
     ps.println("    \"usedMaxBreadth\": " + usedMaxBreadth + ",");
     ps.println("    \"loops\": " + loops + ",");
@@ -97,7 +100,14 @@ public class an5SearchStats {
     ps.println("    \"addMin\": " + addMin + ",");
     ps.println("    \"addMax\": " + addMax + ",");
     ps.println("    \"addInsert\": " + addInsert + ",");
-    ps.println("    \"duration\": " + Duration.between(start, stop).getSeconds());
+    if (start != null ) {    
+      if (stop != null ) {
+         ps.println("    \"duration\": " + Duration.between(start, stop).getSeconds());
+      } else {
+    	stop = Instant.now();
+        ps.println("    \"duration\": " + Duration.between(start, stop).getSeconds());
+      }
+    }
     ps.println("  }");
     ps.println("}");
   }

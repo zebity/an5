@@ -73,6 +73,7 @@ public class an5JoinNetwork extends an5Template {
   String srcClass,
          destClass;
   int status = an5SearchControl.SearchResult.UNDEFINED;
+  boolean DEBUG = false;
   
   public an5JoinNetwork(an5Template par, an5Object proto, an5Network net, an5Object to, List<an5Object> ele, an5AvailableResource avail) {
     super(par);	  
@@ -299,7 +300,10 @@ public class an5JoinNetwork extends an5Template {
     an5Object fromO;
     an5Path[] foundPaths;
     List<an5GoalTree> orJoins = new LinkedList<>();
-    
+    if (DEBUG) {
+      ctrl.stats.stopTimer();
+      ctrl.stats.dumpJSON(System.out);
+    }
     an5Object[][] addPaths = new an5Object[(int)pathStats.expansionMultiplier][probeCnts.size()];
     if (probeCnts.size() > 0) {
       Collections.sort(probeCnts);
