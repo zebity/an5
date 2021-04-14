@@ -132,11 +132,11 @@ public class BuildMiniNetwork {
 
     an5Object[] use = {sw1,
     		           cp1, cp2, cp3, cp4, cp5, cp6,
-    		           cp7, cp8, /* cp9, cp10, cp11, cp12, */
+    		           cp7, cp8, cp9, cp10, cp11, cp12,
     		           nic1, nic2, nic3, nic4, nic5, nic6,
-    		           nic7, nic8, /* nic9, nic10, nic11, nic12,*/
-    		           cab1, cab2, cab3, cab4 , cab5, cab6,
-    		           cab7, cab8, cab9 /*, cab10 , cab11, cab12, cab13 */};
+    		           nic7, nic8, nic9, nic10, nic11, nic12,
+    		           cab1, cab2, cab3 , cab4 , cab5, cab6,
+    		           cab7, cab8, cab9 , cab10 , cab11, cab12, cab13 };
     List<an5Object> parts = new ArrayList<>();
     for (an5Object ob : use) parts.add(ob);
     AN5TP_ethernet_lan  netPrototype = new AN5TP_ethernet_lan();
@@ -148,8 +148,12 @@ public class BuildMiniNetwork {
     		       an5SearchControl.SearchOptions.COST;
     int offFlags2 = an5SearchControl.SearchOptions.REMOVE_LOCAL_EQUIVALENTS;
     int offFlags3 = an5SearchControl.SearchOptions.COST;
+    int offFlags4 = an5SearchControl.SearchOptions.REMOVE_LOCAL_EQUIVALENTS |
+    		        an5SearchControl.SearchOptions.BIND_UNIQUE;
     int onFlags1 = an5SearchControl.SearchOptions.DEPTH;
     ctrl.turnOff(offFlags1);
+    // ctrl.turnOff(offFlags3);
+    // ctrl.turnOff(offFlags4);
     ctrl.turnOn(onFlags1);
     
     an5Goal makeNet = new an5Goal(netTemplate, ctrl);

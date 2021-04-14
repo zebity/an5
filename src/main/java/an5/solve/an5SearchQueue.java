@@ -1,16 +1,14 @@
 /**
  @what Search solution queue.
  
- @note Need to refactor so that insert does not do start to tail walk ...
-         should either do binary partition or insert + resort
+ @note Need [Now Done] to refactor so that insert does not do start to tail walk ...
+         should either do binary partition or insert + resort 
  
  @author John Hartley - Graphica Software/Dokmai Pty Ltd
 */
 package an5.solve;
 
 import java.io.PrintStream;
-import java.time.Duration;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 

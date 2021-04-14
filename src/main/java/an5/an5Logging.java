@@ -14,9 +14,12 @@ public class an5Logging {
 	  diags = 5;
 
   public an5Logging() {
+	LOGGER.setLevel(Level.OFF);
+	LOGGER.setLevel(Level.SEVERE);
   }
   public an5Logging(int v, int d) {
 	LOGGER.setLevel(Level.OFF);
+	LOGGER.setLevel(Level.SEVERE);
     verbosity = v;
     diags = d;
   }

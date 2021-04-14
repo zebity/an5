@@ -8,7 +8,6 @@
 */
 package an5.solve;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,9 +21,10 @@ import an5.model.an5Service;
 
 public class an5InterfaceFinder {
   /* from Available Interfaces */
-  public int canMatchInterface(an5Object fromO, an5Service netSrv, an5Service protoSrvs, 
-		                       boolean removeLocalEquivalents, boolean bindUnique, an5AvailableInterfaces availIf) {
-    int cnt = 0,
+  public long canMatchInterface(an5Object fromO, an5Service netSrv, an5Service protoSrvs, 
+		                       boolean removeLocalEquivalents, boolean bindUnique,
+		                       an5AvailableInterfaces availIf, an5SearchStats stats) {
+    long cnt = 0,
     	bindCnt;
     boolean found = false;
     List<an5MapIf> toIfs = null;
@@ -49,9 +49,12 @@ public class an5InterfaceFinder {
     		      if (removeLocalEquivalents && ! equivalent.contains(toI.ref.getClass().toString())) {
     	            cnt += bindCnt;
     	            equivalent.add(toI.ref.getClass().toString());
+    	            stats.noLocalEquivalentsAddedCheck++;
     		      }
     		      else if (! removeLocalEquivalents) {
       	            cnt += bindCnt;  
+    		      } else {
+      	            stats.noLocalEquivalentsRemovedCheck++;    		    	  
     		      }
     	          if (! foundIf.contains(fromOfromI)) {
     	    	    foundIf.add(fromOfromI);
@@ -73,7 +76,8 @@ public class an5InterfaceFinder {
 	return cnt;
   }
   public an5Path[] probePaths(an5Object startO, an5Service netSrv, an5Service protoSrvs,
-		                      boolean removeLocalEquivalents, boolean bindUnique, an5AvailableInterfaces avail) {
+		                      boolean removeLocalEquivalents, boolean bindUnique,
+		                      an5AvailableInterfaces avail, an5SearchStats stats) {
     an5Path[] res = null;
     an5Object pathStartO, fromO; 
     
@@ -108,16 +112,19 @@ public class an5InterfaceFinder {
     	          binds = fromI.forInterface.bind(fromO, toI.ref, toI.forInterface, netSrv, protoSrvs);
     	          if (binds != null) {
     		        equivalent.add(toI.ref.getClass().toString());
+    		        stats.noLocalEquivalentsAdded++;
       		        bindings.add(binds);
       		        startWith.add(pathStartO);
     	          }
     	    	} else if (! removeLocalEquivalents) {
     	    	  binds = fromI.forInterface.bind(fromO, toI.ref, toI.forInterface, netSrv, protoSrvs);
     	          if (binds != null) {
-    		        equivalent.add(toI.ref.getClass().toString());
+    		        // equivalent.add(toI.ref.getClass().toString());
       		        bindings.add(binds);
       		        startWith.add(pathStartO);
     	          }
+    	    	} else {
+    	    	  stats.noLocalEquivalentsRemoved++;
     	    	}
     	        if (binds != null) {
     		      found = true;
@@ -156,18 +163,22 @@ public class an5InterfaceFinder {
 	return res;
   }
   /* from Available Resources */
-  public int canMatchInterface(an5Object fromO, an5Service netSrv, an5Service protoSrvs,
-		                       boolean removeLocalEquivalents, boolean bindUnique, an5AvailableResource availRes) {
-    int cnt = 0;
+  public long canMatchInterface(an5Object fromO, an5Service netSrv, an5Service protoSrvs,
+		                       boolean removeLocalEquivalents, boolean bindUnique,
+		                       an5AvailableResource availRes, an5SearchStats stats) {
+    long cnt = 0;
 	availRes.load();
-	cnt = canMatchInterface(fromO, netSrv, protoSrvs, removeLocalEquivalents, bindUnique, availRes.availableInterface);
+	cnt = canMatchInterface(fromO, netSrv, protoSrvs, removeLocalEquivalents, bindUnique,
+			                availRes.availableInterface, stats);
 	return cnt;
   }
   public an5Path[] probePaths(an5Object fromO, an5Service netSrv, an5Service protoSrv,
-		             boolean removeLocalEquivalents, boolean bindUnique, an5AvailableResource availRes) {
+		             boolean removeLocalEquivalents, boolean bindUnique,
+		             an5AvailableResource availRes, an5SearchStats stats) {
     an5Path[] res = null;
 	availRes.load();
-	res = probePaths(fromO, netSrv, protoSrv, removeLocalEquivalents, bindUnique, availRes.availableInterface);
+	res = probePaths(fromO, netSrv, protoSrv, removeLocalEquivalents, bindUnique,
+			         availRes.availableInterface, stats);
 	return res;
   }
 }
