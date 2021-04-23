@@ -21,6 +21,7 @@ So it is data definition only, with class & interface used for schema defintion
 
 - [ANTLR](http://www.antlr.org) - Compiler Generation Tool
 - Modern Compiler Implementation in Java - 2nd Ed - [MiniJava Project](https://www.cambridge.org/resources/052182060X/) as an9 is also a based on Java language syntax, this has useful examples and an9 symbol table handling is based on this
+- [an5 - Intelligent Network Design](https://just.graphica.com.au/intelligent-network-design/) - design considerations and architecture of initial implementation  
 
 
 
