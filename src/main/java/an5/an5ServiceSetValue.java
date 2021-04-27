@@ -1,7 +1,7 @@
 /**
  @what reflected interface variable
  
- @author John Hartley = Graphica Software/Dokmai Pty Ltd
+ @author John Hartley - Graphica Software/Dokmai Pty Ltd
 */
 
 package an5;
