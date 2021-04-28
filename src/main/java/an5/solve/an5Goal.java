@@ -38,7 +38,7 @@ public class an5Goal extends an5GoalTree {
     ctrlAndStats.stats.startTimer();
     
     queue.addToQueue(next, ctrlAndStats.stats);
-    while (! stopSearch) {;
+    while (! stopSearch) {
       res = next.status();
   	  log.DBG(6, "AN5:an5Goal.solve: next - '" + next.getClass().toString()
   			      + "' queue size: " + next.goalQueueSize() + " status: " + ctrlAndStats.resultString(res)
