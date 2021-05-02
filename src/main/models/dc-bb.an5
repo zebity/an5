@@ -36,13 +36,13 @@ interface rj45_plug {
   common = { "plug=rj45"};
 }
 
-interface base_t_sink extends rj45_plug {
+interface baset_sink extends rj45_plug {
   needs = { "cable=(cat([3-8].?))?",
             "gender=male", "media=copper"};
   provides = {"plug=rj45", "gender=female"};
 }
  
-interface ethernet_port_base_t extends base_t_sink {
+interface ethernet_port_baset extends baset_sink {
   common = { "service=ethernet"};
   binding = "p-%I+1";
   string name,
@@ -76,13 +76,13 @@ interface pcie_card extends pcie_interface {
   provides = {"form=card"};
 }
 
-class pcie_nic extends element exposes pcie_card, ethernet_port_base_t {
+class pcie_nic extends element exposes pcie_card, ethernet_port_baset {
   reflects pcie_card card;
-  reflects ethernet_port_base_t port[];
+  reflects ethernet_port_baset port[];
 }
 
-class switch extends element exposes ethernet_port_base_t, ethernet_vlan, ethernet_lag {
-  reflects ethernet_port_base_t port[];
+class switch extends element exposes ethernet_port_baset, ethernet_vlan, ethernet_lag {
+  reflects ethernet_port_baset port[];
   reflects ethernet_vlan vlan[];
   reflects ethernet_lag lag[];
   string name;
@@ -103,7 +103,7 @@ class cat6_cable extends link exposes catx_link {
          length,
          colour,
          label;
-   reflects cat6_link a, b;
+   reflects catx_link a, b;
 }
 
 abstract class ethernet_lan extends network {
