@@ -13,6 +13,15 @@ So it is data definition only, with class & interface used for schema defintion
 - Project:  build with Eclipse with ANTLR XText Facit and maven Antlr plugin
 - Git: where Eclipse Workspace is in Git Workspace
 
+# Building with Eclipse
+
+1. Clone git repository
+2. Install Eclipse
+3. Open repository Eclipse project
+4. Run the compiler to generate sample classes
+5. Build the Sample Network builder
+6. Run Network Builder via Eclipse
+
 # Authors and contributors
 
 - John Hartley - Graphica Software/Dokmai Pty Ltd
