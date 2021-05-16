@@ -18,8 +18,8 @@ So it is data definition only, with class & interface used for schema defintion
 1. Clone git repository
 2. Install Eclipse
 3. Open repository Eclipse project
-4. Run the compiler to generate sample classes
-5. Build the Sample Network builder
+4. Run the compiler to generate sample classes (see: src/main/models/dc-bb.an5) 
+5. Build the Sample Network builder (see: src/test/java/BuildMiniNetwork.java)
 6. Run Network Builder via Eclipse
 
 # Authors and contributors
