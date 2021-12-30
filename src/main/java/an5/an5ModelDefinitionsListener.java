@@ -116,6 +116,9 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
         if (litCtx.STRING_LITERAL() != null) {
           sigStr.setLength(0);
           sigStr.append(litCtx.STRING_LITERAL().getText());
+        } else if (litCtx.integerLiteral() != null) {
+          sigStr.setLength(0);
+          sigStr.append(litCtx.integerLiteral().DECIMAL_LITERAL().toString());
         }
       }
 	}
@@ -126,11 +129,22 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	
 	for (VariableDeclaratorContext varDecCtx: id) {
       String array = new String();
+      String arrayDim = new String();
       an5Parser.VariableDeclaratorIdContext varDecIdCtx = varDecCtx.variableDeclaratorId();
       if (varDecIdCtx.LBRACK().size() > 0) {
-        array = new String(global.arrayFlag); 
+        array = new String(global.arrayFlag);
+        arrayDim = String.valueOf(varDecIdCtx.LBRACK().size());
+        varIds.add(new String[]{array, varDecIdCtx.IDENTIFIER().getText(), arrayDim});
+      } else {
+    	an5Parser.VariableInitializerContext varInitCxt = varDecCtx.variableInitializer();
+    	if (varInitCxt != null) {
+    	  StringBuilder valStr = new StringBuilder();
+    	  extractVarVal(varInitCxt, valStr);
+          varIds.add(new String[]{array, varDecIdCtx.IDENTIFIER().getText(), valStr.toString()});
+    	} else {
+          varIds.add(new String[]{array, varDecIdCtx.IDENTIFIER().getText()});
+    	}
       }
-      varIds.add(new String[]{array, varDecIdCtx.IDENTIFIER().getText()});
     }
   }
   boolean getServicesSet(List<String> srvs, List<String> services, List<int[]> srvCardinality) {
@@ -551,6 +565,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
       res = generator.generateInterfaceDefinitions();
 	  res = generator.generateInterfaceImplementations();
 	  res = generator.generateClassImplementations();
+	  res = generator.generateJSONSerializerImplementations();
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
@@ -615,7 +630,11 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 		}
 		else {
 		  for (String[] val: varIds) {
-		    nd.attributes.add(new String[]{typeVal[1].toString(), val[1]});
+			if (val.length == 2) {
+		      nd.attributes.add(new String[]{typeVal[1].toString(), val[1]});
+			} else if (val.length == 3) {
+			  nd.attributes.add(new String[]{typeVal[1].toString(), val[1], val[2]});
+			}
 		  }
 		}
       }

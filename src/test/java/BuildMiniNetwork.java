@@ -151,8 +151,8 @@ public class BuildMiniNetwork {
     int offFlags4 = an5SearchControl.SearchOptions.REMOVE_LOCAL_EQUIVALENTS |
     		        an5SearchControl.SearchOptions.BIND_UNIQUE;
     int onFlags1 = an5SearchControl.SearchOptions.DEPTH;
-    ctrl.turnOff(offFlags1);
-    //ctrl.turnOff(offFlags3);
+    // ctrl.turnOff(offFlags1);
+    ctrl.turnOff(offFlags3);
     // ctrl.turnOff(offFlags4);
     ctrl.turnOn(onFlags1);
     

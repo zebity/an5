@@ -9,6 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class an5Path extends an5Object {
+  String an5name = "path";
   public Map<String, an5Object> path = new LinkedHashMap<>();
   String firstEntry = null,
          lastEntry;

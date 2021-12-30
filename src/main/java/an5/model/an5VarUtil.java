@@ -1,7 +1,7 @@
 /**
- @what Class to support constructors and variable withinn an5Object
+ @what Class to support constructors and variables within an5Object
  
- @note Need to be replaced with JSON based mechanism for dump/restore of class objects
+ @note Needs to be replaced with JSON based mechanism for dump/restore of class objects
  
  @author John Hartley - Graphica Software/Dokmai Pty Ltd
 */

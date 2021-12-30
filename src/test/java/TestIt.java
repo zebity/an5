@@ -16,7 +16,7 @@ public class TestIt {
 	
 	class Mickey { int Val=0;
 	}
-	an5Interface obj = new AN5CL_ethernet_port_base_t();
+	an5Interface obj = new AN5CL_ethernet_port_baset(new String("p%I"));
 	
 	Mickey m = new Mickey();
 	m.Val++; m.Val++;

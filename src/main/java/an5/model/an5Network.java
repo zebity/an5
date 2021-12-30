@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class an5Network extends an5Object {
+  String an5name = "network";
   public static class Cloned { public static final int MEMBERS = 0x01, NETWORKS = 0x02, CANDIDATES = 0x04, ALL = 0x07; }
   Map<String, an5Object> members = new HashMap<>();
   Map<String, an5Network> memberNetworks = new HashMap<>();

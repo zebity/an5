@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class an5Object implements an5ClassTemplate {
+  String an5name = "object";
   public boolean abstractSpec = false;
   public boolean mandatory = false;
   public String[] uniqueId = new String[2];
@@ -246,5 +247,11 @@ public class an5Object implements an5ClassTemplate {
   }
   public an5Object getLast() {
 	return this;
+  }
+  public String setValue(String nam, String val) {
+    return null;
+  }
+  public String getValue(String nam) {
+    return null;
   }
 }

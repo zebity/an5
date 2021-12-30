@@ -6,7 +6,8 @@
  */
 package an5.model;
 
-public class an5Element extends an5Object {  
+public class an5Element extends an5Object {
+  String an5name = "element";
   public an5Element() {
   }
   public an5Element(an5ConstructArguments args) {  
