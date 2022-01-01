@@ -11,9 +11,8 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-public class an5PathJsonSer extends StdSerializer<an5Object> {
+public class an5PathJsonSer extends an5ObjectJsonSer {
   private static final long serialVersionUID = 1L;
   public an5PathJsonSer(Class<an5Object> t) {
     super(t);

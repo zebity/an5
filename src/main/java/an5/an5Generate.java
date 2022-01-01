@@ -322,7 +322,7 @@ public class an5Generate {
       jvStrm.println("      res = String.valueOf(" + global.attrPrefix + attVal[1] + ");");
     } else if (attVal[0].equals("int")) {
       res++;
-      jvStrm.println("      " + global.attrPrefix + attVal[1] + " = String.valueOf(val);");
+      jvStrm.println("      " + global.attrPrefix + attVal[1] + " = Integer.parseInt(val);");
       jvStrm.println("      res = String.valueOf(" + global.attrPrefix + attVal[1] + ");");
     }
 
@@ -565,7 +565,7 @@ public class an5Generate {
     	      } else if (attVar[0].equals("boolean")) {
     	    	jvStrm.println("    gen.writeBooleanField(\"" + attVar[1] + "\", vo." + global.attrPrefix + attVar[1] + ");");
     	      } else if (attVar[0].equals("int")) {
-    	    	jvStrm.println("    gen.writeIntField(\"" + attVar[1] + "\", vo." + global.attrPrefix + attVar[1] + ");");
+    	    	jvStrm.println("    gen.writeNumberField(\"" + attVar[1] + "\", vo." + global.attrPrefix + attVar[1] + ");");
     	      }
     	    }
     	  }

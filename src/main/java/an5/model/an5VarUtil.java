@@ -17,19 +17,21 @@ public class an5VarUtil {
 	String val;
     if (nd != null) {
       JsonNode ifNd = nd.get("reflects");
-      for (Iterator<JsonNode> nxt = ifNd.elements(); nxt.hasNext();) {
-    	aNd = nxt.next();
-        String nam = aNd.get("name").asText();
-	    an5InterfaceTable v = obj.AN5AT_interfaces.get(nam);
-	    if (v != null && v.instance instanceof an5InterfaceInstance) {
-	      peakNd = aNd.get("template");
-	      if (peakNd != null) {
-	    	((an5InterfaceInstance)v.instance).setNameTemplate(peakNd.asText());
-	      }
-	      peakNd = aNd.get("policy");
-	      if (peakNd != null && peakNd.asText().equals(an5InterfaceInstance.PolicyString[an5InterfaceInstance.Policy.STATIC])) {
-	        int sz = aNd.get("size").asInt();
-	        ((an5InterfaceInstance)v.instance).allocateBinding(sz);
+      if (ifNd != null) {
+        for (Iterator<JsonNode> nxt = ifNd.elements(); nxt.hasNext();) {
+    	  aNd = nxt.next();
+          String nam = aNd.get("name").asText();
+	      an5InterfaceTable v = obj.AN5AT_interfaces.get(nam);
+	      if (v != null && v.instance instanceof an5InterfaceInstance) {
+	        peakNd = aNd.get("template");
+	        if (peakNd != null) {
+	    	  ((an5InterfaceInstance)v.instance).setNameTemplate(peakNd.asText());
+	        }
+	        peakNd = aNd.get("policy");
+	        if (peakNd != null && peakNd.asText().equals(an5InterfaceInstance.PolicyString[an5InterfaceInstance.Policy.STATIC])) {
+	          int sz = aNd.get("size").asInt();
+	          ((an5InterfaceInstance)v.instance).allocateBinding(sz);
+	        }
 	      }
 	    }
       }

@@ -41,46 +41,33 @@ public class JSONConstruct {
     String cpdef12 = "{\"an5name\":\"computer\",\"name\":\"hal-12\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
     
     /* 12 * NIC */
-    String[][] nicdef1 = {{"port", "[2]"}};
-    String[][] nicdef2 = {{"port", "[2]"}};
-    String[][] nicdef3 = {{"port", "[2]"}};
-    String[][] nicdef4 = {{"port", "[2]"}};
-    String[][] nicdef5 = {{"port", "[2]"}};
-    String[][] nicdef6 = {{"port", "[2]"}};
-    String[][] nicdef7 = {{"port", "[2]"}};
-    String[][] nicdef8 = {{"port", "[2]"}};
-    String[][] nicdef9 = {{"port", "[2]"}};
-    String[][] nicdef10 = {{"port", "[2]"}};
-    String[][] nicdef11 = {{"port", "[2]"}};
-    String[][] nicdef12 = {{"port", "[2]"}};
+    String nicdef1 = "{\"an5name\":\"pcie_nic\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":2}]}";
+    String nicdef2 = "{\"an5name\":\"pcie_nic\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":2}]}";
+    String nicdef3 = "{\"an5name\":\"pcie_nic\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":2}]}";
+    String nicdef4 = "{\"an5name\":\"pcie_nic\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":2}]}";
+    String nicdef5 = "{\"an5name\":\"pcie_nic\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":2}]}";
+    String nicdef6 = "{\"an5name\":\"pcie_nic\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":2}]}";
+    String nicdef7 = "{\"an5name\":\"pcie_nic\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":2}]}";
+    String nicdef8 = "{\"an5name\":\"pcie_nic\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":2}]}";
+    String nicdef9 = "{\"an5name\":\"pcie_nic\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":2}]}";
+    String nicdef10 = "{\"an5name\":\"pcie_nic\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":2}]}";
+    String nicdef11 = "{\"an5name\":\"pcie_nic\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":2}]}";
+    String nicdef12 = "{\"an5name\":\"pcie_nic\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":2}]}";
     
     /* 13 * Cat6 */
-    String[][] cabdef1 = {{"type", "physical"},
-    		              {"length", "1"}};
-    String[][] cabdef2 = {{"type", "physical"},
-                          {"length", "1"}};
-    String[][] cabdef3 = {{"type", "physical"},
-                          {"length", "1"}};
-    String[][] cabdef4 = {{"type", "physical"},
-                          {"length", "1"}};
-    String[][] cabdef5 = {{"type", "physical"},
-                          {"length", "1"}};
-    String[][] cabdef6 = {{"type", "physical"},
-                          {"length", "1"}};
-    String[][] cabdef7 = {{"type", "physical"},
-                          {"length", "1"}};
-    String[][] cabdef8 = {{"type", "physical"},
-                          {"length", "1"}};
-    String[][] cabdef9 = {{"type", "physical"},
-                          {"length", "1"}};
-    String[][] cabdef10 = {{"type", "physical"},
-                           {"length", "1"}};
-    String[][] cabdef11 = {{"type", "physical"},
-                           {"length", "1"}};
-    String[][] cabdef12 = {{"type", "physical"},
-                           {"length", "1"}};
-    String[][] cabdef13 = {{"type", "physical"},
-                           {"length", "1"}};
+    String cabdef1 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
+    String cabdef2 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
+    String cabdef3 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
+    String cabdef4 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
+    String cabdef5 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
+    String cabdef6 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
+    String cabdef7 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
+    String cabdef8 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
+    String cabdef9 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
+    String cabdef10 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
+    String cabdef11 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
+    String cabdef12 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
+    String cabdef13 = "{\"an5name\":\"cat6_cable\",\"type\":\"physical\",\"length\":100};";
     
     AN5CL_switch sw1 = null;
 	AN5CL_computer cp1 = null;
@@ -95,7 +82,32 @@ public class JSONConstruct {
 	AN5CL_computer cp10 = null;
 	AN5CL_computer cp11 = null;
 	AN5CL_computer cp12 = null;
-
+    AN5CL_pcie_nic nic1 = null;
+    AN5CL_pcie_nic nic2 = null;
+    AN5CL_pcie_nic nic3 = null;
+    AN5CL_pcie_nic nic4 = null;
+    AN5CL_pcie_nic nic5 = null;
+    AN5CL_pcie_nic nic6 = null;
+    AN5CL_pcie_nic nic7 = null;
+    AN5CL_pcie_nic nic8 = null;
+    AN5CL_pcie_nic nic9 = null;
+    AN5CL_pcie_nic nic10 = null;
+    AN5CL_pcie_nic nic11 = null;
+    AN5CL_pcie_nic nic12 = null;
+    AN5CL_cat6_cable cab1 = null;
+    AN5CL_cat6_cable cab2 = null;
+    AN5CL_cat6_cable cab3 = null;
+    AN5CL_cat6_cable cab4 = null;
+    AN5CL_cat6_cable cab5 = null;
+    AN5CL_cat6_cable cab6 = null;
+    AN5CL_cat6_cable cab7 = null;
+    AN5CL_cat6_cable cab8 = null;
+    AN5CL_cat6_cable cab9 = null;
+    AN5CL_cat6_cable cab10 = null;
+    AN5CL_cat6_cable cab11 = null;
+    AN5CL_cat6_cable cab12 = null;
+    AN5CL_cat6_cable cab13 = null;
+    
 	try {
 	  sw1 = new AN5CL_switch(new ObjectMapper().readTree(swdef));
 	  cp1 = new AN5CL_computer(new ObjectMapper().readTree(cpdef1));
@@ -109,7 +121,33 @@ public class JSONConstruct {
 	  cp9 = new AN5CL_computer(new ObjectMapper().readTree(cpdef9));
 	  cp10 = new AN5CL_computer(new ObjectMapper().readTree(cpdef10));
 	  cp11 = new AN5CL_computer(new ObjectMapper().readTree(cpdef11));
-	  cp12 = new AN5CL_computer(new ObjectMapper().readTree(cpdef12));	
+	  cp12 = new AN5CL_computer(new ObjectMapper().readTree(cpdef12));
+	  nic1 = new AN5CL_pcie_nic(new ObjectMapper().readTree(nicdef1));
+	  nic2 = new AN5CL_pcie_nic(new ObjectMapper().readTree(nicdef2));
+	  nic3 = new AN5CL_pcie_nic(new ObjectMapper().readTree(nicdef3));
+	  nic4 = new AN5CL_pcie_nic(new ObjectMapper().readTree(nicdef4));
+	  nic5 = new AN5CL_pcie_nic(new ObjectMapper().readTree(nicdef5));
+	  nic6 = new AN5CL_pcie_nic(new ObjectMapper().readTree(nicdef6));
+	  nic7 = new AN5CL_pcie_nic(new ObjectMapper().readTree(nicdef7));
+	  nic8 = new AN5CL_pcie_nic(new ObjectMapper().readTree(nicdef8));
+	  nic9 = new AN5CL_pcie_nic(new ObjectMapper().readTree(nicdef9));
+	  nic10 = new AN5CL_pcie_nic(new ObjectMapper().readTree(nicdef10));
+	  nic11 = new AN5CL_pcie_nic(new ObjectMapper().readTree(nicdef11));
+	  nic12 = new AN5CL_pcie_nic(new ObjectMapper().readTree(nicdef12));
+	  cab1 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef1));
+	  cab2 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef2));
+	  cab3 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef3));
+	  cab4 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef4));
+	  cab5 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef5));
+	  cab6 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef6));
+	  cab7 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef7));
+      cab8 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef8));
+      cab9 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef9));
+	  cab10 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef10));
+	  cab11 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef11));
+	  cab12 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef12));
+	  cab13 = new AN5CL_cat6_cable(new ObjectMapper().readTree(cabdef13));
+
 	} catch (JsonMappingException e1) {
 		// TODO Auto-generated catch block
 		e1.printStackTrace();
@@ -118,34 +156,6 @@ public class JSONConstruct {
 		e1.printStackTrace();
 	}
     
-    AN5CL_pcie_nic nic1 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef1));
-    AN5CL_pcie_nic nic2 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef2));
-    AN5CL_pcie_nic nic3 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef3));
-    AN5CL_pcie_nic nic4 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef4));
-    AN5CL_pcie_nic nic5 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef5));
-    AN5CL_pcie_nic nic6 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef6));
-    AN5CL_pcie_nic nic7 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef7));
-    AN5CL_pcie_nic nic8 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef8));
-    AN5CL_pcie_nic nic9 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef9));
-    AN5CL_pcie_nic nic10 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef10));
-    AN5CL_pcie_nic nic11 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef11));
-    AN5CL_pcie_nic nic12 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef12));
-
-    AN5CL_cat6_cable cab1 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef1));
-    AN5CL_cat6_cable cab2 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef2));
-    AN5CL_cat6_cable cab3 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef3));
-    AN5CL_cat6_cable cab4 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef4));
-    AN5CL_cat6_cable cab5 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef5));
-    AN5CL_cat6_cable cab6 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef6));
-    AN5CL_cat6_cable cab7 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef7));
-    AN5CL_cat6_cable cab8 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef8));
-    AN5CL_cat6_cable cab9 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef9));
-    AN5CL_cat6_cable cab10 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef10));
-    AN5CL_cat6_cable cab11 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef11));
-    AN5CL_cat6_cable cab12 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef12));
-    AN5CL_cat6_cable cab13 = new AN5CL_cat6_cable(new an5ConstructArguments(cabdef13));
-
-
     an5Object[] use = {sw1,
     		           cp1, cp2, cp3, cp4, cp5, cp6,
     		           cp7, cp8, /* cp9, cp10, cp11, cp12, */

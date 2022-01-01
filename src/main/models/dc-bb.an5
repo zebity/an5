@@ -100,9 +100,9 @@ interface cat6_link extends catx_link {
   
 class cat6_cable extends link exposes catx_link {
   string type = "physical",
-         length,
          colour,
          label;
+   int length;
    reflects catx_link a, b;
 }
 
