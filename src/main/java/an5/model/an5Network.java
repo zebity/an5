@@ -15,6 +15,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 public class an5Network extends an5Object {
   String an5name = "network";
   public static class Cloned { public static final int MEMBERS = 0x01, NETWORKS = 0x02, CANDIDATES = 0x04, ALL = 0x07; }
@@ -28,6 +30,9 @@ public class an5Network extends an5Object {
   an5Network clonedFrom = null;
   Map<String, an5Network> clonedBy = new LinkedHashMap<>();
   public an5Network() {  
+  }
+  public an5Network(JsonNode nd) {
+    super(nd == null ? null : nd.get("extends"));
   }
   public an5Network(an5ConstructArguments args) {  
   }

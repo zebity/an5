@@ -19,6 +19,7 @@ public class an5Global {
 		 classPrefix = "AN5CL_",
 		 templatePrefix = "AN5TP_",
 		 serializerPrefix = "AN5SR_",
+		 deserializerPrefix = "AN5DR_",
 		 attrPrefix = "AN5AT_",
 		 sigPrefix = "AN5SG_",
          fileSuffix = ".java",

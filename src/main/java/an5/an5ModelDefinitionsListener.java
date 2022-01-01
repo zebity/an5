@@ -565,7 +565,8 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
       res = generator.generateInterfaceDefinitions();
 	  res = generator.generateInterfaceImplementations();
 	  res = generator.generateClassImplementations();
-	  res = generator.generateJSONSerializerImplementations();
+	  res = generator.generateJsonSerializerImplementations();
+	  res = generator.generateJsonDeserializerImplementations();
 	} catch (FileNotFoundException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();

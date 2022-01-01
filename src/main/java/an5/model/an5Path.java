@@ -8,6 +8,8 @@ package an5.model;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 public class an5Path extends an5Object {
   String an5name = "path";
   public Map<String, an5Object> path = new LinkedHashMap<>();
@@ -83,6 +85,10 @@ public class an5Path extends an5Object {
       }
       i++;
     }
+  }
+  public an5Path(JsonNode nd) {
+    super(nd == null ? null : nd.get("extends"));
+    /* Now traverse through pathList */
   }
   public Object clone() {
     return new an5Path(this);

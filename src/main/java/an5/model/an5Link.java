@@ -6,6 +6,7 @@
 */
 package an5.model;
 
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class an5Link extends an5Object {
   String an5name = "link";
@@ -15,5 +16,8 @@ public class an5Link extends an5Object {
   }
   public an5Link(an5Link lk) {
     super(lk);
+  }
+  public an5Link(JsonNode nd) {
+	super(nd == null ? null : nd.get("extends"));
   }
 }

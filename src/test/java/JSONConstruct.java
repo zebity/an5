@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -21,34 +23,22 @@ public class JSONConstruct {
   public static void main(String[] args){
 	    
     /* Switch */
-    String[][] swdef = {{"name", "simple-switch"},
-    		            {"port", "[24]"}};
+    String swdef = "{\"an5name\":\"switch\",\"name\":\"simple-switch\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":24}]}";
+
     
     /* 12 x Computer */
-    String[][] cpdef1 = {{"name", "hal-1"},
-            {"slot", "[4]"}};
-    String[][] cpdef2 = {{"name", "hal-2"},
-            {"slot", "[4]"}};
-    String[][] cpdef3 = {{"name", "hal-3"},
-            {"slot", "[4]"}};
-    String[][] cpdef4 = {{"name", "hal-4"},
-            {"slot", "[4]"}};
-    String[][] cpdef5 = {{"name", "hal-5"},
-            {"slot", "[4]"}};
-    String[][] cpdef6 = {{"name", "hal-6"},
-            {"slot", "[4]"}};
-    String[][] cpdef7 = {{"name", "hal-7"},
-            {"slot", "[4]"}};
-    String[][] cpdef8 = {{"name", "hal-8"},
-            {"slot", "[4]"}};
-    String[][] cpdef9 = {{"name", "hal-9"},
-            {"slot", "[4]"}};
-    String[][] cpdef10 = {{"name", "hal-10"},
-            {"slot", "[4]"}};
-    String[][] cpdef11 = {{"name", "hal-11"},
-            {"slot", "[4]"}};
-    String[][] cpdef12 = {{"name", "hal-12"},
-            {"slot", "[4]"}};
+    String cpdef1 = "{\"an5name\":\"computer\",\"name\":\"hal-1\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
+    String cpdef2 = "{\"an5name\":\"computer\",\"name\":\"hal-2\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
+    String cpdef3 = "{\"an5name\":\"computer\",\"name\":\"hal-3\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
+    String cpdef4 = "{\"an5name\":\"computer\",\"name\":\"hal-4\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
+    String cpdef5 = "{\"an5name\":\"computer\",\"name\":\"hal-5\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
+    String cpdef6 = "{\"an5name\":\"computer\",\"name\":\"hal-6\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
+    String cpdef7 = "{\"an5name\":\"computer\",\"name\":\"hal-7\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
+    String cpdef8 = "{\"an5name\":\"computer\",\"name\":\"hal-8\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
+    String cpdef9 = "{\"an5name\":\"computer\",\"name\":\"hal-9\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
+    String cpdef10 = "{\"an5name\":\"computer\",\"name\":\"hal-10\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
+    String cpdef11 = "{\"an5name\":\"computer\",\"name\":\"hal-11\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
+    String cpdef12 = "{\"an5name\":\"computer\",\"name\":\"hal-12\",\"reflects\":[{\"name\":\"slot\",\"policy\":\"STATIC\",\"size\":4}]}";
     
     /* 12 * NIC */
     String[][] nicdef1 = {{"port", "[2]"}};
@@ -92,21 +82,42 @@ public class JSONConstruct {
     String[][] cabdef13 = {{"type", "physical"},
                            {"length", "1"}};
     
-    AN5CL_switch sw1 = new AN5CL_switch(new an5ConstructArguments(swdef));
-        
-    AN5CL_computer cp1 = new AN5CL_computer(new an5ConstructArguments(cpdef1));
-    AN5CL_computer cp2 = new AN5CL_computer(new an5ConstructArguments(cpdef2));
-    AN5CL_computer cp3 = new AN5CL_computer(new an5ConstructArguments(cpdef3));
-    AN5CL_computer cp4 = new AN5CL_computer(new an5ConstructArguments(cpdef4));
-    AN5CL_computer cp5 = new AN5CL_computer(new an5ConstructArguments(cpdef5));
-    AN5CL_computer cp6 = new AN5CL_computer(new an5ConstructArguments(cpdef6));
-    AN5CL_computer cp7 = new AN5CL_computer(new an5ConstructArguments(cpdef7));
-    AN5CL_computer cp8 = new AN5CL_computer(new an5ConstructArguments(cpdef8));
-    AN5CL_computer cp9 = new AN5CL_computer(new an5ConstructArguments(cpdef9));
-    AN5CL_computer cp10 = new AN5CL_computer(new an5ConstructArguments(cpdef10));
-    AN5CL_computer cp11 = new AN5CL_computer(new an5ConstructArguments(cpdef11));
-    AN5CL_computer cp12 = new AN5CL_computer(new an5ConstructArguments(cpdef12));
+    AN5CL_switch sw1 = null;
+	AN5CL_computer cp1 = null;
+	AN5CL_computer cp2 = null;
+	AN5CL_computer cp3 = null;
+	AN5CL_computer cp4 = null;
+	AN5CL_computer cp5 = null;
+	AN5CL_computer cp6 = null;
+	AN5CL_computer cp7 = null;
+    AN5CL_computer cp8 = null;
+	AN5CL_computer cp9 = null;
+	AN5CL_computer cp10 = null;
+	AN5CL_computer cp11 = null;
+	AN5CL_computer cp12 = null;
 
+	try {
+	  sw1 = new AN5CL_switch(new ObjectMapper().readTree(swdef));
+	  cp1 = new AN5CL_computer(new ObjectMapper().readTree(cpdef1));
+	  cp2 = new AN5CL_computer(new ObjectMapper().readTree(cpdef2));
+	  cp3 = new AN5CL_computer(new ObjectMapper().readTree(cpdef3));
+	  cp4 = new AN5CL_computer(new ObjectMapper().readTree(cpdef4));
+	  cp5 = new AN5CL_computer(new ObjectMapper().readTree(cpdef5));
+	  cp6 = new AN5CL_computer(new ObjectMapper().readTree(cpdef6));
+	  cp7 = new AN5CL_computer(new ObjectMapper().readTree(cpdef7));
+	  cp8 = new AN5CL_computer(new ObjectMapper().readTree(cpdef8));
+	  cp9 = new AN5CL_computer(new ObjectMapper().readTree(cpdef9));
+	  cp10 = new AN5CL_computer(new ObjectMapper().readTree(cpdef10));
+	  cp11 = new AN5CL_computer(new ObjectMapper().readTree(cpdef11));
+	  cp12 = new AN5CL_computer(new ObjectMapper().readTree(cpdef12));	
+	} catch (JsonMappingException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	} catch (JsonProcessingException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+    
     AN5CL_pcie_nic nic1 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef1));
     AN5CL_pcie_nic nic2 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef2));
     AN5CL_pcie_nic nic3 = new AN5CL_pcie_nic(new an5ConstructArguments(nicdef3));
@@ -144,7 +155,7 @@ public class JSONConstruct {
     		           cab7, cab8, cab9 /* , cab10, cab11, cab12, cab13 */};
     List<an5Object> parts = new ArrayList<>();
     for (an5Object ob : use) parts.add(ob);
-    AN5TP_ethernet_lan  netPrototype = new AN5TP_ethernet_lan();
+    /* AN5TP_ethernet_lan  netPrototype = new AN5TP_ethernet_lan();
     AN5TP_ethernet_node nodePrototype = new AN5TP_ethernet_node();
     an5Network netResult = (an5Network)netPrototype.createInstance();
     an5Template netTemplate = new an5CreateNetwork(null, new an5Object[]{netPrototype, nodePrototype}, parts, netResult);
@@ -160,7 +171,7 @@ public class JSONConstruct {
     ctrl.turnOff(offFlags3);
     // ctrl.turnOff(offFlags4);
     ctrl.turnOn(onFlags1);
-    
+    */
     
     // an5Goal makeNet = new an5Goal(netTemplate, ctrl);
     // int res = makeNet.solve();
@@ -170,13 +181,21 @@ public class JSONConstruct {
 
     ObjectMapper objectMapper = new ObjectMapper();
     SimpleModule module = new SimpleModule("an5ObjectJSONSerializer");
-    module.addSerializer(an5Object.class, new an5ObjectJSONSer());
-    module.addSerializer(an5Element.class, new an5ElementJSONSer());
-    module.addSerializer(an5Network.class, new an5NetworkJSONSer());
+    module.addSerializer(an5Object.class, new an5ObjectJsonSer());
+    module.addSerializer(an5Element.class, new an5ElementJsonSer());
+    module.addSerializer(an5Network.class, new an5NetworkJsonSer());
     module.addSerializer(AN5CL_cat6_cable.class, new AN5SR_cat6_cable());
     module.addSerializer(AN5CL_pcie_nic.class, new AN5SR_pcie_nic());
     module.addSerializer(AN5CL_computer.class, new AN5SR_computer());
     module.addSerializer(AN5CL_switch.class, new AN5SR_switch());
+    module.addDeserializer(an5Object.class, new an5ObjectJsonDeser());
+    /* module.addDeserializer(an5Element.class, new an5ElementJsonDeser());
+    module.addDeserializer(an5Element.class, new an5ElementJsonDeser());
+    module.addDeserializer(an5Network.class, new an5NetworkJsonDeser());
+    module.addDeserializer(AN5CL_cat6_cable.class, new AN5DR_cat6_cable());
+    module.addDeserializer(AN5CL_pcie_nic.class, new AN5DR_pcie_nic());
+    module.addDeserializer(AN5CL_computer.class, new AN5DR_computer());
+    module.addDeserializer(AN5CL_switch.class, new AN5DR_switch()); */
     objectMapper.registerModule(module);
     objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
     String partToJSON = new String();;

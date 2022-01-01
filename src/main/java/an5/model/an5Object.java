@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 public class an5Object implements an5ClassTemplate {
   String an5name = "object";
   public boolean abstractSpec = false;
@@ -238,6 +240,16 @@ public class an5Object implements an5ClassTemplate {
 	} else {
 	  persistentUniqueId = new String[]{new String(o.persistentUniqueId[0]), new String(o.persistentUniqueId[1])};
 	}
+  }
+  public an5Object(JsonNode nd) {
+	if (nd != null) {
+      abstractSpec = nd.get("abstractSpec").asBoolean();
+      mandatory = nd.get("mandatory").asBoolean();
+      JsonNode idNd = nd.get("persistentUniqueId");
+      if (idNd != null) {
+        persistentUniqueId = new String[]{idNd.get(0).asText(), idNd.get(1).asText()};
+      }
+    }
   }
   public an5Object createInstance() {
     return null;

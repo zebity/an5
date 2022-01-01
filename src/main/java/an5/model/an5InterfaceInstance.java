@@ -12,12 +12,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class an5InterfaceInstance extends an5VariableInstance {
-  public enum allocationPolicy { STATIC, DYNAMIC};
+  public static class Policy { public static final int STATIC = 0, DYNAMIC = 1; };
   public an5Interface interfaceDefinition;
-  List<an5Binding> bindings = new ArrayList<>();
-  int min,
-      max;
-  allocationPolicy alloc = allocationPolicy.DYNAMIC;
+  public List<an5Binding> bindings = new ArrayList<>();
+  public int min,
+             max;
+  public int policy = Policy.DYNAMIC;
+  public static String[] PolicyString = { "STATIC", "DYNAMIC"};
   public an5InterfaceInstance(String varNm, an5Interface ifDef, int mn, int mx) {
 	super(varNm);
     interfaceDefinition = ifDef;
@@ -29,7 +30,7 @@ public class an5InterfaceInstance extends an5VariableInstance {
 	int i = 0;
     min = ifInst.min;
     max = ifInst.max;
-    alloc = ifInst.alloc;
+    policy = ifInst.policy;
     // bindings = new ArrayList<>();
     for (;i < ifInst.bindings.size(); i++) {
       newBinding = interfaceDefinition.getBinding(ifInst.bindings.get(i));
@@ -48,7 +49,7 @@ public class an5InterfaceInstance extends an5VariableInstance {
     if (max > 0) {
       adj = Integer.min(max, sz);
     }
-    alloc = allocationPolicy.STATIC;
+    policy = Policy.STATIC;
     for (;i < adj; i++) {
       bindings.add(interfaceDefinition.getBinding(i));
     }
@@ -76,7 +77,7 @@ public class an5InterfaceInstance extends an5VariableInstance {
 	
 	if (match.matchResult == an5InterfaceMatch.matchState.all ||
 		match.matchResult == an5InterfaceMatch.matchState.partial) {
-	  if (alloc == allocationPolicy.STATIC) {
+	  if (policy == Policy.STATIC) {
 		for (int j = 0; (! found) && (j < bindings.size()); j++) {
 		  next = bindings.get(j);
 		  if (next.state == an5Binding.bindState.OPEN) {
@@ -105,7 +106,7 @@ public class an5InterfaceInstance extends an5VariableInstance {
 			   next;
 	boolean found = false;
 	
-	if (alloc == allocationPolicy.STATIC) {
+	if (policy == Policy.STATIC) {
 	  for (int j = 0; (! found) && (j < bindings.size()); j++) {
 	    next = bindings.get(j);
 		if (next.state == an5Binding.bindState.OPEN && next != toLink) {

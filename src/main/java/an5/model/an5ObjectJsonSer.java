@@ -13,12 +13,12 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-public class an5ObjectJSONSer extends StdSerializer<an5Object> {
+public class an5ObjectJsonSer extends StdSerializer<an5Object> {
   private static final long serialVersionUID = 1L;
-  public an5ObjectJSONSer(Class<an5Object> t) {
+  public an5ObjectJsonSer(Class<an5Object> t) {
     super(t);
   }
-  public an5ObjectJSONSer() {
+  public an5ObjectJsonSer() {
     this(null);
   }
   @Override
