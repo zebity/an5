@@ -12,20 +12,21 @@ import java.io.IOException;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonNode;
 
-public class an5ElementJsonDeser extends an5ObjectJsonDeser {
+public class an5ElementJsonDeser extends JsonDeserializer<an5Element> {
   private static final long serialVersionUID = 1L;
-  public an5ElementJsonDeser(Class<an5Object> t) {
+  /* public an5ElementJsonDeser(Class<? extends an5Object> t) {
     super(t);
   }
   public an5ElementJsonDeser() {
     this(null);
-  }
+  } */
   @Override
-  public an5Object deserialize(JsonParser jp, DeserializationContext cxt) throws IOException, JsonProcessingException {
+  public an5Element deserialize(JsonParser jp, DeserializationContext cxt) throws IOException, JsonProcessingException {
     JsonNode node = jp.getCodec().readTree(jp);
-    an5Object res = new an5Element(node);
+    an5Element res = new an5Element(node);
     return res;
   }
 }

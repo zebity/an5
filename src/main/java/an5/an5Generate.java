@@ -604,24 +604,26 @@ public class an5Generate {
 	      jvStrm.println("import com.fasterxml.jackson.core.JsonParser;");
 	      jvStrm.println("import com.fasterxml.jackson.core.JsonProcessingException;");
 	      jvStrm.println("import com.fasterxml.jackson.databind.DeserializationContext;");
+	      jvStrm.println("import com.fasterxml.jackson.databind.JsonDeserializer;");
 	      jvStrm.println("import com.fasterxml.jackson.databind.JsonNode;");
           jvStrm.print("public class " + clNm);
-          if (clNd.classExtended != null) {
-            jvStrm.print(" extends " + adjustDeserializerClass(clNd.classExtended.value, global.serializerPrefix));
-          }
-          jvStrm.println(" {");
+          // if (clNd.classExtended != null) {
+          //   jvStrm.print(" extends " + adjustDeserializerClass(clNd.classExtended.value, global.serializerPrefix));
+          // }
+          jvStrm.print(" extends JsonDeserializer<" + obNm + "> {");
+          // jvStrm.println(" {");
 	      jvStrm.println("  private static final long serialVersionUID = 1L;");
-	      jvStrm.println("  public " + clNm + "(Class<an5Object> t) {");
-	      jvStrm.println("    super(t);");
-	      jvStrm.println("  }");
-	      jvStrm.println("  public " + clNm + "() {");
-	      jvStrm.println("    this(null);");
-	      jvStrm.println("  }");
+	      // jvStrm.println("  public " + clNm + "(Class<an5Object> t) {");
+	      // jvStrm.println("    super(t);");
+	      // jvStrm.println("  }");
+	      // jvStrm.println("  public " + clNm + "() {");
+	      // jvStrm.println("    this(null);");
+	      // jvStrm.println("  }");
 	      jvStrm.println("  @Override");
-	      jvStrm.println("  public an5Object deserialize(JsonParser jp, DeserializationContext cxt) throws IOException, JsonProcessingException {");
+	      jvStrm.println("  public " + obNm + " deserialize(JsonParser jp, DeserializationContext cxt) throws IOException, JsonProcessingException {");
 	      jvStrm.println("    JsonNode node = jp.getCodec().readTree(jp);");
-	 	  jvStrm.println("    an5Object res = new " + obNm + "(node);");
-	      jvStrm.println("    return res;");
+	 	  jvStrm.println("    return new " + obNm + "(node);");
+	      // jvStrm.println("    return res;");
 	      jvStrm.println("  }");
 	      jvStrm.println("}");
 	    }
