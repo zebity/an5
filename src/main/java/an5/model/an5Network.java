@@ -21,19 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 
-import an5.generic.dctypes.AN5CL_cat6_cable;
-import an5.generic.dctypes.AN5CL_computer;
-import an5.generic.dctypes.AN5CL_pcie_nic;
-import an5.generic.dctypes.AN5CL_switch;
-import an5.generic.dctypes.AN5DR_cat6_cable;
-import an5.generic.dctypes.AN5DR_computer;
-import an5.generic.dctypes.AN5DR_pcie_nic;
-import an5.generic.dctypes.AN5DR_switch;
-import an5.generic.dctypes.AN5SR_cat6_cable;
-import an5.generic.dctypes.AN5SR_computer;
-import an5.generic.dctypes.AN5SR_pcie_nic;
-import an5.generic.dctypes.AN5SR_switch;
-
 public class an5Network extends an5Object {
   String an5name = "network";
   public static class Cloned { public static final int MEMBERS = 0x01, NETWORKS = 0x02, CANDIDATES = 0x04, ALL = 0x07; }
@@ -51,8 +38,8 @@ public class an5Network extends an5Object {
   public an5Network(JsonNode nd) {
     super(nd == null ? null : nd.get("extends"));
   }
-  public an5Network(an5ConstructArguments args) {  
-  }
+  // public an5Network(an5ConstructArguments args) {  
+  // }
   public an5Network(an5Network cn) {
     super(cn);
     
