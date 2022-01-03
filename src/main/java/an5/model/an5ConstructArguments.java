@@ -10,6 +10,7 @@ package an5.model;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class an5ConstructArguments {
   public List<String[]> args = new ArrayList<>();
 

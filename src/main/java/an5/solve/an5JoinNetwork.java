@@ -437,7 +437,7 @@ public class an5JoinNetwork extends an5Template {
 
 	  fromO = (an5Object)toAdd.get(i);
 	  foundPaths = finder.probePaths(fromO, joinNet.providesServices(), viaService, localRemove, bindUnique, pool, ctrl.stats);
-	  if (foundPaths.length <= probeCnts.get(m).cnt) {
+	  if (foundPaths != null && foundPaths.length <= probeCnts.get(m).cnt) {
 	    for (k = 0; k < pathStats.expansionMultiplier; k += probeCnts.get(m).increment) {
 	      for (l = 0; l < probeCnts.get(m).increment; l++) {
 	     	if (j < foundPaths.length) {

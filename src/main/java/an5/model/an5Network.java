@@ -15,7 +15,24 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+
+import an5.generic.dctypes.AN5CL_cat6_cable;
+import an5.generic.dctypes.AN5CL_computer;
+import an5.generic.dctypes.AN5CL_pcie_nic;
+import an5.generic.dctypes.AN5CL_switch;
+import an5.generic.dctypes.AN5DR_cat6_cable;
+import an5.generic.dctypes.AN5DR_computer;
+import an5.generic.dctypes.AN5DR_pcie_nic;
+import an5.generic.dctypes.AN5DR_switch;
+import an5.generic.dctypes.AN5SR_cat6_cable;
+import an5.generic.dctypes.AN5SR_computer;
+import an5.generic.dctypes.AN5SR_pcie_nic;
+import an5.generic.dctypes.AN5SR_switch;
 
 public class an5Network extends an5Object {
   String an5name = "network";
@@ -184,64 +201,21 @@ public class an5Network extends an5Object {
 	return res;
   }
   public void dumpJSON(PrintStream ps) {
-	int i;
-	boolean comma = false,
-			ncomma = false;
+	ObjectMapper objectMapper = new ObjectMapper();
+	// SimpleModule module = new SimpleModule("an5ObjectJSONSerializer");
+	SimpleModule module = new SimpleModule();
+	module.addSerializer(an5Network.class, new an5NetworkJsonSer());
+    objectMapper.registerModule(module);
+	objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+	objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 	
-	if (cloned) {
-	  decoupleClone(clonedFrom, Cloned.ALL);
-	}
-	ps.println("{");
-	ps.println("  \"an5Network\": {");
-	ps.println("    \"class\": \"" + getClass().getSimpleName() + "\",");
-	ps.println("    \"GUID\": \"" + getGUID() + "\",");
-	ps.println("    \"services\": {");
-	for (i = 0; i < AN5AT_serviceUnion.size(); i++) {
-	  ps.println("      \"" + AN5AT_serviceUnion.getService(i) +  "\": {");
-	  int[] cd = AN5AT_serviceUnion.getCardinality(i);
-	  ps.println("        \"min\": " + cd[0] + ",");
-	  ps.println("        \"max\": " + cd[0]);
-	  ps.println("      }"); 
-	}
-	ps.println("    }");
-	ps.println("    \"members\": {");
-	for (an5Object o: members.values()) {
-	  if (comma) {
-	    ps.println(",");		  
-	  }
-	  ps.print("      \"" + o.getClass().getSimpleName() + "\": \"" + o.getGUID() + "\"");
-	  comma = true;
-	}
-	if (comma) {
-	  ps.println();	
-	}
-	ps.println("    }");
-	comma = false;
-	ps.println("    \"candidates\": {");
-	for (an5Object o: candidates.values()) {
-	  if (comma) {
-	    ps.println(",");		  
-	  }
-	  ps.println("      \"" + o.getClass().getSimpleName() + "\": {");
-	  an5Path po = (an5Path)o;
-	  ncomma = false;
-	  for (an5Object pmo: po.path.values()) {
-		if (ncomma) {
-		  ps.println(",");		  
-		}
-		ps.print("        \"" + pmo.getClass().getSimpleName() + "\": \"" + pmo.getGUID() + "\"");
-	    ncomma = true;
-	  }
-	  if (ncomma) {
-		ps.println();		  
-	  }
-	  ps.println("      }");
-	}
-	if (comma) {
-	  ps.println();	
-	}
-	ps.println("    }");
-	ps.println("  }");
-	ps.println("}");
+    String partToJSON = new String();;
+    try {
+      partToJSON = objectMapper.writeValueAsString(this);
+    } catch (JsonProcessingException e) {
+      // TODO Auto-generated catch block
+      e.printStackTrace();
+    }    
+    ps.println(partToJSON);
   }
 }

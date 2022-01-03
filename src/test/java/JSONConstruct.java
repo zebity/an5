@@ -42,6 +42,7 @@ public class JSONConstruct {
 	module.addDeserializer(AN5CL_switch.class, new AN5DR_switch());
 	objectMapper.registerModule(module);
 	objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+	objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
 	
     /* Switch */
     String swdef = "{\"an5name\":\"switch\",\"name\":\"simple-switch\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":24}]}";

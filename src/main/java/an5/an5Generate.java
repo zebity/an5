@@ -10,15 +10,7 @@ package an5;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintStream;
-import java.util.Iterator;
 import java.util.List;
-
-import com.fasterxml.jackson.databind.JsonNode;
-
-import an5.model.an5ConstructArguments;
-import an5.model.an5InterfaceInstance;
-import an5.model.an5InterfaceTable;
-import an5.model.an5Object;
 
 public class an5Generate {
   an5Global global;
@@ -475,17 +467,18 @@ public class an5Generate {
 	jvStrm.println("    varUtil.setConstrutArgs(nd, this);");
     jvStrm.println("    abstractSpec = true;");
 	jvStrm.println("  }");
-    jvStrm.println("  public " + clNm + "(an5ConstructArguments args) {");
-    jvStrm.println("    super(args.getSuperArgs());");
-	jvStrm.println("    for (an5InterfaceTable v: AN5AT_interface) AN5AT_interfaces.put(v.name, v);");
-	jvStrm.println("    for (an5ClassInstance v: AN5AT_class) AN5AT_classes.put(v.var, v);");
-    if (nd.interfacesReflected.size() > 0 || nd.networkServices.size() > 0) {
-     jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
-     jvStrm.println("    AN5SG_sigKeyUnion.add(this, AN5AT_interface);");
-    }
-	jvStrm.println("    varUtil.setConstrutArgs(args, this);");
-    jvStrm.println("    abstractSpec = true;");
-	jvStrm.println("  }");
+	// Depracated - use JSON deserializers
+    // jvStrm.println("  public " + clNm + "(an5ConstructArguments args) {");
+    // jvStrm.println("    super(args.getSuperArgs());");
+	// jvStrm.println("    for (an5InterfaceTable v: AN5AT_interface) AN5AT_interfaces.put(v.name, v);");
+	// jvStrm.println("    for (an5ClassInstance v: AN5AT_class) AN5AT_classes.put(v.var, v);");
+    // if (nd.interfacesReflected.size() > 0 || nd.networkServices.size() > 0) {
+    //  jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
+    //  jvStrm.println("    AN5SG_sigKeyUnion.add(this, AN5AT_interface);");
+    // }
+	// jvStrm.println("    varUtil.setConstrutArgs(args, this);");
+    // jvStrm.println("    abstractSpec = true;");
+	// jvStrm.println("  }");
     jvStrm.println("}");
     
     return cnt;
@@ -725,16 +718,17 @@ public class an5Generate {
 	    generateClassAttributeDeserializatonImplemenation(jvStrm, clNd);
 	    jvStrm.println("    varUtil.setConstrutArgs(nd, this);");
 	    jvStrm.println("  }");
-	    jvStrm.println("  public " + clNm + "(an5ConstructArguments args) {");
-	    jvStrm.println("    super(args.getSuperArgs());");
-	    jvStrm.println("    for (an5InterfaceTable v: AN5AT_interface) AN5AT_interfaces.put(v.name, v);");
-	    jvStrm.println("    for (an5ClassInstance v: AN5AT_class) AN5AT_classes.put(v.var, v);");
-	    if (clNd.interfacesReflected.size() > 0 || clNd.networkServices.size() > 0) {
-	      jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
-	      jvStrm.println("    AN5SG_sigKeyUnion.add(this, AN5AT_interface);");
-	    }
-	    jvStrm.println("    varUtil.setConstrutArgs(args, this);");
-	    jvStrm.println("  }");
+	    // Depracated - use JSON deserializers
+	    // jvStrm.println("  public " + clNm + "(an5ConstructArguments args) {");
+	    // jvStrm.println("    super(args.getSuperArgs());");
+	    // jvStrm.println("    for (an5InterfaceTable v: AN5AT_interface) AN5AT_interfaces.put(v.name, v);");
+	    // jvStrm.println("    for (an5ClassInstance v: AN5AT_class) AN5AT_classes.put(v.var, v);");
+	    // if (clNd.interfacesReflected.size() > 0 || clNd.networkServices.size() > 0) {
+	    //   jvStrm.println("    AN5AT_serviceUnion.add(AN5AT_service);");
+	    //   jvStrm.println("    AN5SG_sigKeyUnion.add(this, AN5AT_interface);");
+	    // }
+	    // jvStrm.println("    varUtil.setConstrutArgs(args, this);");
+	    // jvStrm.println("  }");
 	    jvStrm.println("  public " + clNm + "(" + clNm + " o) {");
 	    jvStrm.println("    super(o);");
 	    jvStrm.println("    for (an5InterfaceTable v: AN5AT_interface) AN5AT_interfaces.put(v.name, v);");
