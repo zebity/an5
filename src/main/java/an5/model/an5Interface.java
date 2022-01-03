@@ -18,6 +18,9 @@ abstract public class an5Interface extends an5Object {
   public Map<String, String[]> signatureKeys = new LinkedHashMap<>();
   String lastKey = new String();
   public String bindingNameTemplate;
+  /* public an5Interface(an5ClassTemplate t) {
+	super(t);
+  } */
   public an5Interface(String nameTemplate) {
     super();
     bindingNameTemplate = nameTemplate;

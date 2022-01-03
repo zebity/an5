@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public class an5Object implements an5ClassTemplate {
   String an5name = "object";
+  an5ClassTemplate template = null;
   public boolean abstractSpec = false;
   public boolean mandatory = false;
   public String[] uniqueId = new String[2];
@@ -32,6 +33,33 @@ public class an5Object implements an5ClassTemplate {
   public an5Service AN5AT_serviceUnion = new an5ServiceMap();
   public an5InterfaceSignatureKeys AN5SG_sigKeyUnion = new an5InterfaceSignatureKeys();
   public an5VarUtil varUtil = new an5VarUtil();
+  public an5Object() {}
+  public an5Object(an5ClassTemplate t, boolean ab) {
+    template = t;
+    abstractSpec = ab;
+  }
+  public an5Object(an5Object o) {
+	template = o.template;
+    abstractSpec = o.abstractSpec;
+	mandatory = o.mandatory;
+	o.getGUID();
+	uniqueId = new String[]{new String(o.uniqueId[0]), new String(o.uniqueId[1])};
+	if (o.persistentUniqueId[0] == null) {
+	  persistentUniqueId = new String[2];
+	} else {
+	  persistentUniqueId = new String[]{new String(o.persistentUniqueId[0]), new String(o.persistentUniqueId[1])};
+	}
+  }
+  public an5Object(JsonNode nd) {
+	if (nd != null) {
+      abstractSpec = nd.get("abstractSpec").asBoolean();
+      mandatory = nd.get("mandatory").asBoolean();
+      JsonNode idNd = nd.get("persistentUniqueId");
+      if (idNd != null) {
+        persistentUniqueId = new String[]{idNd.get(0).asText(), idNd.get(1).asText()};
+      }
+    }
+  }
   public String getGUID() {
 	String res = null;
     if (persistentUniqueId[0] != null) {
@@ -94,6 +122,14 @@ public class an5Object implements an5ClassTemplate {
   public an5Service providesServices() {
 	/* Change to only use ServiceMap */
 	return new an5ServiceMap((an5ServiceMap)AN5AT_serviceUnion);
+  }
+  public an5Service acceptsServices() {
+	/* Initially only provide what template defines ... */
+	an5Service res = null;
+	if (template != null) {
+	  res = template.expose();
+	}
+	return res;
   }
   public int[] locateBinding(an5Binding bd) {
     int[] res = null;
@@ -229,28 +265,6 @@ public class an5Object implements an5ClassTemplate {
     }
     return res;
   }
-  public an5Object() {}
-  public an5Object(an5Object o) {
-    abstractSpec = o.abstractSpec;
-	mandatory = o.mandatory;
-	o.getGUID();
-	uniqueId = new String[]{new String(o.uniqueId[0]), new String(o.uniqueId[1])};
-	if (o.persistentUniqueId[0] == null) {
-	  persistentUniqueId = new String[2];
-	} else {
-	  persistentUniqueId = new String[]{new String(o.persistentUniqueId[0]), new String(o.persistentUniqueId[1])};
-	}
-  }
-  public an5Object(JsonNode nd) {
-	if (nd != null) {
-      abstractSpec = nd.get("abstractSpec").asBoolean();
-      mandatory = nd.get("mandatory").asBoolean();
-      JsonNode idNd = nd.get("persistentUniqueId");
-      if (idNd != null) {
-        persistentUniqueId = new String[]{idNd.get(0).asText(), idNd.get(1).asText()};
-      }
-    }
-  }
   public an5Object createInstance() {
     return null;
   }
@@ -265,5 +279,12 @@ public class an5Object implements an5ClassTemplate {
   }
   public String getValue(String nam) {
     return null;
+  }
+  public an5Service expose() {
+    an5Service res = null;
+    if (template != null) {
+      res = template.expose();
+    }
+    return res;
   }
 }

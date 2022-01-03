@@ -3,7 +3,7 @@
    There are multiple scenarios that need to be supported
    a. Require that join is via particular "service" and topology as specified by prototype
    b. That join must be via specified object, as specified by prototype
-   c. network only has single object, so can only be by connecting to that object
+   c. network only has single object, so can only join by connecting to that object
    d. multiple objects can join, but same prototype constraints apply
 
  @author John Hartley - Graphica Software/Dokmai Pty Ltd
@@ -124,7 +124,7 @@ public class an5JoinNetwork extends an5Template {
   }
   public int seedGoal() {
 	int i = 0;
-    viaService = prototype.providesServices().getWhere(1, -1);
+    viaService = prototype.expose().getWhere(1, -1);
     for (an5VariableInstance c : prototype.AN5AT_classes.values()) {
       if (c instanceof an5ClassInstance) {
     	an5ClassInstance cl = (an5ClassInstance)c;
@@ -201,7 +201,7 @@ public class an5JoinNetwork extends an5Template {
 
             startFromO = (an5Object)toAdd.get(i).clone();
     	    fromO = startFromO.getLast();
-    	    bindings = fromO.bind(toO, targetNet.providesServices(), viaService, localRemove, bindUnique);
+    	    bindings = fromO.bind(toO, targetNet.acceptsServices(), viaService, localRemove, bindUnique);
     	    /* connectTo object already in network, so just add toAdd[i] object */
     	    if (bindings != null) {
               an5Path newP = new an5Path(startFromO, toO, bindings);
@@ -253,7 +253,7 @@ public class an5JoinNetwork extends an5Template {
     /* Before going to trouble of expanding paths make sure it is worth it.. */
 	for (i = 0; i < pathCnt.length; i++) {
 	  /* can we do direct bind to joint object */
-	  j = toAdd.get(i).getLast().canBind(null, connectTo, joinNet.providesServices(), viaService,
+	  j = toAdd.get(i).getLast().canBind(null, connectTo, joinNet.acceptsServices(), viaService,
 			                             removeLocalEquivalents, bindUnique);
 	  if (j > 0) {
 	    pathCnt[i][PathIdx.BIND] = j;
@@ -262,7 +262,7 @@ public class an5JoinNetwork extends an5Template {
 	    pStat.minDirect = Integer.min(i, pStat.minDirect);
 	    pStat.maxDirect = Integer.max(i, pStat.maxDirect);
 	  } else { 
-	    k = finder.canMatchInterface(toAdd.get(i).getLast(), joinNet.providesServices(), viaService,
+	    k = finder.canMatchInterface(toAdd.get(i).getLast(), joinNet.acceptsServices(), viaService,
 	    		                     removeLocalEquivalents, bindUnique, available, stats);
 	    if (k > Integer.MAX_VALUE) {
 	      log.CRITICAL("AN5:an5JoinNetwork.getPathStats - path expansion greater than Integer.MAX_VALUE: " + k);
@@ -329,7 +329,7 @@ public class an5JoinNetwork extends an5Template {
       /* consumption / depletion order is based on initial input order */
       
       fromO = (an5Object)toAdd.get(i);
-      foundPaths = finder.probePaths(fromO, joinNet.providesServices(), viaService, localRemove, bindUnique, pool, stats);
+      foundPaths = finder.probePaths(fromO, joinNet.acceptsServices(), viaService, localRemove, bindUnique, pool, stats);
       if (foundPaths.length <= probeCnts.get(m).cnt) {
         for (k = 0; k < pathStats.expansionMultiplier; k += probeCnts.get(m).increment) {
           for (l = 0; l < probeCnts.get(m).increment; l++) {
@@ -436,7 +436,7 @@ public class an5JoinNetwork extends an5Template {
 	  j = 0;
 
 	  fromO = (an5Object)toAdd.get(i);
-	  foundPaths = finder.probePaths(fromO, joinNet.providesServices(), viaService, localRemove, bindUnique, pool, ctrl.stats);
+	  foundPaths = finder.probePaths(fromO, joinNet.acceptsServices(), viaService, localRemove, bindUnique, pool, ctrl.stats);
 	  if (foundPaths != null && foundPaths.length <= probeCnts.get(m).cnt) {
 	    for (k = 0; k < pathStats.expansionMultiplier; k += probeCnts.get(m).increment) {
 	      for (l = 0; l < probeCnts.get(m).increment; l++) {

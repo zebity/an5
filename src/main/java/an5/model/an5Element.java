@@ -12,6 +12,9 @@ public class an5Element extends an5Object {
   String an5name = "element";
   public an5Element() {
   }
+  public an5Element(an5ClassTemplate t, boolean ab) {
+    super(t, ab);
+  }
   // public an5Element(an5ConstructArguments args) {  
   // }
   public an5Element(JsonNode nd) {

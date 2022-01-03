@@ -12,8 +12,11 @@ public class an5Link extends an5Object {
   String an5name = "link";
   public an5Link() {  
   }
-  public an5Link(an5ConstructArguments args) {	  
+  public an5Link(an5ClassTemplate t, boolean ab) {
+    super(t, ab);
   }
+  // public an5Link(an5ConstructArguments args) {	  
+  // }
   public an5Link(an5Link lk) {
     super(lk);
   }

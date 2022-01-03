@@ -116,11 +116,11 @@ public class BuildMiniNetwork {
 	    
 	an5Object[] use = {sw1,
 	    		       cp[0], cp[1], cp[2], cp[3], cp[4], cp[5],
-	    		       cp[6], cp[7], /* cp9, cp10, cp11, cp12, */
+	    		       cp[6], cp[7], cp[8], cp[9], /* cp11, cp12, */
 	    		       nic[0], nic[1], nic[2], nic[3], nic[4], nic[5],
-	    		       nic[6], nic[7], /* nic9, nic10, nic11, nic12, */
+	    		       nic[6], nic[7], nic[8], nic[9], /* nic[10], nic[11], */
 	    		       cab[0], cab[1], cab[2], cab[3], cab[4], cab[5],
-	    		       cab[6], cab[7], cab[8] /* , cab10, cab11, cab12, cab13 */};
+	    		       cab[6], cab[7], cab[8], cab[9], cab[10] /* , cab[11], cab[12] */};
 
     List<an5Object> parts = new ArrayList<>();
     for (an5Object ob : use) parts.add(ob);
@@ -137,9 +137,9 @@ public class BuildMiniNetwork {
     		        an5SearchControl.SearchOptions.BIND_UNIQUE;
     int onFlags1 = an5SearchControl.SearchOptions.DEPTH;
     // ctrl.turnOff(offFlags1);
-    ctrl.turnOff(offFlags3);
+    // ctrl.turnOff(offFlags3);
     // ctrl.turnOff(offFlags4);
-    ctrl.turnOn(onFlags1);
+    // ctrl.turnOn(onFlags1);
     
     an5Goal makeNet = new an5Goal(netTemplate, ctrl);
     int res = makeNet.solve();

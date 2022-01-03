@@ -16,6 +16,9 @@ public class an5Path extends an5Object {
   String firstEntry = null,
          lastEntry;
   
+  public an5Path(an5ClassTemplate t, boolean ab) {
+	super(t, ab);
+  }
   public an5Path(an5Object o, an5Binding b) {
 	if (o instanceof an5Path) {
 	  for (an5Object po : ((an5Path) o).path.values()) {
@@ -58,6 +61,8 @@ public class an5Path extends an5Object {
 	an5Object cloneA = null, cloneB = null, priorO = null;
 	an5Binding[] cloneLinksA;
 	an5InterfaceTable cloneBIT;
+	
+	template = p.template;
 	firstEntry = new String(p.firstEntry);
     lastEntry = new String(p.lastEntry);
 

@@ -46,7 +46,7 @@ public class an5ServiceMap implements an5Service {
 	  map.put(srvs[i], new mapSrv(srvs[i], card[i][0], card[i][1]));
 	}
   }
-  public an5ServiceMap(an5ServiceList from, boolean unique) {
+  /* public an5ServiceMap(an5ServiceList from, boolean unique) {
 	map = new LinkedHashMap<>();
     Collection<String> uniqueSet = new HashSet<>();
     mappedUnique = unique;
@@ -59,10 +59,11 @@ public class an5ServiceMap implements an5Service {
         map.put(from.getService(i), new mapSrv(from.getService(i), from.getCardinality(i)[0], from.getCardinality(i)[1]));    	  
       }
     }
-  }
-  public an5ServiceMap(an5ServiceMap from) {
+  } */
+  public an5ServiceMap(an5Service from) {
+	an5ServiceMap fm = (an5ServiceMap)from;
     map = new LinkedHashMap<>();
-    for (mapSrv m: from.map.values()) {
+    for (mapSrv m: fm.map.values()) {
       map.put(m.service, new mapSrv(m));	
     }
   }
@@ -148,8 +149,8 @@ public class an5ServiceMap implements an5Service {
 	return new an5ServiceMap(srv, card);
   }
   public void add(an5Service srvs) {
-    if (srvs instanceof an5ServiceList) {
-      for (int i = 0; i < srvs.size(); i++) {
+    /* if (srvs instanceof an5ServiceList) {
+    for (int i = 0; i < srvs.size(); i++) {
     	if (mappedUnique && ! map.containsKey(srvs.getService(i))) {
     	  map.put(srvs.getService(i), new mapSrv(srvs.getService(i), srvs.getCardinality(i)[0], srvs.getCardinality(i)[1]));
     	}
@@ -158,12 +159,12 @@ public class an5ServiceMap implements an5Service {
     	}
       }
     }
-    else {
+    else { */
       an5ServiceMap m = (an5ServiceMap)srvs;
       for (mapSrv ms : m.map.values()) {
     	map.put(ms.service, new mapSrv(new String(ms.service), ms.min, ms.max));
       }
-    }
+    /* } */
   }
   public boolean contains(String srv) {
     return map.containsKey(srv);

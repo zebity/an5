@@ -35,6 +35,9 @@ public class an5Network extends an5Object {
   Map<String, an5Network> clonedBy = new LinkedHashMap<>();
   public an5Network() {  
   }
+  public an5Network(an5ClassTemplate t, boolean ab) {
+    super(t, ab);
+  }
   public an5Network(JsonNode nd) {
     super(nd == null ? null : nd.get("extends"));
   }
@@ -43,6 +46,7 @@ public class an5Network extends an5Object {
   public an5Network(an5Network cn) {
     super(cn);
     
+    // template = cn.template;
     int testSize = members.size() + 100 * memberNetworks.size() + 5 * candidates.size();
     if (testSize < lazyCloneThreshold) {
       for (an5Object o: cn.members.values()) {

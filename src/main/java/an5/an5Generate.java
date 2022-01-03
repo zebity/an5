@@ -410,7 +410,9 @@ public class an5Generate {
 		    jvStrm.print(", {" + set.cardinality.get(i)[0] + ", " + set.cardinality.get(i)[1] + "}");
 	    }
 	    jvStrm.println("});");
-	  }
+	  } /* else {
+	    jvStrm.println("  an5Service AN5AT_service = null;");
+	  } */
 	}
 	return i;		
   }
@@ -443,7 +445,14 @@ public class an5Generate {
     generateClassServiceSetVariablesImplementation(jvStrm, nd, false);
     generateClassObjectVariablesImplementation(jvStrm, nd, false);
     jvStrm.println("  public an5Object createInstance() {");
-    jvStrm.println("    return new " + global.classPrefix + nd.value + "(this);");    
+    jvStrm.println("    return new " + global.classPrefix + nd.value + "(this, false);");    
+	jvStrm.println("  }");
+    jvStrm.println("  public an5Service expose() {");
+	if (nd.networkServices.size() > 0) {
+      jvStrm.println("    return AN5AT_service == null ? null : AN5AT_service.provides();");
+	} else {
+	  jvStrm.println("    return new an5ServiceMap();");
+	}
 	jvStrm.println("  }");
     jvStrm.println("  public " + clNm + "() {");
     jvStrm.println("    super();");
@@ -688,8 +697,8 @@ public class an5Generate {
 	    generateClassObjectVariablesImplementation(jvStrm, clNd, clNd.abstractSpec);
 	    generateClassFieldVariablesImplementation(jvStrm, clNd, clNd.abstractSpec);
 	    if (clNd.abstractSpec) {
-	      jvStrm.println("  public " + clNm + "(" + global.templatePrefix + clNd.value + " from) {");
-	      jvStrm.println("    super();");
+	      jvStrm.println("  public " + clNm + "(" + global.templatePrefix + clNd.value + " from, boolean ab) {");
+	      jvStrm.println("    super(from, ab);");
 	      jvStrm.println("    for (an5InterfaceTable v: AN5AT_interface) AN5AT_interfaces.put(v.name, v);");
 	      jvStrm.println("    for (an5ClassInstance v: AN5AT_class) AN5AT_classes.put(v.var, v);");
 	      if (clNd.interfacesReflected.size() > 0 || clNd.networkServices.size() > 0) {

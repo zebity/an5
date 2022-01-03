@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
+@Deprecated
 public class an5ServiceList implements an5Service {
   List<String> service = new ArrayList<>();
   List<int[]> cardinality = new ArrayList<>();
