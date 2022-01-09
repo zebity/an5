@@ -12,6 +12,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import an5.an5Logging;
+import an5.an5Logging.LogVerbose;
+import an5.an5Logging.SyslogLevel;
 
 public class an5Goal extends an5GoalTree {
   an5SimpleGoal goal;
@@ -20,7 +22,7 @@ public class an5Goal extends an5GoalTree {
   an5SearchControl ctrlAndStats;
   int endScore,
       status = an5SearchControl.SearchResult.UNDEFINED;
-  an5Logging log = new an5Logging(4, 4);
+  an5Logging log = new an5Logging(LogVerbose.OFF, SyslogLevel.notice);
   boolean DEBUG = false;
   
   public an5Goal(an5Template targ, an5SearchControl st) {

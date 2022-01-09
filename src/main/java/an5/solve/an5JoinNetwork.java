@@ -27,6 +27,8 @@ import an5.model.an5Object;
 import an5.model.an5Path;
 import an5.model.an5Service;
 import an5.an5Logging;
+import an5.an5Logging.LogVerbose;
+import an5.an5Logging.SyslogLevel;
 import an5.model.an5Binding;
 import an5.model.an5VariableInstance;
 
@@ -58,7 +60,7 @@ public class an5JoinNetwork extends an5Template {
       return a.idx - b.idx;		
     }
   }
-  an5Logging log = new an5Logging(7,7);
+  an5Logging log = new an5Logging(LogVerbose.ON,SyslogLevel.notice);
   an5Object prototype;
   public an5Network joinNet;
   an5Object connectTo;

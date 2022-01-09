@@ -14,9 +14,11 @@
 package an5.model;
 
 import an5.an5Logging;
+import an5.an5Logging.LogVerbose;
+import an5.an5Logging.SyslogLevel;
 
 public class an5InterfaceMatch {
-  public class matchState { public static final char all = 'a', none = 'n', partial = 'p',  empty = 'e';}
+  public static class matchState { public static final char all = 'a', none = 'n', partial = 'p',  empty = 'e';}
   public int fromKeySz = 0,
 	         toKeySz = 0,
 	         fromSetSz = 0,
@@ -25,7 +27,7 @@ public class an5InterfaceMatch {
   public char[][] sigMatch = null;
   public int[][] servicesEnabled = null;
   public char matchResult = matchState.none; 
-  an5Logging log = new an5Logging(4,4);
+  an5Logging log = new an5Logging(LogVerbose.ON, SyslogLevel.notice);
   
   void matchSignature(an5Interface from, an5Interface to) {
 	int i, j, k,
@@ -35,7 +37,10 @@ public class an5InterfaceMatch {
     fromKeySz = from.signatureKeys.size();
     toKeySz = to.signatureKeys.size();
     String[] toNamVal = null;
-    
+
+    /* DBG: if (from instanceof AN5CL_ethernet_port_baset || to instanceof AN5CL_ethernet_port_baset) {
+        boolean stop = true;
+    } */
     min = Integer.min(fromKeySz, toKeySz);
     max = Integer.max(fromKeySz, toKeySz);
     keyMatch = new boolean[max];
@@ -57,7 +62,7 @@ public class an5InterfaceMatch {
     fromSetSz = i = from.signatureSet.size();
     toSetSz = j = to.signatureSet.size();
       
-    log.DBG(6, "<INFO>:AN5:MatchSignature - from[" + fromSetSz + "]: " + from.getGUID() + " to[" + toSetSz + "]: " + to.getGUID());
+    log.DBG(6, "AN5:MatchSignature - from[" + fromSetSz + "]: " + from.getGUID() + " to[" + toSetSz + "]: " + to.getGUID());
     
     min = Integer.min(fromSetSz, toSetSz);
     max = Integer.max(fromSetSz, toSetSz);

@@ -11,6 +11,8 @@
 
 package an5.model;
 
+import an5.model.an5InterfaceMatch.matchState;
+
 public class an5Binding {
   public static class bindState { final static int OPEN = 0x01, BASE_MATCH = 0x02, REFLECTING = 0x04,
 	                                COMMITTED = 0x08, BOUND = 0x0E, ALL = 0x0F; }
@@ -33,9 +35,9 @@ public class an5Binding {
     name = bd.name;
     id = bd.id;
     if (bd.member != null) {
-      if (bd.member instanceof an5ServiceMap) {
-        member = new an5ServiceMap((an5ServiceMap)bd.member);
-      } /* else if (bd.member instanceof an5ServiceList) { */
+      // if (bd.member instanceof an5ServiceMap) {
+      member = new an5ServiceMap((an5ServiceMap)bd.member);
+      // } /* else if (bd.member instanceof an5ServiceList) { */
     	/* change to only use an5ServiceMap */
         /* member = new an5ServiceMap((an5ServiceMap)bd.member);
       } */
@@ -49,18 +51,41 @@ public class an5Binding {
   int bind(an5Object ao, an5InterfaceInstance ai, an5Object bo, an5InterfaceInstance bi, an5Binding link, an5InterfaceMatch match) {
 	/* ignore cardinality, reflecting and service exposed for initial test */
     int res = 0;
+    /* DBG: if (ai.interfaceDefinition instanceof AN5CL_ethernet_port_baset || bi.interfaceDefinition instanceof AN5CL_ethernet_port_baset) {
+      boolean stop = true;
+    } */
+    if (match.matchResult == matchState.all) {
+      state = bindState.BASE_MATCH;
+      link.state = bindState.BASE_MATCH;
+      for (int[] si: match.servicesEnabled) {
+    	if (si[1] > 0){
+    	  if (member == null)
+    		member = new an5ServiceMap();
+    	  an5InterfaceSignature fromSig = ai.interfaceDefinition.signatureSet.get(si[0]);
+    	  for (String sv: fromSig.services.values()) {
+    	    member.addService(sv, fromSig.min, fromSig.max);
+    	  }
+    	}
+    	if (si[3] > 0) {
+      	  if (link.member == null)
+      		link.member = new an5ServiceMap();
+    	  an5InterfaceSignature toSig = ai.interfaceDefinition.signatureSet.get(si[2]);
+    	  for (String sv: toSig.services.values()) {
+      	    link.member.addService(sv, toSig.min, toSig.max);
+      	  }
+    	}
+      }
+    }
     aORef = ao;
     aIRef = ai;
     bORef = bo;
     bIRef = bi;
     boundTo = link;
-    state = bindState.BASE_MATCH;
     link.aORef = bo;
     link.aIRef = bi;
     link.bORef = ao;
     link.bIRef = ai;
     link.boundTo = this;
-    link.state = bindState.BASE_MATCH;
     if (bIRef == null || aIRef == null) {
       res = -1;
     }
