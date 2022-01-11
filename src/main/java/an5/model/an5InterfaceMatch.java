@@ -18,7 +18,7 @@ import an5.an5Logging.LogVerbose;
 import an5.an5Logging.SyslogLevel;
 
 public class an5InterfaceMatch {
-  public static class matchState { public static final char all = 'a', none = 'n', partial = 'p',  empty = 'e';}
+  public static class matchState { public static final char all = 'a', none = 'n', partial = 'p',  empty = 'e', undefined = 'u';}
   public int fromKeySz = 0,
 	         toKeySz = 0,
 	         fromSetSz = 0,
@@ -27,7 +27,7 @@ public class an5InterfaceMatch {
   public char[][] sigMatch = null;
   public int[][] servicesEnabled = null;
   public char matchResult = matchState.none; 
-  an5Logging log = new an5Logging(LogVerbose.ON, SyslogLevel.notice);
+  an5Logging log = new an5Logging(LogVerbose.VERBOSE, SyslogLevel.debug);
   
   void matchSignature(an5Interface from, an5Interface to) {
 	int i, j, k,
@@ -62,19 +62,18 @@ public class an5InterfaceMatch {
     fromSetSz = i = from.signatureSet.size();
     toSetSz = j = to.signatureSet.size();
       
-    log.DBG(6, "AN5:MatchSignature - from[" + fromSetSz + "]: " + from.getGUID() + " to[" + toSetSz + "]: " + to.getGUID());
+    log.DBG(6, "AN5:MatchSignature - keys[" + fromKeySz + "," + toKeySz + "]: from[" + fromSetSz + "]: " + from.getGUID() + " to[" + toSetSz + "]: " + to.getGUID());
     
     min = Integer.min(fromSetSz, toSetSz);
     max = Integer.max(fromSetSz, toSetSz);
     overall = max + 1;
     sigMatch = new char[overall][3];
-    for (k = 0; k < 3; k++) {
-      sigMatch[overall-1][k] = matchState.empty;
-    }
     servicesEnabled = new int[max][4];
     for (k = 0; k < max; k++) {
+      sigMatch[k][0] = sigMatch[k][1] = sigMatch[k][2] = matchState.undefined;
       servicesEnabled[k][0] = servicesEnabled[k][1] = servicesEnabled[k][2] = servicesEnabled[k][3] = -1;
     }
+    sigMatch[overall-1][0] = sigMatch[overall-1][1] = sigMatch[overall-1][2] = matchState.empty;
     
     for (k = 0; i > 0 && j > 0; i--, j--, k++) {
       /* go from lowest @end to highest @front */

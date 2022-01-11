@@ -45,13 +45,13 @@ public class an5Generate {
     String res;
 
 	if (in.equals("link")) {
-	  res = new String("an5LinkJsonDeser");
+	  res = new String("an5LinkJsonDes");
 	} else if (in.equals("element")) {
-	  res = new String("an5ElementJsonDeser");
+	  res = new String("an5ElementJsonDes");
 	} else if (in.equals("network")) {
-	  res = new String("an5NetworkJsonDeser");
+	  res = new String("an5NetworkJsonDes");
 	} else if (in.equals("object")) {
-	  res = new String("an5ObjectJsonDeser");
+	  res = new String("an5ObjectJsonDes");
 	} else {
 	  res = new String(prefix + in);
 	}

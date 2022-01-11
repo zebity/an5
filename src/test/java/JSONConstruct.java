@@ -33,9 +33,9 @@ public class JSONConstruct {
 	module.addSerializer(AN5CL_pcie_nic.class, new AN5SR_pcie_nic());
 	module.addSerializer(AN5CL_computer.class, new AN5SR_computer());
 	module.addSerializer(AN5CL_switch.class, new AN5SR_switch());
-	module.addDeserializer(an5Object.class, new an5ObjectJsonDeser());
-	module.addDeserializer(an5Element.class, new an5ElementJsonDeser());
-	module.addDeserializer(an5Network.class, new an5NetworkJsonDeser());
+	module.addDeserializer(an5Object.class, new an5ObjectJsonDes());
+	module.addDeserializer(an5Element.class, new an5ElementJsonDes());
+	module.addDeserializer(an5Network.class, new an5NetworkJsonDes());
 	module.addDeserializer(AN5CL_cat6_cable.class, new AN5DR_cat6_cable());
 	module.addDeserializer(AN5CL_pcie_nic.class, new AN5DR_pcie_nic());
 	module.addDeserializer(AN5CL_computer.class, new AN5DR_computer());

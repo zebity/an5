@@ -55,8 +55,16 @@ public class an5Binding {
       boolean stop = true;
     } */
     if (match.matchResult == matchState.all) {
-      state = bindState.BASE_MATCH;
-      link.state = bindState.BASE_MATCH;
+      if (match.fromKeySz == match.toKeySz) {
+        state = bindState.BASE_MATCH;
+        link.state = bindState.BASE_MATCH;
+      } else if (match.fromKeySz > match.toKeySz) {
+    	state = bindState.REFLECTING;
+    	link.state = bindState.BASE_MATCH;
+      } else {
+      	state = bindState.BASE_MATCH;
+      	link.state = bindState.REFLECTING;  
+      }
       for (int[] si: match.servicesEnabled) {
     	if (si[1] > 0){
     	  if (member == null)
