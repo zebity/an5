@@ -13,6 +13,9 @@
 */
 package an5.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import an5.an5Logging;
 import an5.an5Logging.LogVerbose;
 import an5.an5Logging.SyslogLevel;
@@ -37,6 +40,13 @@ public class an5InterfaceMatch {
     fromKeySz = from.signatureKeys.size();
     toKeySz = to.signatureKeys.size();
     String[] toNamVal = null;
+    /* unmatched and reflecting details */
+    List<String[]> umCommon = new ArrayList<>(),
+    		       umNeeds = new ArrayList<>(),
+    		       umProvides = new ArrayList<>();
+    List<String[]> umServices = new ArrayList<>();
+    int refectMin = 0,
+        reflectMax = -1;
 
     /* DBG: if (from instanceof AN5CL_ethernet_port_baset || to instanceof AN5CL_ethernet_port_baset) {
         boolean stop = true;
@@ -91,6 +101,7 @@ public class an5InterfaceMatch {
         toNamVal = to.signatureSet.get(j - 1).common.get(fromNamVal[0]);
         if (toNamVal == null) {
           notMatched++;
+          umCommon.add(new String[]{fromNamVal[0], fromNamVal[1]});
           log.DBG(6, "  common - from: " + fromNamVal[0] + " = \"" + fromNamVal[1] +
         		     "\" to: null");
 
@@ -99,6 +110,9 @@ public class an5InterfaceMatch {
        		     "\" common - to: " + toNamVal[0] + " = \"" + toNamVal[1] + "\"");
           if (fromNamVal[1].equals(toNamVal[1])) {
     	    matched++;
+    	  } else {
+    		notMatched++;
+            umCommon.add(new String[]{fromNamVal[0], fromNamVal[1]});
     	  }
         }
       }
@@ -111,6 +125,7 @@ public class an5InterfaceMatch {
       for (String[] fromNamVal : from.signatureSet.get(i - 1).needs.values()) {
         toNamVal = to.signatureSet.get(j - 1).provides.get(fromNamVal[0]);
         if (toNamVal == null) {
+          umNeeds.add(new String[]{fromNamVal[0], fromNamVal[1]});  
           log.DBG(6, "  needs - from: " + fromNamVal[0] + " = \"" + fromNamVal[1] +
       		         "\"  provides - to: null");
           notMatched++;
@@ -119,6 +134,9 @@ public class an5InterfaceMatch {
          		     "\"  provides - to: " + toNamVal[0] + " = \"" + toNamVal[1] + "\"");
           if (fromNamVal[1].equals(toNamVal[1])) {
     	    matched++;
+    	  } else {
+      	    notMatched++;
+            umNeeds.add(new String[]{fromNamVal[0], fromNamVal[1]});    		  
     	  }
         }
       }
@@ -131,6 +149,7 @@ public class an5InterfaceMatch {
       for (String[] fromNamVal : from.signatureSet.get(i - 1).provides.values()) {
         toNamVal = to.signatureSet.get(j - 1).needs.get(fromNamVal[0]);
         if (toNamVal == null) {
+          umProvides.add(new String[]{fromNamVal[0], fromNamVal[1]}); 
           log.DBG(6, "  provides - from: " + fromNamVal[0] + " = \"" + fromNamVal[1] +
        		         "\"  needs - to: null");
           notMatched++;
@@ -139,7 +158,10 @@ public class an5InterfaceMatch {
           		     "\"  needs - to: " + toNamVal[0] + " = \"" + toNamVal[1] + "\"");
           if (fromNamVal[1].equals(toNamVal[1])) {
     	    matched++;
-    	  }
+    	  } else {
+        	notMatched++;
+            umProvides.add(new String[]{fromNamVal[0], fromNamVal[1]});    		  
+          }
         }
       }
       matchDetails(k, 2, fromSz, toSz, matched, notMatched, sigMatch, overall -1);
