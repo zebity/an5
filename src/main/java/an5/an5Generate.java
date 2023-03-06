@@ -526,7 +526,7 @@ public class an5Generate {
       if (nd instanceof an5ClassValue) {
     	an5ClassValue clNd = (an5ClassValue)nd;
     	
-    	if (! clNd.abstractSpec) {
+    	if (! clNd.goalSpec) {
     	  clNm = new String(global.serializerPrefix + clNd.value);
     	  obNm = new String(global.classPrefix + clNd.value);
           jvStrm = new PrintStream(dirPath + packagePath + global.pathSeperator + clNm + global.fileSuffix);
@@ -593,7 +593,7 @@ public class an5Generate {
 	  if (nd instanceof an5ClassValue) {
 	    an5ClassValue clNd = (an5ClassValue)nd;
 	    
-	    if (! clNd.abstractSpec) {
+	    if (! clNd.goalSpec) {
 	      clNm = new String(global.deserializerPrefix + clNd.value);
 	      obNm = new String(global.classPrefix + clNd.value);
 	      jvStrm = new PrintStream(dirPath + packagePath + global.pathSeperator + clNm + global.fileSuffix);
@@ -661,6 +661,18 @@ public class an5Generate {
 	}
     return cnt;
   }
+  
+  void generateJsonSerDeserInitialisation(PrintStream jvStrm, an5ClassValue clNd) {
+	String clNm = new String(global.classPrefix + clNd.value);
+	String serNm = new String(global.serializerPrefix + clNd.value);  
+    String deserNm = new String(global.deserializerPrefix + clNd.value);
+    
+    jvStrm.println("  static boolean sdReady = sdInit();");
+    jvStrm.println("  static boolean sdInit() {");
+    jvStrm.println("   an5JSONSerDeser.addSerDeser(" + clNm + ".class, new " + serNm + "(), new " + deserNm + "());");
+    jvStrm.println("   return true;");
+    jvStrm.println("  }");
+  }
   int generateClassImplementations() throws FileNotFoundException {
     int cnt = 0;
 	PrintStream jvStrm;
@@ -669,7 +681,7 @@ public class an5Generate {
 	for (an5TypeValue nd : symtab.current.identifier.values()) {
 	  if (nd instanceof an5ClassValue) {
 	    an5ClassValue clNd = (an5ClassValue)nd;
-	    if (clNd.abstractSpec) {
+	    if (clNd.goalSpec) {
 	      generateTemplateClassImplementations(clNd);
 	    }
 	    clNm = new String(global.classPrefix + clNd.value);
@@ -692,11 +704,14 @@ public class an5Generate {
 	    }
 	    jvStrm.println(" {");
 	    jvStrm.println("  String an5name = \"" + clNd.value + "\";");
+	    if (! clNd.goalSpec) {
+	      generateJsonSerDeserInitialisation(jvStrm, clNd);
+	    }
 	    generateClassInterfaceVariablesImplementation(jvStrm, clNd);
-	    generateClassServiceSetVariablesImplementation(jvStrm, clNd, clNd.abstractSpec);
-	    generateClassObjectVariablesImplementation(jvStrm, clNd, clNd.abstractSpec);
-	    generateClassFieldVariablesImplementation(jvStrm, clNd, clNd.abstractSpec);
-	    if (clNd.abstractSpec) {
+	    generateClassServiceSetVariablesImplementation(jvStrm, clNd, clNd.goalSpec);
+	    generateClassObjectVariablesImplementation(jvStrm, clNd, clNd.goalSpec);
+	    generateClassFieldVariablesImplementation(jvStrm, clNd, clNd.goalSpec);
+	    if (clNd.goalSpec) {
 	      jvStrm.println("  public " + clNm + "(" + global.templatePrefix + clNd.value + " from, boolean ab) {");
 	      jvStrm.println("    super(from, ab);");
 	      jvStrm.println("    for (an5InterfaceTable v: AN5AT_interface) AN5AT_interfaces.put(v.name, v);");
@@ -751,7 +766,7 @@ public class an5Generate {
 	    jvStrm.println("  public Object clone() {");
 	    jvStrm.println("    return new " + clNm + "(this);");
 	    jvStrm.println("  }");
-	    generateClassFieldVariablesGetSetImplementation(jvStrm, clNd, clNd.abstractSpec);
+	    generateClassFieldVariablesGetSetImplementation(jvStrm, clNd, clNd.goalSpec);
 	    jvStrm.println("}");
 	  }
 	}

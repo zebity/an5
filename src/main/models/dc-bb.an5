@@ -13,7 +13,7 @@ package an5.generic.dctypes;
 
 @Model(
   spec = "an5",
-  version = "0.1"
+  version = "0.2"
 )
 
 interface pcie_interface {
@@ -106,6 +106,22 @@ class cat6_cable extends link exposes catx_link {
    reflects catx_link a, b;
 }
 
+/* new 0.2 spec */
+goal class ethernet_lan extends network {
+  @mandatory switch[] fabric;
+  @mandatory computer[] hosts;
+  object[] uses;
+  service = { "ethernet", "(ethernet_vlan)*" };
+  handler = "an5CreateNetwork";
+
+  constraint class ethernet_node extends element {
+    @mandatory computer host;
+    @mandatory switch ether;
+    object[] uses;
+   }
+}
+
+/* old 0.1 spec
 abstract class ethernet_lan extends network {
   @mandatory switch[] fabric;
   @mandatory computer[] hosts;
@@ -117,5 +133,5 @@ abstract class ethernet_node extends element {
   @mandatory computer host;
   @mandatory switch ether;
   object[] uses;
- }
+ } */
  

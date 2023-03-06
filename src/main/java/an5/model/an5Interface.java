@@ -21,6 +21,8 @@ abstract public class an5Interface extends an5Object {
   /* public an5Interface(an5ClassTemplate t) {
 	super(t);
   } */
+  public an5Interface() {
+  }
   public an5Interface(String nameTemplate) {
     super();
     bindingNameTemplate = nameTemplate;

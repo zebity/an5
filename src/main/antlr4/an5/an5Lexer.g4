@@ -39,7 +39,7 @@ lexer grammar an5Lexer;
 
 // Keywords
 
-ABSTRACT:           'abstract';
+// ABSTRACT:           'abstract';
 // ASSERT:             'assert';
 BINDING:            'binding';
 BOOLEAN:            'boolean';
@@ -51,6 +51,7 @@ CHAR:               'char';
 CLASS:              'class';
 COMMON:             'common';
 CONST:              'const';
+CONSTRAINT:			'constraint';
 // CONTINUE:           'continue';
 DEFAULT:            'default';
 // DO:                 'do';
@@ -65,7 +66,9 @@ EXTENDS:            'extends';
 FLOAT:              'float';
 // FOR:                'for';
 // IF:                 'if';
+GOAL:				'goal';
 // GOTO:               'goto';
+HANDLER:			'handler';
 // IMPLEMENTS:         'implements';
 IMPORT:             'import';
 // INSTANCEOF:         'instanceof';

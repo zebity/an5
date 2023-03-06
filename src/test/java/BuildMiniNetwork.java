@@ -22,7 +22,7 @@ public class BuildMiniNetwork {
   public static void main(String[] args){
     int i = 0;
     
-	ObjectMapper objectMapper = new ObjectMapper();
+	/* ObjectMapper objectMapper = new ObjectMapper();
     // SimpleModule module = new SimpleModule("an5ObjectJSONSerializer");
 	SimpleModule module = new SimpleModule();
 	module.addSerializer(an5Object.class, new an5ObjectJsonSer());
@@ -41,7 +41,9 @@ public class BuildMiniNetwork {
 	module.addDeserializer(AN5CL_switch.class, new AN5DR_switch());
 	objectMapper.registerModule(module);
 	objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-	objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+	objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true); */
+    
+    an5JSONSerDeser.stage2Init();
 		
 	/* Switch */
 	String swdef = "{\"an5name\":\"switch\",\"name\":\"simple-switch\",\"reflects\":[{\"name\":\"port\",\"policy\":\"STATIC\",\"size\":24}]}";
@@ -97,13 +99,13 @@ public class BuildMiniNetwork {
 	try {
 	  sw1 = new AN5CL_switch(new ObjectMapper().readTree(swdef));
 	  for (i = 0; i < cpdef.length; i++) {
-		cp[i] = objectMapper.readValue(cpdef[i], AN5CL_computer.class);
+		cp[i] = an5JSONSerDeser.mapper().readValue(cpdef[i], AN5CL_computer.class);
       }
 	  for (i = 0; i < nicdef.length; i++) {
-	    nic[i] = objectMapper.readValue(nicdef[i], AN5CL_pcie_nic.class);
+	    nic[i] = an5JSONSerDeser.mapper().readValue(nicdef[i], AN5CL_pcie_nic.class);
 	  }
 	  for (i = 0; i < cabdef.length; i++) {
-		cab[i] = objectMapper.readValue(cabdef[i], AN5CL_cat6_cable.class);
+		cab[i] = an5JSONSerDeser.mapper().readValue(cabdef[i], AN5CL_cat6_cable.class);
       }
 
 	} catch (JsonMappingException e1) {
@@ -125,7 +127,7 @@ public class BuildMiniNetwork {
     List<an5Object> parts = new ArrayList<>();
     for (an5Object ob : use) parts.add(ob);
     AN5TP_ethernet_lan  netPrototype = new AN5TP_ethernet_lan();
-    AN5TP_ethernet_node nodePrototype = new AN5TP_ethernet_node();
+    // AN5TP_ethernet_node nodePrototype = new AN5TP_ethernet_node();
     an5Network netResult = (an5Network)netPrototype.createInstance();
     an5Template netTemplate = new an5CreateNetwork(null, new an5Object[]{netPrototype, nodePrototype}, parts, netResult);
     an5SearchControl ctrl = new an5SearchControl();

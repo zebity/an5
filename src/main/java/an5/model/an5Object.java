@@ -67,8 +67,8 @@ public class an5Object implements an5ClassTemplate {
     } else if (uniqueId[0] != null) {
       res = new String(uniqueId[0] + "=" + uniqueId[1]);
     } else {
-      uniqueId[0] = new String("java-oid");
-      uniqueId[1] = new String(toString());
+      uniqueId[0] = new String("xid");
+      uniqueId[1] = an5UIDGenerator.getNextUID(this);
       res = new String(uniqueId[0] + "=" + uniqueId[1]);
     }
     return res;

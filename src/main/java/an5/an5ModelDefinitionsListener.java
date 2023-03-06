@@ -370,7 +370,7 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	}
 	return nd;
   }
-  public boolean isAbstractClass(an5Parser.ClassDeclarationContext ctx) {
+  public boolean isGoalClass(an5Parser.ClassDeclarationContext ctx) {
     boolean res = false;
     
     RuleContext up = ctx.parent;
@@ -384,11 +384,33 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
 	if (up != null) {
 	  an5Parser.TypeDeclarationContext typCtx = (an5Parser.TypeDeclarationContext)up;
 	  for (ClassOrInterfaceModifierContext modCtx: typCtx.classOrInterfaceModifier()) {
-		if (modCtx.ABSTRACT() != null) {
+		if (modCtx.GOAL() != null) {
 		  res = true;
 		}
 	  }
 	}
+
+	return res;
+  }
+  public boolean isConstraintClass(an5Parser.ClassDeclarationContext ctx) {
+	boolean res = false;
+	    
+	RuleContext up = ctx.parent;
+	while (up != null) {
+	  if (up instanceof an5Parser.TypeDeclarationContext) {
+	    break;
+	  }
+	  up = up.parent;
+	}
+
+	if (up != null) {
+	  an5Parser.TypeDeclarationContext typCtx = (an5Parser.TypeDeclarationContext)up;
+	  for (ClassOrInterfaceModifierContext modCtx: typCtx.classOrInterfaceModifier()) {
+	    if (modCtx.CONSTRAINT() != null) {
+		  res = true;
+	    }
+	  }
+    }
 
 	return res;
   }
@@ -516,7 +538,10 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
     an5ClassValue nd = useClassValue(ctx, 0);
     if (nd != null) {
       nd.fromMemberDec = false;
-      nd.abstractSpec = isAbstractClass(ctx);
+      nd.goalSpec = isGoalClass(ctx);
+      if (! nd.goalSpec) {
+        nd.constraintSpec = isConstraintClass(ctx);
+      }
       res = symtab.select(extendsKey[1].toString());
       if (res == null) {
     	nd.classExtended = new an5UnresolvedClassValue("class", extendsKey[1].toString(), symtab.current.forPackage);

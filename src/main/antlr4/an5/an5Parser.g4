@@ -72,7 +72,9 @@ classOrInterfaceModifier
 //    | PROTECTED
 //    | PRIVATE
 //    | STATIC
-    | ABSTRACT
+//    | ABSTRACT
+    | GOAL
+    | CONSTRAINT
 //    | FINAL    // FINAL for class only -- does not apply to interfaces
 //    | STRICTFP
     ;
@@ -143,6 +145,7 @@ memberDeclaration
 //    : methodDeclaration
 //    | genericMethodDeclaration
     : serviceSignatureDeclaration
+    | handlerDeclaration
     | interfaceVariableDeclaration
     | annotationFieldDeclaration
 //    | fieldDeclaration
@@ -197,6 +200,10 @@ typeTypeOrVoid
 serviceSignatureDeclaration
     : SERVICE '=' arrayInitializer 
     ;
+
+handlerDeclaration
+	: HANDLER '=' STRING_LITERAL
+	;
 
 interfaceVariableDeclaration
     : REFLECTS typeType variableDeclarators

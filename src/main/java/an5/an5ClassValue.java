@@ -11,7 +11,8 @@ import java.util.List;
 
 class an5ClassValue extends an5TypeValue {
   boolean fromMemberDec = true;
-  boolean abstractSpec = false;
+  boolean goalSpec = false;
+  boolean constraintSpec = false;
   List<an5InterfaceValue> interfacesExposed = new ArrayList<>();
   an5ClassValue classExtended;
   List<an5InterfaceVariableValue> interfacesReflected = new ArrayList<>();
