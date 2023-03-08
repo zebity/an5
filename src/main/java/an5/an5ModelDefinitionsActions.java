@@ -14,6 +14,7 @@ import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.tree.TerminalNode;
 
 import an5.an5Parser.AnnotationFieldDeclarationContext;
+import an5.an5Parser.ClassDeclarationContext;
 import an5.an5Parser.ClassOrInterfaceModifierContext;
 import an5.an5Parser.ExpressionContext;
 import an5.an5Parser.LiteralContext;
@@ -367,32 +368,61 @@ class an5ModelDefinitionsActions {
 	else {      
 	  nd = new an5ClassValue(id, symtab.current.forPackage);
 	  symtab.insert(id, nd, up);
+	  Object[] goalres = handleGoalClassDeclarations(ctx, nd);
+	  if (goalres != null && goalres[1] == null) {
+	    nd = null;
+	  }
 	}
 	return nd;
   }
-  public boolean isGoalClass(an5Parser.ClassDeclarationContext ctx) {
-    boolean res = false;
+  
+  public Object[] isGoalClass(an5Parser.ClassDeclarationContext ctx) {
+    Object[] res = null;
     
     RuleContext up = ctx.parent;
-	while (up != null) {
-	  if (up instanceof an5Parser.TypeDeclarationContext) {
-	    break;
-	  }
-	  up = up.parent;
-    }
+    if (up instanceof an5Parser.MemberDeclarationContext) {
+
+      while (up != null) {
+        if (up instanceof an5Parser.ClassBodyDeclarationContext) {
+    	  break;
+    	}
+    	up = up.parent;
+      }
+      
+  	  if (up != null) {
+  	    an5Parser.ClassBodyDeclarationContext typCtx = (an5Parser.ClassBodyDeclarationContext)up;
+  	    for (an5Parser.ModifierContext modCtx: typCtx.modifier()) {
+  	      if (modCtx.classOrInterfaceModifier() != null) {	    	  
+  	        ClassOrInterfaceModifierContext cimc = modCtx.classOrInterfaceModifier();
+  		    if (cimc.CONSTRAINT() != null) {
+  		      res = new Object[] {true, false, true, "constraint"};
+  		    }
+  	      }
+  		}
+  	  }
+    } else {
+    
+	  while (up != null) {
+	    if (up instanceof an5Parser.TypeDeclarationContext) {
+	      break;
+	    }
+	    up = up.parent;
+      }
 	
-	if (up != null) {
-	  an5Parser.TypeDeclarationContext typCtx = (an5Parser.TypeDeclarationContext)up;
-	  for (ClassOrInterfaceModifierContext modCtx: typCtx.classOrInterfaceModifier()) {
-		if (modCtx.GOAL() != null) {
-		  res = true;
+	  if (up != null) {
+	    an5Parser.TypeDeclarationContext typCtx = (an5Parser.TypeDeclarationContext)up;
+	    for (ClassOrInterfaceModifierContext modCtx: typCtx.classOrInterfaceModifier()) {
+		  if (modCtx.GOAL() != null) {
+		    res = new Object[] {true, true, false, "goal"};
+		  }
 		}
 	  }
 	}
 
 	return res;
   }
-  public boolean isConstraintClass(an5Parser.ClassDeclarationContext ctx) {
+  
+  /* public boolean isConstraintClass(an5Parser.ClassDeclarationContext ctx) {
 	boolean res = false;
 	    
 	RuleContext up = ctx.parent;
@@ -413,15 +443,70 @@ class an5ModelDefinitionsActions {
     }
 
 	return res;
+  } */
+  
+  public an5Parser.ClassDeclarationContext getParentClassCxt(an5Parser.ClassDeclarationContext ctx) {
+    an5Parser.ClassDeclarationContext res = null;
+	    
+	RuleContext up = ctx.parent;
+	
+    while (up != null) {
+	  if (up instanceof an5Parser.TypeDeclarationContext) {
+		an5Parser.TypeDeclarationContext tdc = (an5Parser.TypeDeclarationContext)up;
+		res = tdc.classDeclaration();
+		 break;
+	  }
+	  up = up.parent;
+	}		
+    return res;
   }
+  
+  public Object[] handleGoalClassDeclarations(an5Parser.ClassDeclarationContext ctx, an5ClassValue nd) {
+  // if we have "goal" class we need to setup constraints parent
+    log.DBG("handleGoalClassDeclarations");
+    
+    Object[] res = null;
+    
+    String id = ctx.IDENTIFIER().getText();
+    
+    Object[] classType = isGoalClass(ctx);
+    
+    if (classType != null && (Boolean)classType[1]) {
+      nd.goalSpec = true;
+      res = new Object[]{true, nd};  
+    } else if (classType != null && (Boolean)classType[2]) {
+  	  nd.constraintSpec = true;
+  	  ClassDeclarationContext par = getParentClassCxt(ctx);
+  	  if (par != null) {
+  	    String parid = par.IDENTIFIER().getText();
+  	    an5TypeValue fnd = symtab.select(parid);
+  	    if (fnd != null) {
+  	      if (fnd instanceof an5ClassValue) {
+  	        an5ClassValue parnd = (an5ClassValue)fnd;
+  	        parnd.containedClass.add(nd);
+  	        res = new Object[] {true, nd};
+  	      } else {
+  	        log.ERR(3, "<ERR>:AN5:Parent Class Type Invalid: [" + fnd.isA + "]" + fnd.value + ".");   
+  	      }
+  	    } else {
+  	      log.ERR(3, "<ERR>:AN5:Constraint Parent Class: '" + parid + "' not found: [" + nd.isA + "]" + nd.value + ".");  
+  	    }
+  	  } else {
+  	    log.ERR(3, "<ERR>:AN5: Failed to create new Constraint Class: '" + id + "'."); 
+  	  }
+    }
+    return res;
+  }
+  
   public void enterBlock(an5Parser.BlockContext ctx) {
 	log.DBG("enterBlock");
 	symtab.current = symtab.current.addChild();
   }
   public void enterClassDeclaration(an5Parser.ClassDeclarationContext ctx) {
+  // if we have "goal" class we need to add node into symbol table so we can add handler & constraints
     log.DBG("enterClassDeclaration");
-//    symtab.current = symtab.current.addChild();
   }
+
   public void enterCompilationUnit(an5Parser.CompilationUnitContext ctx) {
 	log.DBG("enterCompilationUnit");
 	symtab.reset();
@@ -445,10 +530,6 @@ class an5ModelDefinitionsActions {
     an5ClassValue nd = useClassValue(ctx, 0);
     if (nd != null) {
       nd.fromMemberDec = false;
-      nd.goalSpec = isGoalClass(ctx);
-      if (! nd.goalSpec) {
-        nd.constraintSpec = isConstraintClass(ctx);
-      }
       res = symtab.select(extendsKey[1].toString());
       if (res == null) {
     	nd.classExtended = new an5UnresolvedClassValue("class", extendsKey[1].toString(), symtab.current.forPackage);
@@ -482,7 +563,6 @@ class an5ModelDefinitionsActions {
   	  }
   	  nd.locked = true;
     }
-//    symtab.current = symtab.current.getParent();
   }
   public void exitCompilationUnit(an5Parser.CompilationUnitContext ctx) {
 	log.DBG("exitCompilationUnit");
@@ -782,7 +862,7 @@ class an5ModelDefinitionsActions {
 	
 	/* Extract services */
 	if (up == null) {
-	  log.ERR(3, "<ERR>:AN5:Class Services Parent Not Found.");		
+		  log.ERR(3, "<ERR>:AN5:Class Services Parent Not Found.");		
 	}
 	else {
 	  an5ClassValue nd = useClassValue((an5Parser.ClassDeclarationContext)up, 0);
@@ -803,6 +883,39 @@ class an5ModelDefinitionsActions {
 		getServicesSet(vals, services, card);
       }
 	  nd.networkServices.add(new an5ServiceSetValue("service", nd.inPackage, services, card));
+    }
+  }
+  public void exitHandlerDeclaration(an5Parser.HandlerDeclarationContext ctx) {
+	log.DBG("exitHandlerDeclaration");
+	/* get parent interface */
+	RuleContext up = ctx.parent;
+	while (up != null) {
+      if (up instanceof an5Parser.ClassDeclarationContext) {
+        break;
+      }
+      up = up.parent;
+	}
+	
+	/* Extract handler class name */
+	if (up == null) {
+	  log.ERR(3, "<ERR>:AN5:Class Handler Parent not found.");		
+	}
+	else {
+	  String handler = null;
+	  ClassDeclarationContext cdc = (an5Parser.ClassDeclarationContext)up;
+	  an5ClassValue nd = useClassValue(cdc, 0);
+	  
+	  if (nd != null) {
+		isLocked(nd);
+	    TerminalNode tn = ctx.STRING_LITERAL();
+	    if (tn != null) {
+	      String ltStr = tn.getText();
+          handler = ltStr.substring(1, ltStr.length()-1);
+		  log.DBG(diags, "goal handler - '" + handler + "'");
+		  nd.handler = handler;
+	    }
+      }
+	  log.ERR(3, "<ERR>:AN5:Class Parent Value Node not found - '" + cdc.IDENTIFIER().getText() + "'.");
     }
   }
 }

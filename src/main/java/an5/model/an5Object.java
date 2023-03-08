@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 public class an5Object implements an5ClassTemplate {
   String an5name = "object";
   an5ClassTemplate template = null;
-  public boolean abstractSpec = false;
+  public boolean goalSpec = false;
   public boolean mandatory = false;
   public String[] uniqueId = new String[2];
   public String[] persistentUniqueId = new String[2];
@@ -36,11 +36,11 @@ public class an5Object implements an5ClassTemplate {
   public an5Object() {}
   public an5Object(an5ClassTemplate t, boolean ab) {
     template = t;
-    abstractSpec = ab;
+    goalSpec = ab;
   }
   public an5Object(an5Object o) {
 	template = o.template;
-    abstractSpec = o.abstractSpec;
+    goalSpec = o.goalSpec;
 	mandatory = o.mandatory;
 	o.getGUID();
 	uniqueId = new String[]{new String(o.uniqueId[0]), new String(o.uniqueId[1])};
@@ -52,7 +52,7 @@ public class an5Object implements an5ClassTemplate {
   }
   public an5Object(JsonNode nd) {
 	if (nd != null) {
-      abstractSpec = nd.get("abstractSpec").asBoolean();
+      goalSpec = nd.get("goalSpec").asBoolean();
       mandatory = nd.get("mandatory").asBoolean();
       JsonNode idNd = nd.get("persistentUniqueId");
       if (idNd != null) {

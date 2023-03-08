@@ -27,11 +27,13 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   // Delegate...
   //
   public void enterBlock(an5Parser.BlockContext ctx) { delegate.enterBlock(ctx); }
+  public void enterClassDeclaration(an5Parser.ClassDeclarationContext ctx) { delegate.enterClassDeclaration(ctx); }
   public void enterCompilationUnit(an5Parser.CompilationUnitContext ctx) { delegate.enterCompilationUnit(ctx); }
   public void exitBlock(an5Parser.BlockContext ctx) { delegate.exitBlock(ctx); }
   public void exitClassDeclaration(an5Parser.ClassDeclarationContext ctx) { delegate.exitClassDeclaration(ctx); }
   public void exitCompilationUnit(an5Parser.CompilationUnitContext ctx) { delegate.exitCompilationUnit(ctx); }
   public void exitFieldDeclaration(an5Parser.FieldDeclarationContext ctx) { delegate.exitFieldDeclaration(ctx); }
+  public void exitHandlerDeclaration(an5Parser.HandlerDeclarationContext ctx) { delegate.exitHandlerDeclaration(ctx); }
   public void exitInterfaceBindingNameTemplate(an5Parser.InterfaceBindingNameTemplateContext ctx) { delegate.exitInterfaceBindingNameTemplate(ctx); }
   public void exitInterfaceDeclaration(an5Parser.InterfaceDeclarationContext ctx) { delegate.exitInterfaceDeclaration(ctx); }
   public void exitInterfaceAttributeDeclaration(an5Parser.InterfaceAttributeDeclarationContext ctx) { delegate.exitInterfaceAttributeDeclaration(ctx); }
@@ -56,7 +58,6 @@ class an5ModelDefinitionsListener extends an5ParserBaseListener {
   public void enterBlockStatement(an5Parser.BlockStatementContext ctx) { log.DBG("enterBlockStatement"); }
   public void enterClassBody(an5Parser.ClassBodyContext ctx) { log.DBG("enterClassBody"); }
   public void enterClassBodyDeclaration(an5Parser.ClassBodyDeclarationContext ctx) { log.DBG("enterClassBodyDeclaration"); }
-  public void enterClassDeclaration(an5Parser.ClassDeclarationContext ctx) { log.DBG("enterClassDeclaration"); }
   public void enterClassOrInterfaceModifier(an5Parser.ClassOrInterfaceModifierContext ctx) { log.DBG("enterClassOrInterfaceModifier"); }
   public void enterClassOrInterfaceType(an5Parser.ClassOrInterfaceTypeContext ctx) { log.DBG("enterClassOrInterfaceType"); }
   public void enterConstantDeclarator(an5Parser.ConstantDeclaratorContext ctx) { log.DBG("enterConstantDeclarator"); }

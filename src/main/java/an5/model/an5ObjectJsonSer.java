@@ -26,7 +26,7 @@ public class an5ObjectJsonSer extends StdSerializer<an5Object> {
     gen.writeStartObject();
     gen.writeStringField("an5name", val.an5name);
     // gen.writeStartObject();
-    gen.writeBooleanField("abstractSpec", val.abstractSpec);
+    gen.writeBooleanField("goalSpec", val.goalSpec);
     gen.writeBooleanField("mandatory", val.mandatory);
     gen.writeStringField("GUID", val.getGUID());
     if (val.persistentUniqueId[0] != null) {

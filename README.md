@@ -1,4 +1,4 @@
-# an5 V0.1
+# an5 V0.2
 
 - a nETWORK LANGUAGE WITH 5 CLASSES
 - an5 - is a network modelling language designed to allow description and
@@ -6,6 +6,9 @@ processing and simulation of networks
 - The language syntax is derived from java but without any methods
 So it is data definition only, with class & interface used for schema defintion
 - The 5 Classes are: {network, element, interface, link, path}
+
+Updates:
+- 0.2 - remove use of "abstract" and replace with "goal", "handler" and "constraint" to make goal definition simpler/clearer
 
 # Build Tools
 

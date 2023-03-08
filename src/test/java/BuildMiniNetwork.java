@@ -126,6 +126,7 @@ public class BuildMiniNetwork {
 
     List<an5Object> parts = new ArrayList<>();
     for (an5Object ob : use) parts.add(ob);
+    
     AN5TP_ethernet_lan  netPrototype = new AN5TP_ethernet_lan();
     // AN5TP_ethernet_node nodePrototype = new AN5TP_ethernet_node();
     an5Network netResult = (an5Network)netPrototype.createInstance();

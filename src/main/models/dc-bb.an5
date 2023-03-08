@@ -112,7 +112,7 @@ goal class ethernet_lan extends network {
   @mandatory computer[] hosts;
   object[] uses;
   service = { "ethernet", "(ethernet_vlan)*" };
-  handler = "an5CreateNetwork";
+  handler = "an5.solve.an5CreateNetwork";
 
   constraint class ethernet_node extends element {
     @mandatory computer host;
