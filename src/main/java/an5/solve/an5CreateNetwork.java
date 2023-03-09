@@ -23,7 +23,7 @@ import an5.model.an5VariableInstance;
 public class an5CreateNetwork extends an5Template {
   an5Network resultNetwork;
   an5Network netPrototype;
-  an5Object nodePrototype;
+  an5Object[] nodePrototype;
   List<an5Object> use;
   
   /* Working */
@@ -38,10 +38,10 @@ public class an5CreateNetwork extends an5Template {
   int status = an5SearchControl.SearchResult.UNDEFINED;
   int pathsExpanded = 0;
 
-  public an5CreateNetwork(an5Template p, an5Object[] proto, List<an5Object> from, an5Network net) {
+  public an5CreateNetwork(an5Template p, an5Object proto, List<an5Object> from, an5Network net) {
     super(p);
-	netPrototype = (an5Network)proto[0];
-    nodePrototype = (an5Object)proto[1];
+	netPrototype = (an5Network)proto;
+    nodePrototype = proto.createConstraints();
     use = from;
     resultNetwork = net;
   }

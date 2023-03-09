@@ -1,5 +1,6 @@
 package an5.model;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +33,7 @@ public class an5JSONSerDeser {
 	  objectMapper.registerModule(module);
 	  objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
 	  objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true);
+	  objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 	  stage2 = true;
 	  return stage2;
 	}

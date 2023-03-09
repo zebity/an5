@@ -265,9 +265,11 @@ public class an5Object implements an5ClassTemplate {
     }
     return res;
   }
+  @Override
   public an5Object createInstance() {
     return null;
   }
+
   public an5Object getFirst() {
 	return this;
   }
@@ -280,11 +282,17 @@ public class an5Object implements an5ClassTemplate {
   public String getValue(String nam) {
     return null;
   }
+  @Override
   public an5Service expose() {
     an5Service res = null;
     if (template != null) {
       res = template.expose();
     }
+    return res;
+  }
+  @Override
+  public an5Object[] createConstraints() {
+	an5Object[] res = null;
     return res;
   }
 }

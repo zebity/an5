@@ -10,9 +10,6 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.module.SimpleModule;
-
 import an5.model.*;
 import an5.solve.*;
 import an5.generic.dctypes.*;
@@ -21,28 +18,7 @@ import an5.generic.dctypes.*;
 public class BuildMiniNetwork {
   public static void main(String[] args){
     int i = 0;
-    
-	/* ObjectMapper objectMapper = new ObjectMapper();
-    // SimpleModule module = new SimpleModule("an5ObjectJSONSerializer");
-	SimpleModule module = new SimpleModule();
-	module.addSerializer(an5Object.class, new an5ObjectJsonSer());
-	module.addSerializer(an5Element.class, new an5ElementJsonSer());
-	module.addSerializer(an5Network.class, new an5NetworkJsonSer());
-	module.addSerializer(AN5CL_cat6_cable.class, new AN5SR_cat6_cable());
-	module.addSerializer(AN5CL_pcie_nic.class, new AN5SR_pcie_nic());
-	module.addSerializer(AN5CL_computer.class, new AN5SR_computer());
-	module.addSerializer(AN5CL_switch.class, new AN5SR_switch());
-	module.addDeserializer(an5Object.class, new an5ObjectJsonDes());
-	module.addDeserializer(an5Element.class, new an5ElementJsonDes());
-	module.addDeserializer(an5Network.class, new an5NetworkJsonDes());
-	module.addDeserializer(AN5CL_cat6_cable.class, new AN5DR_cat6_cable());
-	module.addDeserializer(AN5CL_pcie_nic.class, new AN5DR_pcie_nic());
-	module.addDeserializer(AN5CL_computer.class, new AN5DR_computer());
-	module.addDeserializer(AN5CL_switch.class, new AN5DR_switch());
-	objectMapper.registerModule(module);
-	objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-	objectMapper.configure(SerializationFeature.INDENT_OUTPUT, true); */
-    
+
     an5JSONSerDeser.stage2Init();
 		
 	/* Switch */
@@ -128,9 +104,10 @@ public class BuildMiniNetwork {
     for (an5Object ob : use) parts.add(ob);
     
     AN5TP_ethernet_lan  netPrototype = new AN5TP_ethernet_lan();
-    // AN5TP_ethernet_node nodePrototype = new AN5TP_ethernet_node();
     an5Network netResult = (an5Network)netPrototype.createInstance();
-    an5Template netTemplate = new an5CreateNetwork(null, new an5Object[]{netPrototype, nodePrototype}, parts, netResult);
+    
+    an5Template netTemplate = new an5CreateNetwork(null, netPrototype, parts, netResult);
+    
     an5SearchControl ctrl = new an5SearchControl();
     int offFlags1 = an5SearchControl.SearchOptions.REMOVE_LOCAL_EQUIVALENTS |
     		       an5SearchControl.SearchOptions.COST;

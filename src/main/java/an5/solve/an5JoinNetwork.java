@@ -61,7 +61,7 @@ public class an5JoinNetwork extends an5Template {
     }
   }
   an5Logging log = new an5Logging(LogVerbose.ON,SyslogLevel.notice);
-  an5Object prototype;
+  an5Object[] prototype;
   public an5Network joinNet;
   an5Object connectTo;
   List<an5Object> srcObjects;
@@ -77,7 +77,7 @@ public class an5JoinNetwork extends an5Template {
   int status = an5SearchControl.SearchResult.UNDEFINED;
   boolean DEBUG = false;
   
-  public an5JoinNetwork(an5Template par, an5Object proto, an5Network net, an5Object to, List<an5Object> ele, an5AvailableResource avail) {
+  public an5JoinNetwork(an5Template par, an5Object[] proto, an5Network net, an5Object to, List<an5Object> ele, an5AvailableResource avail) {
     super(par);	  
     prototype = proto;
     joinNet = net;
@@ -85,7 +85,7 @@ public class an5JoinNetwork extends an5Template {
     use = avail;
     connectTo = to;
   }
-  public an5JoinNetwork(an5Template par, an5Object proto, an5Network net, an5Object to, List<an5Object> ele, Map<String, an5Object> avail) {
+  public an5JoinNetwork(an5Template par, an5Object[] proto, an5Network net, an5Object to, List<an5Object> ele, Map<String, an5Object> avail) {
 	super(par);	  
 	prototype = proto;
 	joinNet = net;
@@ -95,7 +95,7 @@ public class an5JoinNetwork extends an5Template {
 	  use.add(o);
 	connectTo = to;
   }
-  public an5JoinNetwork(an5Template par, an5Object proto, an5Network net, an5Object to, an5Object ele, an5AvailableResource avail) {
+  public an5JoinNetwork(an5Template par, an5Object[] proto, an5Network net, an5Object to, an5Object ele, an5AvailableResource avail) {
 	super(par);
 	prototype = proto;
 	joinNet = net;
@@ -126,8 +126,8 @@ public class an5JoinNetwork extends an5Template {
   }
   public int seedGoal() {
 	int i = 0;
-    viaService = prototype.expose().getWhere(1, -1);
-    for (an5VariableInstance c : prototype.AN5AT_classes.values()) {
+    viaService = prototype[0].expose().getWhere(1, -1);
+    for (an5VariableInstance c : prototype[0].AN5AT_classes.values()) {
       if (c instanceof an5ClassInstance) {
     	an5ClassInstance cl = (an5ClassInstance)c;
     	if (cl.mandatory) {

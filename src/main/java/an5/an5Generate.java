@@ -524,6 +524,16 @@ public class an5Generate {
 	  jvStrm.println("    return new an5ServiceMap();");
 	}
 	jvStrm.println("  }");
+	if (nd.containedClass.size() > 0) {
+      jvStrm.println("  public an5Object[] createConstraints() {");
+	  jvStrm.println("    an5Object[] res = new an5Object[" + nd.containedClass.size() + "];");
+	  for (int j = 0; j < nd.containedClass.size(); j++) {
+		jvStrm.println("    res[" + j + "] = new " + global.templatePrefix + nd.containedClass.get(j).value + "();");	  
+		// jvStrm.println("    res[" + j + "] = (new " + crNm + "()).new " + global.templatePrefix + nd.containedClass.get(j).value + "();");	  
+	  }
+	  jvStrm.println("    return res;");
+	  jvStrm.println("  }");
+	}
     jvStrm.println("  public " + clNm + "() {");
     jvStrm.println("    super();");
 	jvStrm.println("    for (an5InterfaceTable v: AN5AT_interface) AN5AT_interfaces.put(v.name, v);");

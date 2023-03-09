@@ -77,11 +77,13 @@ public class an5Path extends an5Object {
       
         cloneLinksA = cloneA.enumerateBindings(an5Binding.bindState.BOUND);
         /* cloneLinksB = cloneB.enumerateBindings(an5Binding.bindState.BOUND); */
-        for (an5Binding bd : cloneLinksA) {
-          locateBinding = bd.bORef.locateBinding(bd);
-          cloneBIT = cloneB.locateInterface(bd.bIRef.var, locateBinding);
-          if (cloneBIT != null && locateBinding != null) {
-            bd.reBind(cloneA, bd.aIRef, cloneB, cloneBIT.instance, cloneBIT.instance.bindings.get(locateBinding[1]));
+        if (cloneLinksA != null) { /* bug fix - rebind BOUND only */
+          for (an5Binding bd : cloneLinksA) {
+            locateBinding = bd.bORef.locateBinding(bd);
+            cloneBIT = cloneB.locateInterface(bd.bIRef.var, locateBinding);
+            if (cloneBIT != null && locateBinding != null) {
+              bd.reBind(cloneA, bd.aIRef, cloneB, cloneBIT.instance, cloneBIT.instance.bindings.get(locateBinding[1]));
+            }
           }
         }
         path.put(cloneB.getGUID(), cloneB);
