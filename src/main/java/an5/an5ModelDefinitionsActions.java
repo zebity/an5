@@ -421,30 +421,7 @@ class an5ModelDefinitionsActions {
 
 	return res;
   }
-  
-  /* public boolean isConstraintClass(an5Parser.ClassDeclarationContext ctx) {
-	boolean res = false;
-	    
-	RuleContext up = ctx.parent;
-	while (up != null) {
-	  if (up instanceof an5Parser.TypeDeclarationContext) {
-	    break;
-	  }
-	  up = up.parent;
-	}
-
-	if (up != null) {
-	  an5Parser.TypeDeclarationContext typCtx = (an5Parser.TypeDeclarationContext)up;
-	  for (ClassOrInterfaceModifierContext modCtx: typCtx.classOrInterfaceModifier()) {
-	    if (modCtx.CONSTRAINT() != null) {
-		  res = true;
-	    }
-	  }
-    }
-
-	return res;
-  } */
-  
+    
   public an5Parser.ClassDeclarationContext getParentClassCxt(an5Parser.ClassDeclarationContext ctx) {
     an5Parser.ClassDeclarationContext res = null;
 	    
@@ -582,19 +559,7 @@ class an5ModelDefinitionsActions {
 		e.printStackTrace();
 	}	
   }
-  public void exitConstantDeclarator(an5Parser.ConstantDeclaratorContext ctx) { log.DBG("exitConstantDeclarator"); }
-  public void exitConstDeclaration(an5Parser.ConstDeclarationContext ctx) { log.DBG("exitConstDeclaration"); }
-  public void exitDefaultValue(an5Parser.DefaultValueContext ctx) { log.DBG("exitDefaultValue"); }
-  public void exitElementValue(an5Parser.ElementValueContext ctx) { log.DBG("exitElementValue"); }
-  public void exitElementValueArrayInitializer(an5Parser.ElementValueArrayInitializerContext ctx) { log.DBG("exitElementValueArrayInitializer"); }
-  public void exitElementValuePair(an5Parser.ElementValuePairContext ctx) { log.DBG("exitElementValuePair"); }
-  public void exitElementValuePairs(an5Parser.ElementValuePairsContext ctx) { log.DBG("exitElementValuePairs"); }
-  public void exitEnumBodyDeclarations(an5Parser.EnumBodyDeclarationsContext ctx) { log.DBG("exitEnumBodyDeclarations"); }
-  public void exitEnumConstant(an5Parser.EnumConstantContext ctx) { log.DBG("exitEnumConstant"); }
-  public void exitEnumConstants(an5Parser.EnumConstantsContext ctx) { log.DBG("exitEnumConstants"); }
-  public void exitEnumDeclaration(an5Parser.EnumDeclarationContext ctx) { log.DBG("exitEnumDeclaration"); }
-  public void exitExpression(an5Parser.ExpressionContext ctx) { log.DBG("exitExpression"); }
-  public void exitExpressionList(an5Parser.ExpressionListContext ctx) { log.DBG("exitExpressionList"); }
+
   public void exitFieldDeclaration(an5Parser.FieldDeclarationContext ctx) {
     log.DBG("exitFieldDeclaration");
 	/* get parent interface */
